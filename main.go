@@ -3,7 +3,10 @@ package main
 import (
 	"log/slog"
 	"net"
+	"time"
 )
+
+const READ_DEADLINE = time.Duration(time.Minute)
 
 func main() {
 	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:9988")
@@ -31,7 +34,25 @@ func main() {
 }
 
 func handler(conn *net.TCPConn) {
+	if err := SetTimeLimit(conn); err != nil {
+		slog.Error(err.Error())
+		return
+	}
+}
 
+func SetTimeLimit(conn *net.TCPConn) error {
+	if err := conn.SetReadDeadline(time.Now().Add(READ_DEADLINE)); err != nil {
+		return err
+	}
+
+	// total 3min
+	// idle time default 15sec + interval default 15sec * 9
+	// https://pkg.go.dev/net#KeepAliveConfig
+	if err := conn.SetKeepAlive(true); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // TCP 연결과 동시에 첫 패킷은 무조건 유저의 아이디를 담은 패킷이어야 한다.
