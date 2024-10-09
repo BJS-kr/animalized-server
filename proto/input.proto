@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package input;
+
+option go_package = "./proto";
+
+message Input {
+  int32 type = 1;
+  string user_id = 2;
+  optional int32 direction = 3;
+}
