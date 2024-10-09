@@ -1,16 +1,36 @@
 package main
 
 import (
+	"log/slog"
 	"net"
 )
 
-var userConns = make([]net.TCPConn, 0)
-
 func main() {
+	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:9988")
 
+	if err != nil {
+		panic(err)
+	}
+
+	listener, err := net.ListenTCP("tcp", addr)
+
+	if err != nil {
+		panic(err)
+	}
+
+	for {
+		conn, err := listener.AcceptTCP()
+
+		if err != nil {
+			slog.Error(err.Error())
+			continue
+		}
+
+		handler(conn)
+	}
 }
 
-func handler(conn net.TCPConn) {
+func handler(conn *net.TCPConn) {
 
 }
 
