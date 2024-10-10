@@ -1,14 +1,26 @@
 package main
 
 import (
+	"animalized/message"
+	"animalized/packet"
+	"errors"
 	"log/slog"
 	"net"
+
 	"time"
 )
 
 const (
-	READ_DEADLINE          = time.Duration(time.Minute)
+	READ_DEADLINE = time.Duration(time.Minute)
 )
+
+const (
+	INIT = iota + 1
+	MOVE
+	ATTACK
+)
+
+var userConns []*net.TCPConn = make([]*net.TCPConn, 0)
 
 func main() {
 	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:9988")
@@ -23,6 +35,8 @@ func main() {
 		panic(err)
 	}
 
+	inputProduceChannel := make(chan *message.Input, 100)
+
 	for {
 		conn, err := listener.AcceptTCP()
 
@@ -31,14 +45,7 @@ func main() {
 			continue
 		}
 
-		handler(conn)
-	}
-}
-
-func handler(conn *net.TCPConn) {
-	if err := SetTimeLimit(conn); err != nil {
-		slog.Error(err.Error())
-		return
+		launchInputProducer(conn, inputProduceChannel)
 	}
 }
 
@@ -57,14 +64,50 @@ func SetTimeLimit(conn *net.TCPConn) error {
 	return nil
 }
 
-// TCP 연결과 동시에 첫 패킷은 무조건 유저의 아이디를 담은 패킷이어야 한다.
-// 일정시간 동안 패킷이 도착하지 않거나 첫 패킷이 아이디가 아니라면 커넥션은 그대로 버린다.
-// 아이디 패킷이 정상적으로 도착할 경우 커넥션을 저장한다.
-func IsInitPacket() {
+func launchInputProducer(conn *net.TCPConn, inputProduceChannel chan<- *message.Input) {
+	if err := Initialize(conn); err != nil {
+		slog.Error(err.Error())
+		return
+	}
 
+	if err := SetTimeLimit(conn); err != nil {
+		slog.Error(err.Error())
+		return
+	}
+
+	userConns = append(userConns, conn)
+
+	go ProduceInput(conn, inputProduceChannel)
 }
-func StoreConn() {
 
+func Initialize(conn *net.TCPConn) error {
+	initInput, err := packet.ParseInput(conn)
+
+	if err != nil {
+		return err
+	}
+
+	if !IsInitPacket(initInput) {
+		return errors.New("init packet type invalid")
+	}
+
+	return nil
+}
+
+func ProduceInput(conn *net.TCPConn, inputProduceChannel chan<- *message.Input) {
+	for {
+		input, err := packet.ParseInput(conn)
+
+		if err != nil {
+			return
+		}
+
+		inputProduceChannel <- input
+
+		if err := conn.SetReadDeadline(time.Now().Add(READ_DEADLINE)); err != nil {
+			return
+		}
+	}
 }
 
 // 연결된 모든 TCP 커넥션을 순회하며 input을 뿌리는 역할
@@ -83,6 +126,26 @@ func StoreConn() {
 // 3-2. sync.Map
 // 아무래도 sync.Map이 좋아보인다. range로 간편하게 돌 수 있을 뿐더러, key를 input객체 메모리 주소로하고 val은 그냥 nil로 넣은 후(그래야 key가 안겹치니까. uuid같은거 새로 만들기 싫음)
 // Range를 돌면서 cb안에서 LoadAndStore로 전파하면 될 듯
+// 단, 약점은 sync.Map자체가 이미 mutex를 내장하고 있다는 점
+// sync.Map이 퍼포먼스가 안좋다는 글도 있다.
+// 핵심 요인. sync.Map.Range는 삽입한 순서대로 돌지 않는다고 한다.
+// 3.1로 가자
+func Broker(inputProduceChannel <-chan *message.Input) {
+	for input := range inputProduceChannel {
+
+	}
+}
+
+// TCP 연결과 동시에 첫 패킷은 무조건 유저의 아이디를 담은 패킷이어야 한다.
+// 일정시간 동안 패킷이 도착하지 않거나 첫 패킷이 아이디가 아니라면 커넥션은 그대로 버린다.
+// 아이디 패킷이 정상적으로 도착할 경우 커넥션을 저장한다.
+func IsInitPacket(input *message.Input) bool {
+	return input.GetType() == INIT
+}
+func StoreConn() {
+
+}
+
 func Propagate() {
 
 }
