@@ -1,12 +1,15 @@
 package main
 
 import (
+	"animalized/message"
 	"bytes"
 	"errors"
 	"io"
 	"log/slog"
 	"net"
 	"time"
+
+	"google.golang.org/protobuf/proto"
 )
 
 const (
@@ -85,7 +88,7 @@ func ReadInput(buf []byte, conn *net.TCPConn) (int, error) {
 			return size, nil
 		}
 
-		return 0, errors.New("unexpected read error: " + err.Error())
+		return 0, err
 	}
 
 	if size > BUFFER_SIZE {
@@ -105,18 +108,38 @@ func WriteInput(incomingBuf []byte, inputBuf *bytes.Buffer) error {
 	return nil
 }
 func SliceChunk(inputBuf *bytes.Buffer) ([]byte, error) {
-	data, err := inputBuf.ReadBytes(INPUT_PACKET_DELIMITER)
+	chunk, err := inputBuf.ReadBytes(INPUT_PACKET_DELIMITER)
 
 	if err != nil {
 		if errors.Is(err, io.EOF) {
-			inputBuf.Write(data)
-			return data, err
+			inputBuf.Write(chunk)
+			return chunk, err
 		}
 
-		return data, errors.New("unexpected error while read bytes from input buffer: " + err.Error())
+		return chunk, err
 	}
 
-	return data, nil
+	return chunk, nil
+}
+
+func StripDelimiter(chunk []byte) ([]byte, error) {
+	l := len(chunk)
+	
+	if chunk[l-1] != INPUT_PACKET_DELIMITER {
+		return chunk, errors.New("delimiter not on last position")
+	}
+
+	return chunk[:l-1], nil
+}
+
+func Into[M proto.Message](target M, stripped []byte) (*message.Input, error) {
+	input := new(message.Input)
+	
+	if err := proto.Unmarshal(stripped, input); err != nil {
+		return nil, err
+	}
+
+	return input, nil
 }
 
 // 연결된 모든 TCP 커넥션을 순회하며 input을 뿌리는 역할
