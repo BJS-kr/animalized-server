@@ -1,12 +1,19 @@
 package main
 
 import (
+	"bytes"
+	"errors"
+	"io"
 	"log/slog"
 	"net"
 	"time"
 )
 
-const READ_DEADLINE = time.Duration(time.Minute)
+const (
+	READ_DEADLINE          = time.Duration(time.Minute)
+	BUFFER_SIZE            = 4096
+	INPUT_PACKET_DELIMITER = '$'
+)
 
 func main() {
 	addr, err := net.ResolveTCPAddr("tcp", "127.0.0.1:9988")
@@ -69,11 +76,47 @@ func StoreConn() {
 // 복수형인 이유는 패킷파싱할 때 일단 커넥션 타고 있는 것들은 싹 순회하고 넣을 예정이라서
 // 일단 지금 생각으로는 buffered channel로 넣으면 될 것 같다.
 // 패킷 타입은 하나로 통일한다. 로직을 간단화하고 시간순서 맞추기도 편하다.
-func ParsePacket() {
+func ReadInput(buf []byte, conn *net.TCPConn) (int, error) {
+	size, err := conn.Read(buf)
 
+	if err != nil {
+		if errors.Is(err, io.EOF) {
+			// 예측된 에러이고, 버퍼 내용은 buf에 쌓였음
+			return size, nil
+		}
+
+		return 0, errors.New("unexpected read error: " + err.Error())
+	}
+
+	if size > BUFFER_SIZE {
+		return 0, errors.New("read size cannot exceed predefined buffer size")
+	}
+
+	return size, nil
 }
-func CollectInputs() {
 
+// incomingBuf: ReadIncoming함수에서 buf의 size만큼 slice한 []byte
+// ReadIncoming의 size가 0보다 클 때만 호출
+func WriteInput(incomingBuf []byte, inputBuf *bytes.Buffer) error {
+	if _, err := inputBuf.Write(incomingBuf); err != nil {
+		return err
+	}
+
+	return nil
+}
+func SliceChunk(inputBuf *bytes.Buffer) ([]byte, error) {
+	data, err := inputBuf.ReadBytes(INPUT_PACKET_DELIMITER)
+
+	if err != nil {
+		if errors.Is(err, io.EOF) {
+			inputBuf.Write(data)
+			return data, err
+		}
+
+		return data, errors.New("unexpected error while read bytes from input buffer: " + err.Error())
+	}
+
+	return data, nil
 }
 
 // 연결된 모든 TCP 커넥션을 순회하며 input을 뿌리는 역할
