@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package input;
 
-option go_package = "./proto";
+option go_package = "./message";
 
 message Input {
   int32 type = 1;

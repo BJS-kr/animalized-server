@@ -4,7 +4,7 @@
 // 	protoc        v5.29.0--rc1
 // source: proto/input.proto
 
-package proto
+package message
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
