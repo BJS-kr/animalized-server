@@ -15,7 +15,7 @@ import (
 // 결론적으로 내 구현체에서 ABA problem은 없다. 포인터라서 없다는 말이 아니다. 연산 자체가 monotonic하기 때문이다(멀티스레딩 전문가가 아니라서 100%인지는 모르겠음...).
 // TODO test와 benchmark 작성해서 진짜 문제가 없고 써도 된다는 것 확신
 type Node[T any] struct {
-	value T
+	Value T
 	next  atomic.Pointer[Node[T]]
 }
 
