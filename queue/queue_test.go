@@ -82,7 +82,9 @@ func TestDequeueBeforeEnqueue(t *testing.T) {
 	}
 }
 
-// go test -race로 실행해주세요
+/*
+!! WARNING !! 꼭 go test -race로 실행해주세요. 그냥 실행하면 의미가 없습니다.
+*/
 func TestRaceCondition(t *testing.T) {
 	var outerWg sync.WaitGroup
 	input := 1_000_000
@@ -100,7 +102,7 @@ func TestRaceCondition(t *testing.T) {
 				wg.Done()
 			}()
 
-			for i := 0; i < 10; i++ {
+			for i := 0; i < 100; i++ {
 				wg.Add(1)
 				go func() {
 					for {
