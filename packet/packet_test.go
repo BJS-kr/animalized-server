@@ -17,7 +17,6 @@ func TestInputParsing(t *testing.T) {
 	tcs := []struct {
 		desc  string
 		input *message.Input
-		want  string
 	}{
 		{
 			desc: "parse single packet",
