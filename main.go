@@ -130,6 +130,23 @@ func ProduceInput(conn *net.TCPConn, inputProduceChannel chan<- *message.Input) 
 // sync.Map이 퍼포먼스가 안좋다는 글도 있다.
 // 핵심 요인. sync.Map.Range는 삽입한 순서대로 돌지 않는다고 한다.
 // 3.1로 가자
+// 사고의 흐름: mutex & slice -> sync.Map -> LL -> lock free LL
+// mutex & slice를 사용하지 않는 이유: r & w가 intensive한데 거기에 mutex를 매번 거는 것은 낭비같다.
+// sync.Map을 선택하지 않는 이유: 퍼포먼스, 내부적 mutex문제도 있지만 핵심적으로 순서대로 range하는 보장이 없다.
+// LL을 선택하지 않는 이유: actor와 dispatcher가 LL을 사용하게 되는데, actor는 tail, dispatcher는 head만 사용하니까 일견 문제가 없어보이지만
+// 문제는 큐가 끝에 도달할때이다. head와 tail에 actor와 dispatcher가 동시에 접근하게 될 가능성이 있고, 현재 위치가 어디인지 모르니 안정성을 위해서 매번 lock을 걸어야한다.
+// lock free LL을 고민하고 선택한 이유: 일단, 구현자체가 눈에 잘 들어오지 않는다. lock free에 이해도 깊지 않다.
+// 그러나 결국 접근하려는 스레드가 두 개(actor, dispatcher)이므로 lock-contention이 높지 않고, rw rate가 높기 때문에 lock을 매번 거느니 lock free가 낫다고 판단했다.
+// dispatcher와 워커 간에 buffered 채널을 사용할 수 없는 이유: dispatcher가 block될 위험 존재. dispatcher는 워커의 상태에 영향을 받지 않아야 한다.
+// 그렇다면 worker는 dispatcher로 부터 받은 인풋을 바로 수령하고 자신이 컨트롤하는 하는 큐에 넣으면 되는 것 아닌가 할 수 있지만,
+// 그렇게 되면 어차피 1스레드가 전송과 채널 수령을 모두 해야하므로 마찬가지로 전송에 지연이 생겨 채널이 막힐 위험이 있고,
+// 워커 자체가 복수의 고루틴으로 구성된다고 해도 그렇다면 구현의 복잡성이 올라갈 뿐 아니라 대상큐에 락이 걸리거나 워커간 채널이 병목될 위험은 여전히 존재하게 된다.
+// 결론적으로 dispatcher와 워커 간에도 lock free queue를 사용해야하고, 대기열이 비정상적인 수치까지 도달하면 워커와 커넥션 자체를 종료시켜야한다.
+// 추가: dispatcher가 직접 connection을 돌며 전파하지 않는이유: 워커에 뿌려주는 것과 직접 conn을 돌면서 보내는 것은 지연 관리에 큰 영향이 있다.
+// 10개의 클라이언트가 접속했다고 가정해보면 10개를 모두 기다리거나,
+// 기다리지 않기 위해선 10개의 고루틴을 띄우고 다음 루프로 진입해야 하는데 아무리 goroutine이 경량이라지만
+// 빠른 속도로 spin을 도는 상황에서 매번 복수의 goroutine을 띄울수도 없거니와,
+// 유저가 10이 아니라 100명, 1000명이라고 생각해보면 문제는 더욱더 심해진다.
 func Broker(inputProduceChannel <-chan *message.Input) {
 	for input := range inputProduceChannel {
 
