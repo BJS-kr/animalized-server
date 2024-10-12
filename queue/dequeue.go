@@ -6,9 +6,10 @@ func (q *Queue[T]) Dequeue() *Node[T] {
 	for {
 		t := q.head.Load()
 
+		// nil을 리턴하면 아무 일도 일어나지 않을 뿐더러 pool에 nil을 넣는 쓸데없는 연산을 안하기 위해서
+		// 다만, nil을 Put한다고 해서 nil이 Get 되지는 않는다. 그냥 New로 나온다.
 		if t == nil {
-			return t // nil을 리턴하면 아무 일도 일어나지 않을 뿐더러 pool에 nil을 넣는 쓸데없는 연산을 안하기 위해서
-			// 다만, nil을 Put한다고 해서 nil이 Get 되지는 않는다. 그냥 New로 나온다.
+			return t
 		}
 
 		// https://github.com/golang-design/lockfree/blob/master/queue.go
