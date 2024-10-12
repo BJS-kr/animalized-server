@@ -6,7 +6,7 @@ import (
 	"net"
 )
 
-func readInput(buf []byte, conn *net.TCPConn) (int, error) {
+func readInput(buf []byte, conn net.Conn) (int, error) {
 	size, err := conn.Read(buf)
 
 	if err != nil {
