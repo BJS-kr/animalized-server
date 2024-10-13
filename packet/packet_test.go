@@ -49,7 +49,7 @@ func TestInputParsing(t *testing.T) {
 			client.Write(append(message, '$'))
 		}()
 
-		input, err := packet.ParseInput(&server)
+		input, err := packet.ParseInput(server)
 
 		if err != nil {
 			t.Fatal(err)
