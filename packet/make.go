@@ -7,7 +7,7 @@ import (
 	"net"
 )
 
-func makeChunk(conn net.Conn, buf []byte, inputBuf *bytes.Buffer) ([]byte, error) {
+func makeChunk(conn net.Conn, buf *[]byte, inputBuf *bytes.Buffer) (*[]byte, error) {
 	for {
 		size, err := readInput(buf, conn)
 
@@ -15,7 +15,7 @@ func makeChunk(conn net.Conn, buf []byte, inputBuf *bytes.Buffer) ([]byte, error
 			return buf, err
 		}
 
-		if err := writeInput(buf[:size], inputBuf); err != nil {
+		if err := writeInput((*buf)[:size], inputBuf); err != nil {
 			return buf, err
 		}
 
@@ -26,9 +26,9 @@ func makeChunk(conn net.Conn, buf []byte, inputBuf *bytes.Buffer) ([]byte, error
 				continue
 			}
 
-			return chunk, err
+			return &chunk, err
 		}
 
-		return chunk, nil
+		return &chunk, nil
 	}
 }
