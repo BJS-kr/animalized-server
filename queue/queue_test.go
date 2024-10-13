@@ -2,6 +2,7 @@ package queue_test
 
 import (
 	"animalized/queue"
+	"math/rand"
 	"sync"
 	"testing"
 )
@@ -119,4 +120,104 @@ func TestRaceCondition(t *testing.T) {
 		}()
 	}
 	outerWg.Wait()
+}
+
+type ComparisonQueue struct {
+	mtx   sync.Mutex
+	queue []any
+}
+
+func (q *ComparisonQueue) enqueue(v any) {
+	q.mtx.Lock()
+	defer q.mtx.Unlock()
+	q.queue = append(q.queue, v)
+}
+
+func (q *ComparisonQueue) dequeue() any {
+	q.mtx.Lock()
+	defer q.mtx.Unlock()
+	var v any
+
+	if len(q.queue) > 0 {
+		v = q.queue[0]
+		q.queue = q.queue[1:]
+	}
+
+	return v
+}
+
+// lock contention이 없는 경우, naive한 뮤텍스가 더 빠름
+// TODO lock contention이 있는 benchmark작성
+// TODO lock free enqueue가 너무 비효율 적인듯? 개선할 방법 없나
+func BenchmarkNoContention(b *testing.B) {
+	q := queue.New[any]()
+	cq := ComparisonQueue{}
+	n := rand.Int()
+
+	b.ResetTimer()
+
+	b.Run("lock free enqueue", func(b *testing.B) {
+		for range b.N {
+			q.Enqueue(n)
+		}
+	})
+
+	b.Run("comparison enqueue", func(b *testing.B) {
+		for range b.N {
+			cq.enqueue(n)
+		}
+	})
+
+	b.Run("lock free dequeue", func(b *testing.B) {
+		for range b.N {
+			q.Dequeue()
+		}
+	})
+
+	b.Run("comparison dequeue", func(b *testing.B) {
+		for range b.N {
+			cq.dequeue()
+		}
+	})
+}
+
+// 구현 사항에 맞춰서 테스트: 구현 사항이란 인풋 큐에 1 actor와 1 dispatcher가 접근하는 구조
+func BenchmarkContention(b *testing.B) {
+	q := queue.New[any]()
+	cq := ComparisonQueue{}
+	n := rand.Int()
+
+	b.ResetTimer()
+
+	b.Run("contention lock free enqueue", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				q.Enqueue(n)
+			}
+		})
+	})
+
+	b.Run("contention comparison enqueue", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				cq.enqueue(n)
+			}
+		})
+	})
+
+	b.Run("contention lock free dequeue", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				q.Dequeue()
+			}
+		})
+	})
+
+	b.Run("contention comparison dequeue", func(b *testing.B) {
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				cq.dequeue()
+			}
+		})
+	})
 }
