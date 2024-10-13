@@ -147,8 +147,6 @@ func (q *ComparisonQueue) dequeue() any {
 }
 
 // lock contention이 없는 경우, naive한 뮤텍스가 더 빠름
-// TODO lock contention이 있는 benchmark작성
-// TODO lock free enqueue가 너무 비효율 적인듯? 개선할 방법 없나
 func BenchmarkNoContention(b *testing.B) {
 	q := queue.New[any]()
 	cq := ComparisonQueue{}
