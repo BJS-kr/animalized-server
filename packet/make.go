@@ -7,7 +7,7 @@ import (
 	"net"
 )
 
-func makeChunk(conn net.Conn, buf []byte, inputBuf *bytes.Buffer) ([]byte, error) {
+func makeChunk(conn *net.Conn, buf []byte, inputBuf *bytes.Buffer) ([]byte, error) {
 	for {
 		size, err := readInput(buf, conn)
 
