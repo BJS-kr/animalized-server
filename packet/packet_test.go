@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"net"
 	"testing"
-	"time"
 
 	"google.golang.org/protobuf/proto"
 )
@@ -46,7 +45,6 @@ func TestInputParsing(t *testing.T) {
 	for _, tc := range tcs {
 		go func() {
 			message, _ := proto.Marshal(tc.input)
-			client.SetWriteDeadline(time.Now().Add(2 * time.Second))
 			client.Write(append(message, '$'))
 		}()
 

@@ -9,6 +9,7 @@ import (
 
 func makeChunk(conn net.Conn, buf *[]byte, inputBuf *bytes.Buffer) (*[]byte, error) {
 	for {
+
 		size, err := readInput(buf, conn)
 
 		if err != nil {
