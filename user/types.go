@@ -9,7 +9,7 @@ import (
 
 type User struct {
 	Conn       net.Conn
-	InputQueue *queue.Queue[message.Input]
+	InputQueue *queue.Queue[*message.Input]
 	Id         string
 }
 
