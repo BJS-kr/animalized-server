@@ -34,7 +34,7 @@ func TestProduce(t *testing.T) {
 		message, _ := proto.Marshal(input)
 
 		for i := 0; i < goal; i++ {
-			client.Write(append(message, '$'))
+			client.Write(append(message, packet.INPUT_PACKET_DELIMITER))
 		}
 
 		if err := client.Close(); err != nil {

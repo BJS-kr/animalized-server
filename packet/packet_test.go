@@ -45,7 +45,7 @@ func TestInputParsing(t *testing.T) {
 	for _, tc := range tcs {
 		go func() {
 			message, _ := proto.Marshal(tc.input)
-			client.Write(append(message, '$'))
+			client.Write(append(message, packet.INPUT_PACKET_DELIMITER))
 		}()
 
 		buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
