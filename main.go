@@ -33,6 +33,6 @@ func main() {
 			continue
 		}
 
-		handler.StartHandlers(conn, inputProduceChannel)
+		handler.StartHandlers(users, conn, inputProduceChannel)
 	}
 }
