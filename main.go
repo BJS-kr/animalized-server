@@ -36,6 +36,6 @@ func main() {
 			continue
 		}
 
-		handler.StartHandlers(users, serverState, conn, inputProduceChannel)
+		go handler.StartHandlers(users, serverState, conn, inputProduceChannel)
 	}
 }
