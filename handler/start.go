@@ -2,6 +2,7 @@ package handler
 
 import (
 	"animalized/message"
+	"animalized/packet"
 	"animalized/user"
 	"bytes"
 	"log/slog"
@@ -9,16 +10,15 @@ import (
 )
 
 func StartHandlers(users *user.Users, conn net.Conn, inputProduceChannel chan<- *message.Input) {
-	defer conn.Close()
-
-	buf, inputBuf := make([]byte, 0), bytes.NewBuffer(nil)
+	buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
 	u, err := initialize(users, conn, &buf, inputBuf)
 
 	if err != nil {
 		slog.Error(err.Error())
-		users.RemoveUser(u)
 		return
 	}
+
+	users.InsertUser(u)
 
 	quit := make(chan struct{})
 
