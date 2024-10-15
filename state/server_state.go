@@ -17,7 +17,7 @@ func (ss *ServerState) UpdateUserPosition(userId string, direction int32) {
 }
 
 func (ss *ServerState) SignalServerState(inputProduceChannel chan<- *message.Input) {
-	tick := time.Tick(time.Second)
+	tick := time.Tick(SERVER_STATE_SIGNAL_INTERVAL)
 	tickMessage := &message.Input{
 		Type: packet.SERVER_STATE,
 	}
