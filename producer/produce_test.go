@@ -25,7 +25,6 @@ func TestProduce(t *testing.T) {
 		Id:   "test",
 	}
 
-	go producer.Receive(inputProduceChan, q)
 	go func() {
 		input := &message.Input{
 			Type:   1,
@@ -40,6 +39,12 @@ func TestProduce(t *testing.T) {
 
 		if err := client.Close(); err != nil {
 			panic(err)
+		}
+	}()
+
+	go func() {
+		for input := range inputProduceChan {
+			q.Enqueue(input)
 		}
 	}()
 
