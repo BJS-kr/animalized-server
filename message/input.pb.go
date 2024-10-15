@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.35.1
 // 	protoc        v5.29.0--rc1
-// source: proto/input.proto
+// source: message/proto/input.proto
 
 package message
 
@@ -25,14 +25,17 @@ type Input struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type      int32  `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"`
-	UserId    string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Direction *int32 `protobuf:"varint,3,opt,name=direction,proto3,oneof" json:"direction,omitempty"`
+	Type        int32        `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"`
+	UserId      string       `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Direction   *int32       `protobuf:"varint,3,opt,name=direction,proto3,oneof" json:"direction,omitempty"`
+	Context     *int64       `protobuf:"varint,4,opt,name=context,proto3,oneof" json:"context,omitempty"`
+	PrevContext *int64       `protobuf:"varint,5,opt,name=prev_context,json=prevContext,proto3,oneof" json:"prev_context,omitempty"`
+	UserStates  []*UserState `protobuf:"bytes,6,rep,name=user_states,json=userStates,proto3" json:"user_states,omitempty"`
 }
 
 func (x *Input) Reset() {
 	*x = Input{}
-	mi := &file_proto_input_proto_msgTypes[0]
+	mi := &file_message_proto_input_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +47,7 @@ func (x *Input) String() string {
 func (*Input) ProtoMessage() {}
 
 func (x *Input) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_input_proto_msgTypes[0]
+	mi := &file_message_proto_input_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +60,7 @@ func (x *Input) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Input.ProtoReflect.Descriptor instead.
 func (*Input) Descriptor() ([]byte, []int) {
-	return file_proto_input_proto_rawDescGZIP(), []int{0}
+	return file_message_proto_input_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *Input) GetType() int32 {
@@ -81,67 +84,215 @@ func (x *Input) GetDirection() int32 {
 	return 0
 }
 
-var File_proto_input_proto protoreflect.FileDescriptor
+func (x *Input) GetContext() int64 {
+	if x != nil && x.Context != nil {
+		return *x.Context
+	}
+	return 0
+}
 
-var file_proto_input_proto_rawDesc = []byte{
-	0x0a, 0x11, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x12, 0x05, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x22, 0x65, 0x0a, 0x05, 0x49, 0x6e,
-	0x70, 0x75, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x05, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f,
-	0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64,
-	0x12, 0x21, 0x0a, 0x09, 0x64, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20,
-	0x01, 0x28, 0x05, 0x48, 0x00, 0x52, 0x09, 0x64, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e,
-	0x88, 0x01, 0x01, 0x42, 0x0c, 0x0a, 0x0a, 0x5f, 0x64, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f,
-	0x6e, 0x42, 0x09, 0x5a, 0x07, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+func (x *Input) GetPrevContext() int64 {
+	if x != nil && x.PrevContext != nil {
+		return *x.PrevContext
+	}
+	return 0
+}
+
+func (x *Input) GetUserStates() []*UserState {
+	if x != nil {
+		return x.UserStates
+	}
+	return nil
+}
+
+type UserState struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Position *Position `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
+	Score    int32     `protobuf:"varint,2,opt,name=score,proto3" json:"score,omitempty"`
+}
+
+func (x *UserState) Reset() {
+	*x = UserState{}
+	mi := &file_message_proto_input_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserState) ProtoMessage() {}
+
+func (x *UserState) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_input_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserState.ProtoReflect.Descriptor instead.
+func (*UserState) Descriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *UserState) GetPosition() *Position {
+	if x != nil {
+		return x.Position
+	}
+	return nil
+}
+
+func (x *UserState) GetScore() int32 {
+	if x != nil {
+		return x.Score
+	}
+	return 0
+}
+
+type Position struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	X int32 `protobuf:"varint,1,opt,name=x,proto3" json:"x,omitempty"`
+	Y int32 `protobuf:"varint,2,opt,name=y,proto3" json:"y,omitempty"`
+}
+
+func (x *Position) Reset() {
+	*x = Position{}
+	mi := &file_message_proto_input_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Position) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Position) ProtoMessage() {}
+
+func (x *Position) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_input_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Position.ProtoReflect.Descriptor instead.
+func (*Position) Descriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Position) GetX() int32 {
+	if x != nil {
+		return x.X
+	}
+	return 0
+}
+
+func (x *Position) GetY() int32 {
+	if x != nil {
+		return x.Y
+	}
+	return 0
+}
+
+var File_message_proto_input_proto protoreflect.FileDescriptor
+
+var file_message_proto_input_proto_rawDesc = []byte{
+	0x0a, 0x19, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
+	0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x05, 0x69, 0x6e, 0x70,
+	0x75, 0x74, 0x22, 0xfc, 0x01, 0x0a, 0x05, 0x49, 0x6e, 0x70, 0x75, 0x74, 0x12, 0x12, 0x0a, 0x04,
+	0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65,
+	0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x21, 0x0a, 0x09, 0x64, 0x69, 0x72,
+	0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x48, 0x00, 0x52, 0x09,
+	0x64, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x88, 0x01, 0x01, 0x12, 0x1d, 0x0a, 0x07,
+	0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x48, 0x01, 0x52,
+	0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x88, 0x01, 0x01, 0x12, 0x26, 0x0a, 0x0c, 0x70,
+	0x72, 0x65, 0x76, 0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28,
+	0x03, 0x48, 0x02, 0x52, 0x0b, 0x70, 0x72, 0x65, 0x76, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74,
+	0x88, 0x01, 0x01, 0x12, 0x31, 0x0a, 0x0b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x73, 0x74, 0x61, 0x74,
+	0x65, 0x73, 0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74,
+	0x2e, 0x55, 0x73, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x0a, 0x75, 0x73, 0x65, 0x72,
+	0x53, 0x74, 0x61, 0x74, 0x65, 0x73, 0x42, 0x0c, 0x0a, 0x0a, 0x5f, 0x64, 0x69, 0x72, 0x65, 0x63,
+	0x74, 0x69, 0x6f, 0x6e, 0x42, 0x0a, 0x0a, 0x08, 0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74,
+	0x42, 0x0f, 0x0a, 0x0d, 0x5f, 0x70, 0x72, 0x65, 0x76, 0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78,
+	0x74, 0x22, 0x4e, 0x0a, 0x09, 0x55, 0x73, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x2b,
+	0x0a, 0x08, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x0f, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f,
+	0x6e, 0x52, 0x08, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x73,
+	0x63, 0x6f, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72,
+	0x65, 0x22, 0x26, 0x0a, 0x08, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x0c, 0x0a,
+	0x01, 0x78, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x78, 0x12, 0x0c, 0x0a, 0x01, 0x79,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x79, 0x42, 0x0b, 0x5a, 0x09, 0x2e, 0x2f, 0x6d,
+	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_proto_input_proto_rawDescOnce sync.Once
-	file_proto_input_proto_rawDescData = file_proto_input_proto_rawDesc
+	file_message_proto_input_proto_rawDescOnce sync.Once
+	file_message_proto_input_proto_rawDescData = file_message_proto_input_proto_rawDesc
 )
 
-func file_proto_input_proto_rawDescGZIP() []byte {
-	file_proto_input_proto_rawDescOnce.Do(func() {
-		file_proto_input_proto_rawDescData = protoimpl.X.CompressGZIP(file_proto_input_proto_rawDescData)
+func file_message_proto_input_proto_rawDescGZIP() []byte {
+	file_message_proto_input_proto_rawDescOnce.Do(func() {
+		file_message_proto_input_proto_rawDescData = protoimpl.X.CompressGZIP(file_message_proto_input_proto_rawDescData)
 	})
-	return file_proto_input_proto_rawDescData
+	return file_message_proto_input_proto_rawDescData
 }
 
-var file_proto_input_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
-var file_proto_input_proto_goTypes = []any{
-	(*Input)(nil), // 0: input.Input
+var file_message_proto_input_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_message_proto_input_proto_goTypes = []any{
+	(*Input)(nil),     // 0: input.Input
+	(*UserState)(nil), // 1: input.UserState
+	(*Position)(nil),  // 2: input.Position
 }
-var file_proto_input_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+var file_message_proto_input_proto_depIdxs = []int32{
+	1, // 0: input.Input.user_states:type_name -> input.UserState
+	2, // 1: input.UserState.position:type_name -> input.Position
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_proto_input_proto_init() }
-func file_proto_input_proto_init() {
-	if File_proto_input_proto != nil {
+func init() { file_message_proto_input_proto_init() }
+func file_message_proto_input_proto_init() {
+	if File_message_proto_input_proto != nil {
 		return
 	}
-	file_proto_input_proto_msgTypes[0].OneofWrappers = []any{}
+	file_message_proto_input_proto_msgTypes[0].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_proto_input_proto_rawDesc,
+			RawDescriptor: file_message_proto_input_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_proto_input_proto_goTypes,
-		DependencyIndexes: file_proto_input_proto_depIdxs,
-		MessageInfos:      file_proto_input_proto_msgTypes,
+		GoTypes:           file_message_proto_input_proto_goTypes,
+		DependencyIndexes: file_message_proto_input_proto_depIdxs,
+		MessageInfos:      file_message_proto_input_proto_msgTypes,
 	}.Build()
-	File_proto_input_proto = out.File
-	file_proto_input_proto_rawDesc = nil
-	file_proto_input_proto_goTypes = nil
-	file_proto_input_proto_depIdxs = nil
+	File_message_proto_input_proto = out.File
+	file_message_proto_input_proto_rawDesc = nil
+	file_message_proto_input_proto_goTypes = nil
+	file_message_proto_input_proto_depIdxs = nil
 }

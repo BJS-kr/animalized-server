@@ -5,6 +5,7 @@ import (
 	"animalized/message"
 	"animalized/packet"
 	"animalized/queue"
+	"animalized/state"
 	"animalized/user"
 	"net"
 	"testing"
@@ -15,19 +16,20 @@ import (
 
 func TestHandlers(t *testing.T) {
 	users := new(user.Users)
+	serverState := new(state.ServerState)
 	server1, client1 := net.Pipe()
 	server2, client2 := net.Pipe()
 	inputQueue := queue.New[*message.Input]()
 	inputProduceChan := make(chan *message.Input)
 
 	// 글로벌 핸들러 시작
-	go handler.Receive(inputQueue, inputProduceChan)
+	go handler.Receive(inputQueue, serverState, inputProduceChan)
 	go handler.Propagate(inputQueue, users)
 
 	// 유저 핸들러 시작
 	go func() {
-		handler.StartHandlers(users, server1, inputProduceChan)
-		handler.StartHandlers(users, server2, inputProduceChan)
+		handler.StartHandlers(users, serverState, server1, inputProduceChan)
+		handler.StartHandlers(users, serverState, server2, inputProduceChan)
 	}()
 
 	// 두 명의 유저가 접속합니다.

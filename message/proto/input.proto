@@ -8,4 +8,18 @@ message Input {
   int32 type = 1;
   string user_id = 2;
   optional int32 direction = 3;
+  optional int64 context = 4;
+  optional int64 prev_context = 5;
+  repeated UserState user_states = 6;
+}
+
+
+message UserState {
+  Position position = 1;
+  int32 score = 2;
+}
+
+message Position {
+  int32 x = 1;
+  int32 y = 2;
 }

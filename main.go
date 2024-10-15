@@ -4,6 +4,7 @@ import (
 	"animalized/handler"
 	"animalized/message"
 	"animalized/queue"
+	"animalized/state"
 	"animalized/user"
 
 	"log/slog"
@@ -11,6 +12,7 @@ import (
 )
 
 var users = new(user.Users)
+var serverState = new(state.ServerState)
 
 func main() {
 	listener, err := net.Listen("tcp", "127.0.0.1:9988")
@@ -22,8 +24,9 @@ func main() {
 	mainInputs := queue.New[*message.Input]()
 	inputProduceChannel := make(chan *message.Input, 100)
 
-	go handler.Receive(mainInputs, inputProduceChannel)
+	go handler.Receive(mainInputs, serverState, inputProduceChannel)
 	go handler.Propagate(mainInputs, users)
+	go serverState.SignalServerState(inputProduceChannel)
 
 	for {
 		conn, err := listener.Accept()
@@ -33,6 +36,6 @@ func main() {
 			continue
 		}
 
-		handler.StartHandlers(users, conn, inputProduceChannel)
+		handler.StartHandlers(users, serverState, conn, inputProduceChannel)
 	}
 }

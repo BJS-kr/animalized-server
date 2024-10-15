@@ -13,6 +13,7 @@ func (q *Queue[T]) Dequeue() *Node[T] {
 		}
 
 		// https://github.com/golang-design/lockfree/blob/master/queue.go
+		// 하단 검사 있는 상태와 없는 상태 둘 다 벤치 돌려봤는데 큰 차이가 없다.
 		if t != q.head.Load() {
 			continue
 		}
