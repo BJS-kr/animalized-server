@@ -11,7 +11,7 @@ func Propagate(inputQueue *queue.Queue[*message.Input], users *user.Users) {
 		n := inputQueue.Dequeue()
 
 		if n == nil {
-			return
+			continue
 		}
 
 		for u := range users.LockedRange() {
