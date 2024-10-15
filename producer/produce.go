@@ -5,7 +5,6 @@ import (
 	"animalized/packet"
 	"animalized/user"
 	"bytes"
-	"errors"
 	"time"
 )
 
@@ -20,8 +19,10 @@ func ProduceInput(u *user.User, buf *[]byte, inputBuf *bytes.Buffer, inputProduc
 		return err
 	}
 
-	if input.UserId != u.Id {
-		return errors.New("user id not matched")
+	err = validateInput(input, u.Id)
+
+	if err != nil {
+		return err
 	}
 
 	if err := u.Conn.SetReadDeadline(time.Now().Add(READ_DEADLINE)); err != nil {
