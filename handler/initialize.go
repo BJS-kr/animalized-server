@@ -32,7 +32,5 @@ func initialize(users *user.Users, conn net.Conn, buf *[]byte, inputBuf *bytes.B
 		Id:         initInput.UserId,
 	}
 
-	users.InsertUser(u)
-
 	return u, nil
 }
