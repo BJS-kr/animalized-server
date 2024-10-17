@@ -12,7 +12,6 @@ import (
 )
 
 var users = new(user.Users)
-var serverState = new(state.ServerState)
 
 func main() {
 	listener, err := net.Listen("tcp", "127.0.0.1:9988")
@@ -23,6 +22,7 @@ func main() {
 
 	mainInputs := queue.New[*message.Input]()
 	inputProduceChannel := make(chan *message.Input, 100)
+	serverState := state.New()
 
 	go handler.Receive(mainInputs, serverState, inputProduceChannel)
 	go handler.Propagate(mainInputs, users)

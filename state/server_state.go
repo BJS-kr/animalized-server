@@ -12,6 +12,13 @@ type ServerState struct {
 	UserStates map[UserID]UserState
 }
 
+func New() *ServerState {
+	ss := new(ServerState)
+	ss.UserStates = make(map[UserID]UserState)
+
+	return ss
+}
+
 func (ss *ServerState) UpdateUserPosition(userId string, direction int32) {
 	ss.UserStates[UserID(userId)].position.determinePosition(direction)
 }
