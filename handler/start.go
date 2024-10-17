@@ -12,7 +12,7 @@ import (
 
 func StartHandlers(users *user.Users, serverState *state.ServerState, conn net.Conn, inputProduceChannel chan<- *message.Input) {
 	buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
-	u, err := initialize(users, conn, &buf, inputBuf)
+	u, err := initialize(conn, &buf, inputBuf)
 
 	if err != nil {
 		slog.Error(err.Error())
