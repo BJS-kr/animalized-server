@@ -23,6 +23,7 @@ func StartHandlers(users *user.Users, serverState *state.ServerState, conn net.C
 
 	if err != nil {
 		slog.Error(err.Error())
+		conn.Close()
 		return
 	}
 

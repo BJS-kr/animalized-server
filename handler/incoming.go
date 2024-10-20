@@ -12,7 +12,7 @@ func handleIncoming(users *user.Users, u *user.User, buf *[]byte, inputBuf *byte
 	for {
 		if err := producer.ProduceInput(u, buf, inputBuf, inputProduceChannel); err != nil {
 			slog.Error(err.Error())
-			users.RemoveUser(u)
+			users.RemoveUser(u, inputProduceChannel)
 			u.Conn.Close()
 			close(quit)
 			return

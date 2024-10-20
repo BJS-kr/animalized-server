@@ -15,9 +15,6 @@ func Receive(inputQueue *queue.Queue[*message.Input], serverState *state.ServerS
 		switch input.Type {
 		case packet.MOVE:
 			serverState.UpdateUserPosition(input.UserId, *input.Direction)
-		case packet.ATTACK:
-			// TODO
-			continue
 		case packet.SERVER_STATE:
 			prevContext = context
 			context = time.Now().UnixMilli()
@@ -28,8 +25,6 @@ func Receive(inputQueue *queue.Queue[*message.Input], serverState *state.ServerS
 				PrevContext: &prevContext,
 				UserStates:  serverState.GetUserStates(),
 			}
-		default:
-			continue
 		}
 
 		input.Context = &context
