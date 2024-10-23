@@ -10,7 +10,9 @@ message Input {
   optional int32 direction = 3;
   optional int64 context = 4;
   optional int64 prev_context = 5;
-  repeated UserState user_states = 6;
+  optional string room_name = 6;
+  optional int32 users_limit = 7;
+  repeated UserState user_states = 8;
 }
 
 

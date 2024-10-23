@@ -21,14 +21,14 @@ func (l *Lobby) ReceiveLobbyInput(lobbyInputChannel <-chan *message.Input) {
 		case packet.LOBBY_STATUS:
 
 		case packet.CREATE:
-			r, err := l.rooms.Create(input.RoomName, input.UsersLimit)
+			r, err := l.rooms.Create(*input.RoomName, int(*input.UsersLimit))
 
 			if err != nil {
 				slog.Error(err.Error())
 				continue
 			}
 
-			err = l.rooms.Join(input.RoomName, u)
+			err = l.rooms.Join(*input.RoomName, u)
 
 			if err != nil {
 				slog.Error(err.Error())
@@ -38,7 +38,7 @@ func (l *Lobby) ReceiveLobbyInput(lobbyInputChannel <-chan *message.Input) {
 
 			l.users.RemoveUser(u)
 		case packet.JOIN:
-			err := l.rooms.Join(input.RoomName, u)
+			err := l.rooms.Join(*input.RoomName, u)
 
 			if err != nil {
 				slog.Error(err.Error())
