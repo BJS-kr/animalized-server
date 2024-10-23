@@ -11,7 +11,7 @@ import (
 	"net"
 )
 
-var globalUsers = new(users.Users)
+var lobbyUsers = new(users.Users)
 
 func main() {
 	listener, err := net.Listen("tcp", "127.0.0.1:9988")
@@ -25,7 +25,7 @@ func main() {
 	serverState := state.New()
 
 	go handler.Receive(mainInputs, serverState, inputProduceChannel)
-	go handler.Propagate(mainInputs, globalUsers)
+	go handler.Propagate(mainInputs, lobbyUsers)
 	go serverState.SignalServerState(inputProduceChannel)
 
 	for {
@@ -36,6 +36,6 @@ func main() {
 			continue
 		}
 
-		go handler.StartHandlers(globalUsers, serverState, conn, inputProduceChannel)
+		go handler.StartHandlers(lobbyUsers, serverState, conn, inputProduceChannel)
 	}
 }
