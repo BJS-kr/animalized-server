@@ -2,16 +2,15 @@ package main
 
 import (
 	"animalized/handler"
+	"animalized/lobby"
 	"animalized/message"
-	"animalized/users"
 
 	"log/slog"
 	"net"
 )
 
 func main() {
-	lobby := new(users.Users)
-	lobby.Max = 100
+	lobby := lobby.New(100)
 	lobbyInputChannel := make(chan *message.Input, 100)
 
 	listener, err := net.Listen("tcp", "127.0.0.1:9988")
@@ -20,7 +19,8 @@ func main() {
 		panic(err)
 	}
 
-	go handler.ReceiveLobbyInput(lobby, lobbyInputChannel)
+	go lobby.ReceiveLobbyInput(lobbyInputChannel)
+	go handler.Propagate(lobby.Inputs, lobby.Users)
 
 	for {
 		conn, err := listener.Accept()
@@ -30,6 +30,6 @@ func main() {
 			continue
 		}
 
-		go handler.JoinLobby(lobby, conn, lobbyInputChannel)
+		go lobby.JoinLobby(conn, lobbyInputChannel)
 	}
 }

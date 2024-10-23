@@ -1,4 +1,4 @@
-package handler
+package room
 
 import (
 	"animalized/message"
@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func ReceiveGameInput(inputQueue *queue.Queue[*message.Input], gameState *state.GameState, receiveChannel <-chan *message.Input) {
+func (r *Room) ReceiveGameInput(inputQueue *queue.Queue[*message.Input], gameState *state.GameState, receiveChannel <-chan *message.Input) {
 	var prevContext, context int64
 
 	for input := range receiveChannel {

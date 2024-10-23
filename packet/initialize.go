@@ -1,8 +1,8 @@
-package handler
+package packet
 
 import (
 	"animalized/message"
-	"animalized/packet"
+
 	"animalized/queue"
 	"animalized/users"
 	"bytes"
@@ -10,15 +10,15 @@ import (
 	"net"
 )
 
-func initialize(conn net.Conn) (*users.User, error) {
-	buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
-	initInput, err := packet.ParseInput(conn, &buf, inputBuf)
+func Initialize(conn net.Conn) (*users.User, error) {
+	buf, inputBuf := make([]byte, BUFFER_SIZE), bytes.NewBuffer(nil)
+	initInput, err := ParseInput(conn, &buf, inputBuf)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if !packet.IsInitPacket(initInput) {
+	if !IsInitPacket(initInput) {
 		return nil, errors.New("init packet type invalid")
 	}
 
