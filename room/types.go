@@ -11,5 +11,5 @@ type Room struct {
 }
 
 type Rooms struct {
-	Rooms map[RoomName]*Room
+	RoomMap map[RoomName]*Room
 }

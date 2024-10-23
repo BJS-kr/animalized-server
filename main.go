@@ -1,7 +1,6 @@
 package main
 
 import (
-	"animalized/handler"
 	"animalized/lobby"
 	"animalized/message"
 
@@ -20,7 +19,7 @@ func main() {
 	}
 
 	go lobby.ReceiveLobbyInput(lobbyInputChannel)
-	go handler.Propagate(lobby.Inputs, lobby.Users)
+	lobby.Propagate()
 
 	for {
 		conn, err := listener.Accept()

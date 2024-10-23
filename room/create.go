@@ -5,11 +5,15 @@ import (
 	"errors"
 )
 
-func (rs *Rooms) Create(roomName string, usersLimit int) error {
+func (rs *Rooms) Create(roomName string, usersLimit int) (*Room, error) {
+	if r, ok := rs.RoomMap[RoomName(roomName)]; ok {
+		return r, errors.New("room already exists")
+	}
+
 	r := new(Room)
 
 	if usersLimit > 8 {
-		return errors.New("room users limit has exceeded")
+		return r, errors.New("room users limit has exceeded")
 	}
 
 	roomUsers := new(users.Users)
@@ -18,7 +22,7 @@ func (rs *Rooms) Create(roomName string, usersLimit int) error {
 	r.users = roomUsers
 	r.status = READY
 
-	rs.Rooms[RoomName(roomName)] = r
+	rs.RoomMap[RoomName(roomName)] = r
 
-	return nil
+	return r, nil
 }

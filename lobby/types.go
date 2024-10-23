@@ -8,7 +8,7 @@ import (
 )
 
 type Lobby struct {
-	Users  *users.Users
-	Rooms  *room.Rooms
-	Inputs *queue.Queue[*message.Input]
+	users  *users.Users
+	rooms  *room.Rooms
+	inputs *queue.Queue[*message.Input]
 }

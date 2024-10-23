@@ -14,13 +14,13 @@ func (l *Lobby) JoinLobby(conn net.Conn, lobbyInputChannel chan<- *message.Input
 		return err
 	}
 
-	err = l.Users.InsertUser(u)
+	err = l.users.InsertUser(u)
 
 	if err != nil {
 		return err
 	}
 
-	handler.StartHandlers(l.Users, u, lobbyInputChannel)
+	handler.StartHandlers(l.users, u, lobbyInputChannel)
 
 	return nil
 }

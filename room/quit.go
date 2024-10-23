@@ -6,7 +6,7 @@ import (
 )
 
 func (rs *Rooms) Quit(roomName string, user *users.User) error {
-	r, ok := rs.Rooms[RoomName(roomName)]
+	r, ok := rs.RoomMap[RoomName(roomName)]
 
 	if !ok {
 		return errors.New("room does not exists")
@@ -15,7 +15,7 @@ func (rs *Rooms) Quit(roomName string, user *users.User) error {
 	remain := r.Quit(user)
 
 	if remain <= 0 {
-		delete(rs.Rooms, RoomName(roomName))
+		delete(rs.RoomMap, RoomName(roomName))
 	}
 
 	return nil

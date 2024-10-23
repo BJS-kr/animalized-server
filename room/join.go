@@ -6,7 +6,7 @@ import (
 )
 
 func (rs *Rooms) Join(roomName string, user *users.User) error {
-	r, ok := rs.Rooms[RoomName(roomName)]
+	r, ok := rs.RoomMap[RoomName(roomName)]
 
 	if !ok {
 		return errors.New("room not exists")

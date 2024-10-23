@@ -12,12 +12,12 @@ func New(max int) *Lobby {
 	rs := new(room.Rooms)
 	us := new(users.Users)
 
-	rs.Rooms = make(map[room.RoomName]*room.Room)
+	rs.RoomMap = make(map[room.RoomName]*room.Room)
 	us.Max = max
 
-	l.Users = us
-	l.Rooms = rs
-	l.Inputs = queue.New[*message.Input]()
+	l.users = us
+	l.rooms = rs
+	l.inputs = queue.New[*message.Input]()
 
 	return l
 }
