@@ -5,7 +5,7 @@ import (
 	"animalized/packet"
 	"animalized/producer"
 	"animalized/queue"
-	"animalized/user"
+	"animalized/users"
 	"bytes"
 	"net"
 	"testing"
@@ -20,7 +20,7 @@ func TestProduce(t *testing.T) {
 	goal := 1000
 	q := queue.New[*message.Input]()
 
-	user := &user.User{
+	user := &users.User{
 		Conn: server,
 		Id:   "test",
 	}

@@ -3,10 +3,10 @@ package handler
 import (
 	"animalized/message"
 	"animalized/queue"
-	"animalized/user"
+	"animalized/users"
 )
 
-func Propagate(inputQueue *queue.Queue[*message.Input], users *user.Users) {
+func Propagate(inputQueue *queue.Queue[*message.Input], users *users.Users) {
 	for {
 		n := inputQueue.Dequeue()
 

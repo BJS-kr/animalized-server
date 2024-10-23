@@ -6,7 +6,7 @@ import (
 	"animalized/packet"
 	"animalized/queue"
 	"animalized/state"
-	"animalized/user"
+	"animalized/users"
 	"net"
 	"testing"
 	"time"
@@ -15,7 +15,7 @@ import (
 )
 
 func TestHandlers(t *testing.T) {
-	users := new(user.Users)
+	users := new(users.Users)
 	serverState := new(state.ServerState)
 	server1, client1 := net.Pipe()
 	server2, client2 := net.Pipe()

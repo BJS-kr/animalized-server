@@ -1,4 +1,4 @@
-package user
+package users
 
 // consumer.Propagate에서 Users.users range를 돌아야 한다.
 // 다른 고루틴이 Users.users를 간섭하므로 lock이 필요하다.

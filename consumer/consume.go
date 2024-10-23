@@ -2,12 +2,12 @@ package consumer
 
 import (
 	"animalized/packet"
-	"animalized/user"
+	"animalized/users"
 
 	"google.golang.org/protobuf/proto"
 )
 
-func Consume(u *user.User) error {
+func Consume(u *users.User) error {
 	n := u.InputQueue.Dequeue()
 
 	if n == nil {

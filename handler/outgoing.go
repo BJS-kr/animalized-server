@@ -2,10 +2,10 @@ package handler
 
 import (
 	"animalized/consumer"
-	"animalized/user"
+	"animalized/users"
 )
 
-func handleOutgoing(u *user.User, quit <-chan struct{}) {
+func handleOutgoing(u *users.User, quit <-chan struct{}) {
 	for {
 		select {
 		case <-quit:

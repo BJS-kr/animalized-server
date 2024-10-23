@@ -5,7 +5,7 @@ import (
 	"animalized/message"
 	"animalized/packet"
 	"animalized/queue"
-	"animalized/user"
+	"animalized/users"
 	"net"
 	"testing"
 
@@ -20,7 +20,7 @@ func TestConsume(t *testing.T) {
 		UserId: "test",
 	})
 
-	u := &user.User{
+	u := &users.User{
 		Id:         "test",
 		Conn:       server,
 		InputQueue: q,

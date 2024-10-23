@@ -1,4 +1,4 @@
-package user
+package users
 
 func (us *Users) InsertUser(u *User) {
 	us.mtx.Lock()
