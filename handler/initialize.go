@@ -10,8 +10,9 @@ import (
 	"net"
 )
 
-func initialize(conn net.Conn, buf *[]byte, inputBuf *bytes.Buffer) (*users.User, error) {
-	initInput, err := packet.ParseInput(conn, buf, inputBuf)
+func initialize(conn net.Conn) (*users.User, error) {
+	buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
+	initInput, err := packet.ParseInput(conn, &buf, inputBuf)
 
 	if err != nil {
 		return nil, err

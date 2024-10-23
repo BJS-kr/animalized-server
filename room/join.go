@@ -20,11 +20,9 @@ func (rs *Rooms) Join(roomName string, user *users.User) error {
 }
 
 func (r *Room) Join(user *users.User) error {
-	if len(r.participants) >= r.participantsLimit {
-		return errors.New("room full")
+	if err := r.users.InsertUser(user); err != nil {
+		return err
 	}
-
-	r.participants = append(r.participants, user)
 
 	return nil
 }

@@ -1,15 +1,21 @@
 package room
 
-import "errors"
+import (
+	"animalized/users"
+	"errors"
+)
 
-func (rs *Rooms) Create(roomName string, particiPantsLImit int) error {
+func (rs *Rooms) Create(roomName string, usersLimit int) error {
 	r := new(Room)
 
-	if particiPantsLImit > 8 {
-		return errors.New("room participant limit has exceeded")
+	if usersLimit > 8 {
+		return errors.New("room users limit has exceeded")
 	}
 
-	r.participantsLimit = particiPantsLImit
+	roomUsers := new(users.Users)
+	roomUsers.Max = usersLimit
+
+	r.users = roomUsers
 	r.status = READY
 
 	rs.Rooms[RoomName(roomName)] = r

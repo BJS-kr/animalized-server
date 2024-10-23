@@ -8,22 +8,22 @@ import (
 )
 
 type UserID string
-type ServerState struct {
+type GameState struct {
 	UserStates map[UserID]UserState
 }
 
-func New() *ServerState {
-	ss := new(ServerState)
+func NewGameState() *GameState {
+	ss := new(GameState)
 	ss.UserStates = make(map[UserID]UserState)
 
 	return ss
 }
 
-func (ss *ServerState) UpdateUserPosition(userId string, direction int32) {
+func (ss *GameState) UpdateUserPosition(userId string, direction int32) {
 	ss.UserStates[UserID(userId)].position.determinePosition(direction)
 }
 
-func (ss *ServerState) SignalServerState(inputProduceChannel chan<- *message.Input) {
+func (ss *GameState) SignalGameState(inputProduceChannel chan<- *message.Input) {
 	tick := time.Tick(SERVER_STATE_SIGNAL_INTERVAL)
 	tickMessage := &message.Input{
 		Type: packet.SERVER_STATE,
@@ -34,7 +34,7 @@ func (ss *ServerState) SignalServerState(inputProduceChannel chan<- *message.Inp
 	}
 }
 
-func (ss *ServerState) GetUserStates() []*message.UserState {
+func (ss *GameState) GetUserStates() []*message.UserState {
 	userStates := make([]*message.UserState, 0)
 
 	for _, us := range ss.UserStates {
@@ -52,7 +52,7 @@ func (ss *ServerState) GetUserStates() []*message.UserState {
 	return userStates
 }
 
-func (ss *ServerState) AddUserState(userId UserID) error {
+func (ss *GameState) AddUserState(userId UserID) error {
 	if _, ok := ss.UserStates[userId]; ok {
 		return errors.New("user id already exists")
 	}

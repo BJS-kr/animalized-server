@@ -14,22 +14,23 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+// TODO handler는 종단이다. 하위 모듈에서 변경이 일어나고 있기 때문에 구조가 완성된 후 handler의 테스트를 수정한다.
 func TestHandlers(t *testing.T) {
 	users := new(users.Users)
-	serverState := new(state.ServerState)
+	gameState := new(state.GameState)
 	server1, client1 := net.Pipe()
 	server2, client2 := net.Pipe()
 	inputQueue := queue.New[*message.Input]()
 	inputProduceChan := make(chan *message.Input)
 
 	// 글로벌 핸들러 시작
-	go handler.Receive(inputQueue, serverState, inputProduceChan)
+	go handler.Receive(inputQueue, gameState, inputProduceChan)
 	go handler.Propagate(inputQueue, users)
 
 	// 유저 핸들러 시작
 	go func() {
-		handler.StartHandlers(users, serverState, server1, inputProduceChan)
-		handler.StartHandlers(users, serverState, server2, inputProduceChan)
+		handler.StartHandlers(users, gameState, server1, inputProduceChan)
+		handler.StartHandlers(users, gameState, server2, inputProduceChan)
 	}()
 
 	// 두 명의 유저가 접속합니다.

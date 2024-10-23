@@ -15,5 +15,6 @@ type User struct {
 
 type Users struct {
 	mtx   sync.RWMutex
+	Max   int
 	users []*User
 }

@@ -1,12 +1,10 @@
 package users
 
 import (
-	"animalized/message"
-	"animalized/packet"
 	"slices"
 )
 
-func (us *Users) RemoveUser(u *User, inputProduceChannel chan<- *message.Input) {
+func (us *Users) RemoveUser(u *User) int {
 	us.mtx.Lock()
 	defer us.mtx.Unlock()
 
@@ -14,8 +12,5 @@ func (us *Users) RemoveUser(u *User, inputProduceChannel chan<- *message.Input) 
 		return eu.Id == u.Id
 	})
 
-	inputProduceChannel <- &message.Input{
-		Type:   packet.QUIT,
-		UserId: u.Id,
-	}
+	return len(us.users)
 }
