@@ -1,18 +1,25 @@
 package handler
 
 import (
+	"animalized/message"
 	"animalized/users"
-	"log/slog"
 	"net"
 )
 
-func JoinLobby(lobby *users.Users, conn net.Conn) {
+func JoinLobby(lobby *users.Users, conn net.Conn, lobbyInputChannel chan<- *message.Input) error {
 	u, err := initialize(conn)
 
 	if err != nil {
-		slog.Error(err.Error())
-		return
+		return err
 	}
 
-	lobby.InsertUser(u)
+	err = lobby.InsertUser(u)
+
+	if err != nil {
+		return err
+	}
+
+	go StartHandlers(lobby, u, lobbyInputChannel)
+
+	return nil
 }

@@ -5,6 +5,7 @@ const (
 	MOVE
 	ATTACK
 	SERVER_STATE
+	CREATE
 	JOIN
 	QUIT
 )

@@ -8,6 +8,7 @@ import (
 	"errors"
 )
 
+// TODO user conn에 대한 lobby goroutines를 종료시켜야 한다.
 func (rs *Rooms) Start(roomName string) error {
 	r, ok := rs.Rooms[RoomName(roomName)]
 
@@ -22,11 +23,13 @@ func (rs *Rooms) Start(roomName string) error {
 	gameState := state.NewGameState()
 
 	for u := range r.users.LockedRange() {
+		close(u.Quit)                // lobby goroutines를 종료
+		u.Quit = make(chan struct{}) // game을 빠져 나올 때 쓸 채널
 		gameState.AddUserState(state.UserID(u.Id))
-		handler.StartHandlers(r.users, u, gameState, inputProduceChannel)
+		handler.StartHandlers(r.users, u, inputProduceChannel)
 	}
 
-	go handler.Receive(mainInputs, gameState, inputProduceChannel)
+	go handler.ReceiveGameInput(mainInputs, gameState, inputProduceChannel)
 	go handler.Propagate(mainInputs, r.users)
 	go gameState.SignalGameState(inputProduceChannel)
 

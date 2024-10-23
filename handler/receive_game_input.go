@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func Receive(inputQueue *queue.Queue[*message.Input], gameState *state.GameState, receiveChannel <-chan *message.Input) {
+func ReceiveGameInput(inputQueue *queue.Queue[*message.Input], gameState *state.GameState, receiveChannel <-chan *message.Input) {
 	var prevContext, context int64
 
 	for input := range receiveChannel {

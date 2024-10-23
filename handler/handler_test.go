@@ -24,7 +24,7 @@ func TestHandlers(t *testing.T) {
 	inputProduceChan := make(chan *message.Input)
 
 	// 글로벌 핸들러 시작
-	go handler.Receive(inputQueue, gameState, inputProduceChan)
+	go handler.ReceiveGameInput(inputQueue, gameState, inputProduceChan)
 	go handler.Propagate(inputQueue, users)
 
 	// 유저 핸들러 시작

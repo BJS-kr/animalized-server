@@ -31,6 +31,7 @@ func initialize(conn net.Conn) (*users.User, error) {
 		Conn:       conn,
 		InputQueue: queue.New[*message.Input](),
 		Id:         initInput.UserId,
+		Quit:       make(chan struct{}),
 	}
 
 	return u, nil

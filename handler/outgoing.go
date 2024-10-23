@@ -5,10 +5,10 @@ import (
 	"animalized/users"
 )
 
-func handleOutgoing(u *users.User, quit <-chan struct{}) {
+func handleOutgoing(u *users.User) {
 	for {
 		select {
-		case <-quit:
+		case <-u.Quit:
 			return
 		default:
 			consumer.Consume(u)

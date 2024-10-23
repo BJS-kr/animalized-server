@@ -11,6 +11,7 @@ type User struct {
 	Conn       net.Conn
 	InputQueue *queue.Queue[*message.Input]
 	Id         string
+	Quit       chan struct{}
 }
 
 type Users struct {
