@@ -1,8 +1,8 @@
 package packet
 
 import (
+	"animalized/common"
 	"animalized/message"
-
 	"animalized/queue"
 	"animalized/users"
 	"bytes"
@@ -28,9 +28,11 @@ func Initialize(conn net.Conn) (*users.User, error) {
 	}
 
 	u := &users.User{
-		Conn:   conn,
-		Inputs: queue.New[*message.Input](),
-		Id:     initInput.UserId,
+		Conn: conn,
+		Id:   initInput.UserId,
+		Base: common.Base{
+			Inputs: queue.New[*message.Input](),
+		},
 	}
 
 	return u, nil

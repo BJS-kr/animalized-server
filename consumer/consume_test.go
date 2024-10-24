@@ -1,6 +1,7 @@
 package consumer_test
 
 import (
+	"animalized/common"
 	"animalized/consumer"
 	"animalized/message"
 	"animalized/packet"
@@ -21,9 +22,11 @@ func TestConsume(t *testing.T) {
 	})
 
 	u := &users.User{
-		Id:     "test",
-		Conn:   server,
-		Inputs: q,
+		Id:   "test",
+		Conn: server,
+		Base: common.Base{
+			Inputs: q,
+		},
 	}
 
 	input := new(message.Input)

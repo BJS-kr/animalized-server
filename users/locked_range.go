@@ -12,7 +12,7 @@ func (us *Users) LockedRange() func(YieldUser) {
 		us.mtx.RLock()
 		defer us.mtx.RUnlock()
 
-		for _, u := range us.users {
+		for _, u := range us.list {
 			if !yield(u) {
 				return
 			}

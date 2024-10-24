@@ -1,14 +1,14 @@
 package room
 
 import (
-	"animalized/common"
+	"animalized/users"
 )
 
 type RoomName string
 type RoomStatus int
 
 type Room struct {
-	common.Base
+	users.DistributableUsers
 	status RoomStatus
 }
 

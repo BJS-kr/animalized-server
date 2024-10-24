@@ -1,6 +1,6 @@
-package common
+package users
 
-func (b *Base) Propagate() {
+func (b *DistributableUsers) Distribute() {
 	for {
 		select {
 		case <-b.Stop:

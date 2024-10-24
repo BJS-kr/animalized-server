@@ -15,7 +15,7 @@ func New(max int) *Lobby {
 	l.rooms = rs
 
 	go l.Receive(l.handler)
-	go l.Propagate()
+	go l.Distribute()
 
 	return l
 }

@@ -21,7 +21,7 @@ func (rs *Rooms) Create(roomName string, usersLimit int) (*Room, error) {
 	rs.NameMap[RoomName(roomName)] = r
 
 	go r.Receive(r.handler)
-	go r.Propagate()
+	go r.Distribute()
 
 	return r, nil
 }

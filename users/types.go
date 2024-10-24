@@ -1,21 +1,24 @@
 package users
 
 import (
-	"animalized/message"
-	"animalized/queue"
+	"animalized/common"
 	"net"
 	"sync"
 )
 
-type User struct {
-	Conn   net.Conn
-	Inputs *queue.Queue[*message.Input]
-	Id     string
-	Stop   chan struct{}
+type DistributableUsers struct {
+	common.Base
+	Users *Users
 }
 
 type Users struct {
-	mtx   sync.RWMutex
-	Max   int
-	users []*User
+	mtx  sync.RWMutex
+	Max  int
+	list []*User
+}
+
+type User struct {
+	common.Base
+	Conn net.Conn
+	Id   string
 }

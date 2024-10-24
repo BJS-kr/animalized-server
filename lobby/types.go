@@ -1,11 +1,11 @@
 package lobby
 
 import (
-	"animalized/common"
 	"animalized/room"
+	"animalized/users"
 )
 
 type Lobby struct {
-	common.Base
+	users.DistributableUsers
 	rooms *room.Rooms
 }
