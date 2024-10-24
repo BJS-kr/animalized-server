@@ -20,8 +20,7 @@ func (rs *Rooms) Create(roomName string, usersLimit int) (*Room, error) {
 	r.status = READY
 	rs.NameMap[RoomName(roomName)] = r
 
-	go r.Receive(r.handler)
-	go r.Distribute()
+	r.StartStreaming(r.handler)
 
 	return r, nil
 }

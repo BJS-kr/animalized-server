@@ -20,11 +20,9 @@ func (rs *Rooms) Join(roomName string, user *users.User) error {
 }
 
 func (r *Room) Join(user *users.User) error {
-	if err := r.Users.InsertUser(user); err != nil {
+	if err := r.Users.Join(user, r.InputChannel); err != nil {
 		return err
 	}
-
-	users.StartHandlers(r.Users, user, r.InputChannel)
 
 	return nil
 }

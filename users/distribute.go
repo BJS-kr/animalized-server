@@ -1,18 +1,18 @@
 package users
 
-func (b *DistributableUsers) Distribute() {
+func (du *DistributableUsers) Distribute() {
 	for {
 		select {
-		case <-b.Stop:
+		case <-du.Stop:
 			return
 		default:
-			n := b.Inputs.Dequeue()
+			n := du.Inputs.Dequeue()
 
 			if n == nil {
 				continue
 			}
 
-			for u := range b.Users.LockedRange() {
+			for u := range du.Users.LockedRange() {
 				u.Inputs.Enqueue(n.Value)
 			}
 		}

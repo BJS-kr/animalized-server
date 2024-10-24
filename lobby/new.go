@@ -14,8 +14,7 @@ func New(max int) *Lobby {
 	l.Users.Max = max
 	l.rooms = rs
 
-	go l.Receive(l.handler)
-	go l.Distribute()
+	l.StartStreaming(l.handler)
 
 	return l
 }

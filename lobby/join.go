@@ -5,13 +5,11 @@ import (
 )
 
 func (l *Lobby) Join(user *users.User) error {
-	err := l.Users.InsertUser(user)
+	err := l.Users.Join(user, l.InputChannel)
 
 	if err != nil {
 		return err
 	}
-
-	users.StartHandlers(l.Users, user, l.InputChannel)
 
 	return nil
 }

@@ -12,7 +12,7 @@ func (us *Users) Quit(user *User) int {
 		return u.Id == user.Id
 	})
 
-	close(user.Stop)
+	user.StopPacketHandlers()
 
 	return len(us.list)
 }

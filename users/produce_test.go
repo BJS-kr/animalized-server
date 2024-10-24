@@ -49,7 +49,7 @@ func TestProduce(t *testing.T) {
 	}()
 
 	for {
-		if err := users.ProduceInput(user, &buf, inputBuf, inputProduceChan); err != nil {
+		if err := user.ProduceInput(&buf, inputBuf, inputProduceChan); err != nil {
 			break
 		}
 	}

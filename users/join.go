@@ -2,10 +2,11 @@ package users
 
 import (
 	"animalized/common"
+	"animalized/message"
 	"errors"
 )
 
-func (us *Users) InsertUser(u *User) error {
+func (us *Users) Join(u *User, inputProduceChannel chan<- *message.Input) error {
 	us.mtx.Lock()
 	defer us.mtx.Unlock()
 
@@ -14,6 +15,7 @@ func (us *Users) InsertUser(u *User) error {
 	}
 
 	u.Stop = make(chan common.Signal)
+	u.StartPacketHandlers(us, inputProduceChannel)
 	us.list = append(us.list, u)
 
 	return nil
