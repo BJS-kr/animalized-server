@@ -1,7 +1,6 @@
 package room
 
 import (
-	"animalized/handler"
 	"animalized/users"
 	"errors"
 )
@@ -25,7 +24,7 @@ func (r *Room) Join(user *users.User) error {
 		return err
 	}
 
-	handler.StartHandlers(r.Users, user, r.InputChannel)
+	users.StartHandlers(r.Users, user, r.InputChannel)
 
 	return nil
 }

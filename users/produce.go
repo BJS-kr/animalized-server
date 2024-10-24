@@ -1,9 +1,9 @@
-package producer
+package users
 
 import (
 	"animalized/message"
 	"animalized/packet"
-	"animalized/users"
+
 	"bytes"
 	"time"
 )
@@ -12,7 +12,7 @@ import (
 // 복수형인 이유는 패킷파싱할 때 일단 커넥션 타고 있는 것들은 싹 순회하고 넣을 예정이라서
 // 일단 지금 생각으로는 buffered channel로 넣으면 될 것 같다.
 // 패킷 타입은 하나로 통일한다. 로직을 간단화하고 시간순서 맞추기도 편하다.
-func ProduceInput(u *users.User, buf *[]byte, inputBuf *bytes.Buffer, inputProduceChannel chan<- *message.Input) error {
+func ProduceInput(u *User, buf *[]byte, inputBuf *bytes.Buffer, inputProduceChannel chan<- *message.Input) error {
 	input, err := packet.ParseInput(u.Conn, buf, inputBuf)
 
 	if err != nil {

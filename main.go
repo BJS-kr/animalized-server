@@ -2,7 +2,7 @@ package main
 
 import (
 	"animalized/lobby"
-	"animalized/packet"
+	"animalized/users"
 
 	"log/slog"
 	"net"
@@ -30,7 +30,7 @@ func main() {
 }
 
 func handle(conn net.Conn, lobby *lobby.Lobby) error {
-	u, err := packet.Initialize(conn)
+	u, err := users.Initialize(conn)
 
 	if err != nil {
 		return err

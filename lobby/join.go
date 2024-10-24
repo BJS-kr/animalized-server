@@ -1,7 +1,6 @@
 package lobby
 
 import (
-	"animalized/handler"
 	"animalized/users"
 )
 
@@ -12,7 +11,7 @@ func (l *Lobby) Join(user *users.User) error {
 		return err
 	}
 
-	handler.StartHandlers(l.Users, user, l.InputChannel)
+	users.StartHandlers(l.Users, user, l.InputChannel)
 
 	return nil
 }

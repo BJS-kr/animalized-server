@@ -1,9 +1,9 @@
-package producer_test
+package users_test
 
 import (
 	"animalized/message"
 	"animalized/packet"
-	"animalized/producer"
+
 	"animalized/queue"
 	"animalized/users"
 	"bytes"
@@ -49,7 +49,7 @@ func TestProduce(t *testing.T) {
 	}()
 
 	for {
-		if err := producer.ProduceInput(user, &buf, inputBuf, inputProduceChan); err != nil {
+		if err := users.ProduceInput(user, &buf, inputBuf, inputProduceChan); err != nil {
 			break
 		}
 	}

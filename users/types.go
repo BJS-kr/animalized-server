@@ -22,3 +22,5 @@ type User struct {
 	Conn net.Conn
 	Id   string
 }
+
+type OutgoingHandler func(*User)

@@ -1,8 +1,8 @@
-package consumer_test
+package users_test
 
 import (
 	"animalized/common"
-	"animalized/consumer"
+
 	"animalized/message"
 	"animalized/packet"
 	"animalized/queue"
@@ -32,7 +32,7 @@ func TestConsume(t *testing.T) {
 	input := new(message.Input)
 
 	go func() {
-		consumer.Consume(u)
+		users.Consume(u)
 	}()
 
 	buf := make([]byte, packet.BUFFER_SIZE)

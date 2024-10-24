@@ -1,4 +1,4 @@
-package producer
+package users
 
 import (
 	"animalized/message"
