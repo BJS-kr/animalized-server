@@ -7,7 +7,7 @@ import (
 )
 
 type DistributableUsers struct {
-	common.Base
+	common.Distributable
 	Users *Users
 }
 
@@ -18,7 +18,7 @@ type Users struct {
 }
 
 type User struct {
-	common.Base
+	common.Distributable
 	Conn net.Conn
 	Id   string
 }

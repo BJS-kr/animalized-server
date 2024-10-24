@@ -4,10 +4,10 @@ import (
 	"log/slog"
 )
 
-func (b *Base) Receive(handler Handler) {
-	for input := range b.InputChannel {
+func (d *Distributable) Receive(handler Handler) {
+	for input := range d.InputChannel {
 		select {
-		case <-b.Stop:
+		case <-d.Stop:
 			return
 		default:
 			input, err := handler(input)
@@ -17,7 +17,7 @@ func (b *Base) Receive(handler Handler) {
 				continue
 			}
 
-			b.Inputs.Enqueue(input)
+			d.Inputs.Enqueue(input)
 		}
 	}
 }

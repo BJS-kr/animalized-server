@@ -30,7 +30,7 @@ func Initialize(conn net.Conn) (*User, error) {
 	u := &User{
 		Conn: conn,
 		Id:   initInput.UserId,
-		Base: common.Base{
+		Distributable: common.Distributable{
 			Inputs: queue.New[*message.Input](),
 		},
 	}

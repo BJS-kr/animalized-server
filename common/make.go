@@ -5,8 +5,8 @@ import (
 	"animalized/queue"
 )
 
-func (b *Base) Make() {
-	b.InputChannel = make(chan *message.Input)
-	b.Inputs = queue.New[*message.Input]()
-	b.Stop = make(chan Signal)
+func (d *Distributable) Make() {
+	d.InputChannel = make(chan *message.Input)
+	d.Inputs = queue.New[*message.Input]()
+	d.Stop = make(chan Signal)
 }

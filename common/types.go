@@ -5,7 +5,7 @@ import (
 	"animalized/queue"
 )
 
-type Base struct {
+type Distributable struct {
 	Inputs       *queue.Queue[*message.Input]
 	InputChannel chan *message.Input
 	Stop         chan Signal

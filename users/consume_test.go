@@ -24,7 +24,7 @@ func TestConsume(t *testing.T) {
 	u := &users.User{
 		Id:   "test",
 		Conn: server,
-		Base: common.Base{
+		Distributable: common.Distributable{
 			Inputs: q,
 		},
 	}
