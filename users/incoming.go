@@ -20,7 +20,6 @@ func (u *User) handleIncoming(users *Users, inputProduceChannel chan<- *message.
 				slog.Error(err.Error())
 				users.Quit(u)
 				u.Conn.Close()
-				close(u.Stop)
 				return
 			}
 		}
