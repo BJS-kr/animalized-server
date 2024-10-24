@@ -8,7 +8,7 @@ import (
 )
 
 func Consume(u *users.User) error {
-	n := u.InputQueue.Dequeue()
+	n := u.Inputs.Dequeue()
 
 	if n == nil {
 		return nil

@@ -21,9 +21,9 @@ func TestConsume(t *testing.T) {
 	})
 
 	u := &users.User{
-		Id:         "test",
-		Conn:       server,
-		InputQueue: q,
+		Id:     "test",
+		Conn:   server,
+		Inputs: q,
 	}
 
 	input := new(message.Input)

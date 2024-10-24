@@ -8,7 +8,7 @@ import (
 func handleOutgoing(u *users.User) {
 	for {
 		select {
-		case <-u.Quit:
+		case <-u.Stop:
 			return
 		default:
 			consumer.Consume(u)

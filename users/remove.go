@@ -4,13 +4,15 @@ import (
 	"slices"
 )
 
-func (us *Users) RemoveUser(u *User) int {
+func (us *Users) Quit(user *User) int {
 	us.mtx.Lock()
 	defer us.mtx.Unlock()
 
-	us.users = slices.DeleteFunc(us.users, func(eu *User) bool {
-		return eu.Id == u.Id
+	us.users = slices.DeleteFunc(us.users, func(u *User) bool {
+		return u.Id == user.Id
 	})
+
+	close(user.Stop)
 
 	return len(us.users)
 }

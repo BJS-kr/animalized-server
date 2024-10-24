@@ -8,10 +8,10 @@ import (
 )
 
 type User struct {
-	Conn       net.Conn
-	InputQueue *queue.Queue[*message.Input]
-	Id         string
-	Quit       chan struct{}
+	Conn   net.Conn
+	Inputs *queue.Queue[*message.Input]
+	Id     string
+	Stop   chan struct{}
 }
 
 type Users struct {

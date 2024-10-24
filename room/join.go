@@ -1,12 +1,13 @@
 package room
 
 import (
+	"animalized/handler"
 	"animalized/users"
 	"errors"
 )
 
 func (rs *Rooms) Join(roomName string, user *users.User) error {
-	r, ok := rs.RoomMap[RoomName(roomName)]
+	r, ok := rs.NameMap[RoomName(roomName)]
 
 	if !ok {
 		return errors.New("room not exists")
@@ -20,9 +21,11 @@ func (rs *Rooms) Join(roomName string, user *users.User) error {
 }
 
 func (r *Room) Join(user *users.User) error {
-	if err := r.users.InsertUser(user); err != nil {
+	if err := r.Users.InsertUser(user); err != nil {
 		return err
 	}
+
+	handler.StartHandlers(r.Users, user, r.InputChannel)
 
 	return nil
 }

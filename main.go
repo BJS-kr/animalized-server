@@ -2,24 +2,20 @@ package main
 
 import (
 	"animalized/lobby"
-	"animalized/message"
+	"animalized/packet"
 
 	"log/slog"
 	"net"
 )
 
 func main() {
-	lobby := lobby.New(100)
-	lobbyInputChannel := make(chan *message.Input, 100)
-
 	listener, err := net.Listen("tcp", "127.0.0.1:9988")
 
 	if err != nil {
 		panic(err)
 	}
 
-	go lobby.ReceiveLobbyInput(lobbyInputChannel)
-	lobby.Propagate()
+	lobby := lobby.New(100)
 
 	for {
 		conn, err := listener.Accept()
@@ -29,6 +25,22 @@ func main() {
 			continue
 		}
 
-		go lobby.JoinLobby(conn, lobbyInputChannel)
+		go handle(conn, lobby)
 	}
+}
+
+func handle(conn net.Conn, lobby *lobby.Lobby) error {
+	u, err := packet.Initialize(conn)
+
+	if err != nil {
+		return err
+	}
+
+	err = lobby.Join(u)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

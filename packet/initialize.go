@@ -28,10 +28,9 @@ func Initialize(conn net.Conn) (*users.User, error) {
 	}
 
 	u := &users.User{
-		Conn:       conn,
-		InputQueue: queue.New[*message.Input](),
-		Id:         initInput.UserId,
-		Quit:       make(chan struct{}),
+		Conn:   conn,
+		Inputs: queue.New[*message.Input](),
+		Id:     initInput.UserId,
 	}
 
 	return u, nil

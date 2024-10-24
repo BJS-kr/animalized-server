@@ -10,6 +10,7 @@ func (us *Users) InsertUser(u *User) error {
 		return errors.New("users max capacity reached")
 	}
 
+	u.Stop = make(chan struct{})
 	us.users = append(us.users, u)
 
 	return nil

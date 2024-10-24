@@ -1,12 +1,11 @@
 package room
 
 import (
-	"animalized/users"
 	"errors"
 )
 
 func (rs *Rooms) Create(roomName string, usersLimit int) (*Room, error) {
-	if r, ok := rs.RoomMap[RoomName(roomName)]; ok {
+	if r, ok := rs.NameMap[RoomName(roomName)]; ok {
 		return r, errors.New("room already exists")
 	}
 
@@ -16,13 +15,13 @@ func (rs *Rooms) Create(roomName string, usersLimit int) (*Room, error) {
 		return r, errors.New("room users limit has exceeded")
 	}
 
-	roomUsers := new(users.Users)
-	roomUsers.Max = usersLimit
-
-	r.users = roomUsers
+	r.Make()
+	r.Users.Max = usersLimit
 	r.status = READY
+	rs.NameMap[RoomName(roomName)] = r
 
-	rs.RoomMap[RoomName(roomName)] = r
+	go r.Receive(r.handler)
+	go r.Propagate()
 
 	return r, nil
 }
