@@ -1,6 +1,7 @@
 package main
 
 import (
+	"animalized/controller"
 	"animalized/lobby"
 	"animalized/users"
 
@@ -15,7 +16,7 @@ func main() {
 		panic(err)
 	}
 
-	lobby := lobby.New(100)
+	c := controller.New(100)
 
 	for {
 		conn, err := listener.Accept()
@@ -25,7 +26,7 @@ func main() {
 			continue
 		}
 
-		go handle(conn, lobby)
+		go handle(conn, c.Lobby)
 	}
 }
 

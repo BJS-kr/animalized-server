@@ -1,4 +1,4 @@
-package lobby
+package controller
 
 import (
 	"animalized/message"
@@ -6,8 +6,8 @@ import (
 	"errors"
 )
 
-func (l *Lobby) handler(input *message.Input) (*message.Input, error) {
-	u := l.Users.FindUserById(input.UserId)
+func (c *Controller) handler(input *message.Input) (*message.Input, error) {
+	u := c.Users.FindUserById(input.UserId)
 
 	if u == nil {
 		return nil, errors.New("user not found")
@@ -19,29 +19,29 @@ func (l *Lobby) handler(input *message.Input) (*message.Input, error) {
 	case packet.LOBBY_STATUS:
 
 	case packet.CREATE:
-		r, err := l.rooms.Create(*input.RoomName, int(*input.UsersLimit))
+		r, err := c.Rooms.Create(*input.RoomName, int(*input.UsersLimit))
 
 		if err != nil {
 			return nil, err
 		}
 
-		err = l.rooms.Join(*input.RoomName, u)
+		err = c.Rooms.Join(*input.RoomName, u)
 
 		if err != nil {
 
-			l.rooms.RemoveRoom(r)
+			c.Rooms.RemoveRoom(r)
 			return nil, err
 		}
 
-		l.Users.Quit(u)
+		c.Lobby.Users.Quit(u)
 	case packet.JOIN:
-		err := l.rooms.Join(*input.RoomName, u)
+		err := c.Rooms.Join(*input.RoomName, u)
 
 		if err != nil {
 			return nil, err
 		}
 
-		l.Users.Quit(u)
+		c.Lobby.Users.Quit(u)
 	}
 
 	return input, nil
