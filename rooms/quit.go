@@ -12,7 +12,11 @@ func (rs *Rooms) Quit(roomName string, user *users.User) error {
 		return errors.New("room does not exists")
 	}
 
-	remain := r.Quit(user)
+	remain, err := r.Quit(user)
+
+	if err != nil {
+		return err
+	}
 
 	if remain <= 0 {
 		delete(rs.NameMap, RoomName(roomName))
@@ -21,6 +25,6 @@ func (rs *Rooms) Quit(roomName string, user *users.User) error {
 	return nil
 }
 
-func (r *Room) Quit(user *users.User) int {
+func (r *Room) Quit(user *users.User) (int, error) {
 	return r.Users.Quit(user)
 }

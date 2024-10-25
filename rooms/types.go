@@ -1,6 +1,7 @@
 package rooms
 
 import (
+	"animalized/game"
 	"animalized/users"
 )
 
@@ -9,7 +10,8 @@ type RoomStatus int
 
 type Room struct {
 	users.DistributableUsers
-	status RoomStatus
+	Status RoomStatus
+	Game   *game.Game
 }
 
 type Rooms struct {

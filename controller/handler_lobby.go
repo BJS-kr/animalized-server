@@ -3,23 +3,34 @@ package controller
 import (
 	"animalized/message"
 	"animalized/packet"
-	"errors"
 )
 
-func (c *Controller) handler(input *message.Input) (*message.Input, error) {
-	u := c.Users.FindUserById(input.UserId)
+func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) {
+	u, err := c.Users.FindUserById(input.UserId)
 
-	if u == nil {
-		return nil, errors.New("user not found")
+	if err != nil {
+		return nil, err
 	}
 
 	switch input.Type {
 	// 유저가 로그인 할 때
 	// 누군가가 방에 JOIN하거나 QUIT할 때마다 통전송
 	case packet.LOBBY_STATUS:
+		rss := make([]*message.RoomStatus, len(c.Rooms.NameMap))
+		for name, room := range c.Rooms.NameMap {
+			rss = append(rss, &message.RoomStatus{
+				Name:       string(name),
+				UsersLimit: int32(room.Users.Max),
+				UsersCount: int32(room.Users.LockedLen()),
+			})
+		}
 
+		input.LobbyStatus = &message.LobbyStatus{
+			RoomStatuses: rss,
+		}
 	case packet.CREATE:
 		r, err := c.Rooms.Create(*input.RoomName, int(*input.UsersLimit))
+		r.StartStreaming(c.roomHandler)
 
 		if err != nil {
 			return nil, err
@@ -28,8 +39,8 @@ func (c *Controller) handler(input *message.Input) (*message.Input, error) {
 		err = c.Rooms.Join(*input.RoomName, u)
 
 		if err != nil {
-
 			c.Rooms.RemoveRoom(r)
+
 			return nil, err
 		}
 

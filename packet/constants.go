@@ -11,6 +11,7 @@ const (
 	QUIT
 	ROOM_STATUS
 	START
+	FINISH
 )
 
 const (

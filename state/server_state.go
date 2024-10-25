@@ -12,11 +12,11 @@ type GameState struct {
 	UserStates map[UserID]UserState
 }
 
-func NewGameState() *GameState {
-	ss := new(GameState)
-	ss.UserStates = make(map[UserID]UserState)
+func New() *GameState {
+	gs := new(GameState)
+	gs.UserStates = make(map[UserID]UserState)
 
-	return ss
+	return gs
 }
 
 func (ss *GameState) UpdateUserPosition(userId string, direction int32) {

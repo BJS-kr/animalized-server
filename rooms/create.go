@@ -15,9 +15,8 @@ func (rs *Rooms) Create(roomName string, usersLimit int) (*Room, error) {
 		return r, errors.New("room users limit has exceeded")
 	}
 
-	r.Make()
-	r.Users.Max = usersLimit
-	r.status = READY
+	r.MakeWithUsers(usersLimit)
+	r.Status = READY
 	rs.NameMap[RoomName(roomName)] = r
 
 	return r, nil
