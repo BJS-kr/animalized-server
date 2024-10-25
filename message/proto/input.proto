@@ -12,9 +12,9 @@ message Input {
   optional int64 prev_context = 5;
   optional string room_name = 6;
   optional int32 users_limit = 7;
-  repeated UserState user_states = 8;
+  optional LobbyStatus lobby_status = 8;
+  repeated UserState user_states = 9;
 }
-
 
 message UserState {
   Position position = 1;
@@ -24,4 +24,14 @@ message UserState {
 message Position {
   int32 x = 1;
   int32 y = 2;
+}
+
+message LobbyStatus {
+  repeated RoomStatus room_statuses = 1;
+}
+
+message RoomStatus {
+  string name = 1;
+  int32 users_limit = 2;
+  int32 users_count = 3;
 }
