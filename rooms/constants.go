@@ -1,6 +1,6 @@
 package rooms
 
-const PARTICIPANTS_LIMIT = 8
+const MAX_USERS_LIMIT = 8
 
 const (
 	READY RoomStatus = iota + 1

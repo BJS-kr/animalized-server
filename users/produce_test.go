@@ -24,7 +24,7 @@ func TestProduce(t *testing.T) {
 		Conn: server,
 		Id:   "test",
 	}
-
+	user.SetProduceChannel(inputProduceChan)
 	go func() {
 		input := &message.Input{
 			Type:   1,
@@ -49,7 +49,7 @@ func TestProduce(t *testing.T) {
 	}()
 
 	for {
-		if err := user.ProduceInput(&buf, inputBuf, inputProduceChan); err != nil {
+		if _, err := user.ProduceInput(&buf, inputBuf); err != nil {
 			break
 		}
 	}

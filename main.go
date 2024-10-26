@@ -37,7 +37,7 @@ func handle(conn net.Conn, lobby *lobby.Lobby) error {
 		return err
 	}
 
-	err = lobby.Join(u)
+	err = lobby.InitialJoin(u)
 
 	if err != nil {
 		return err

@@ -11,7 +11,7 @@ message Input {
   optional int64 context = 4;
   optional int64 prev_context = 5;
   optional string room_name = 6;
-  optional int32 users_limit = 7;
+  optional int32 max_users = 7;
   optional LobbyStatus lobby_status = 8;
   repeated UserState user_states = 9;
 }
@@ -32,6 +32,6 @@ message LobbyStatus {
 
 message RoomStatus {
   string name = 1;
-  int32 users_limit = 2;
+  int32 max_users = 2;
   int32 users_count = 3;
 }

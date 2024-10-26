@@ -3,6 +3,7 @@ package controller
 import (
 	"animalized/message"
 	"animalized/packet"
+	"errors"
 )
 
 func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) {
@@ -20,7 +21,7 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 		for name, room := range c.Rooms.NameMap {
 			rss = append(rss, &message.RoomStatus{
 				Name:       string(name),
-				UsersLimit: int32(room.Users.Max),
+				MaxUsers:   int32(room.Users.Max),
 				UsersCount: int32(room.Users.LockedLen()),
 			})
 		}
@@ -29,8 +30,26 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 			RoomStatuses: rss,
 		}
 	case packet.CREATE:
-		r, err := c.Rooms.Create(*input.RoomName, int(*input.UsersLimit))
+		if input.RoomName == nil {
+			return nil, errors.New("room name not provided when creating room")
+		}
+		if input.MaxUsers == nil {
+			return nil, errors.New("max users not provided when creating room")
+		}
+
+		r, err := c.Rooms.Create(*input.RoomName, int(*input.MaxUsers))
+
+		if err != nil {
+			return nil, err
+		}
+
 		r.StartStreaming(c.roomHandler)
+	case packet.JOIN:
+		if input.RoomName == nil {
+			return nil, errors.New("room name not provided when join room")
+		}
+
+		err := c.Lobby.Quit(u)
 
 		if err != nil {
 			return nil, err
@@ -39,20 +58,10 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 		err = c.Rooms.Join(*input.RoomName, u)
 
 		if err != nil {
-			c.Rooms.RemoveRoom(r)
-
+			c.Lobby.Join(u)
 			return nil, err
 		}
 
-		c.Lobby.Users.Quit(u)
-	case packet.JOIN:
-		err := c.Rooms.Join(*input.RoomName, u)
-
-		if err != nil {
-			return nil, err
-		}
-
-		c.Lobby.Users.Quit(u)
 	}
 
 	return input, nil

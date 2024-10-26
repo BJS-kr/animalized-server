@@ -1,9 +1,9 @@
 package users
 
-func New(usersLimit int) *Users {
+func New(maxUsers int) *Users {
 	us := new(Users)
-	us.list = make([]*User, 0)
-	us.Max = usersLimit
+	us.list = make([]*User, 0, maxUsers)
+	us.Max = maxUsers
 
 	return us
 }

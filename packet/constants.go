@@ -12,6 +12,7 @@ const (
 	ROOM_STATUS
 	START
 	FINISH
+	STOP
 )
 
 const (

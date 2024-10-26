@@ -1,6 +1,8 @@
 package rooms
 
 import (
+	"animalized/message"
+	"animalized/packet"
 	"animalized/users"
 	"errors"
 )
@@ -16,6 +18,13 @@ func (rs *Rooms) Join(roomName string, user *users.User) error {
 		return err
 	}
 
+	r.Inputs.Enqueue(&message.Input{
+		UserId:   user.Id,
+		Type:     packet.JOIN,
+		RoomName: &roomName,
+	})
+
+	// send when join or qui
 	return nil
 }
 

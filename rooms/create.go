@@ -4,18 +4,18 @@ import (
 	"errors"
 )
 
-func (rs *Rooms) Create(roomName string, usersLimit int) (*Room, error) {
+func (rs *Rooms) Create(roomName string, maxUsers int) (*Room, error) {
 	if r, ok := rs.NameMap[RoomName(roomName)]; ok {
 		return r, errors.New("room already exists")
 	}
 
 	r := new(Room)
 
-	if usersLimit > 8 {
+	if maxUsers > MAX_USERS_LIMIT {
 		return r, errors.New("room users limit has exceeded")
 	}
 
-	r.MakeWithUsers(usersLimit)
+	r.MakeWithUsers(maxUsers)
 	r.Status = READY
 	rs.NameMap[RoomName(roomName)] = r
 

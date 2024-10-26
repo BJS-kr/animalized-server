@@ -5,10 +5,10 @@ import (
 	"animalized/rooms"
 )
 
-func New(usersLimit int) *Controller {
+func New(maxUsers int) *Controller {
 	c := new(Controller)
 
-	c.Lobby = lobby.New(usersLimit)
+	c.Lobby = lobby.New(maxUsers)
 	c.Rooms = rooms.New()
 
 	c.Lobby.StartStreaming(c.lobbyHandler)

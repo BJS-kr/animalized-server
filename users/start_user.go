@@ -1,10 +1,6 @@
 package users
 
-import (
-	"animalized/message"
-)
-
-func (u *User) StartPacketHandlers(users *Users, inputProduceChannel chan<- *message.Input) {
-	go u.handleIncoming(users, inputProduceChannel)
+func (u *User) StartPacketHandlers(users *Users) {
+	go u.handleIncoming(users)
 	go u.handleOutgoing()
 }

@@ -1,6 +1,6 @@
 package users
 
-func (du *DistributableUsers) MakeWithUsers(usersLimit int) {
+func (du *DistributableUsers) MakeWithUsers(maxUsers int) {
 	du.Make()
-	du.Users = New(usersLimit)
+	du.Users = New(maxUsers)
 }

@@ -25,7 +25,5 @@ func (us *Users) Quit(user *User) (int, error) {
 		return len(us.list), errors.New("failed to quit. user not found")
 	}
 
-	found.StopPacketHandlers()
-
 	return len(us.list), nil
 }

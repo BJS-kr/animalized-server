@@ -2,6 +2,7 @@ package users
 
 import (
 	"animalized/common"
+	"animalized/message"
 	"net"
 	"sync"
 )
@@ -19,8 +20,9 @@ type Users struct {
 
 type User struct {
 	common.Distributable
-	Conn net.Conn
-	Id   string
+	Conn           net.Conn
+	Id             string
+	produceChannel chan<- *message.Input
 }
 
 type OutgoingHandler func(*User)

@@ -15,7 +15,7 @@ func (us *Users) Join(u *User, inputProduceChannel chan<- *message.Input) error 
 	}
 
 	u.Stop = make(chan common.Signal)
-	u.StartPacketHandlers(us, inputProduceChannel)
+	u.SetProduceChannel(inputProduceChannel)
 	us.list = append(us.list, u)
 
 	return nil

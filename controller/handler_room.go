@@ -35,13 +35,13 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 			return nil, err
 		}
 
-		err = c.Lobby.Users.Join(u, c.Lobby.InputChannel)
+		_, err = r.Users.Quit(u)
 
 		if err != nil {
 			return nil, err
 		}
 
-		_, err = r.Users.Quit(u)
+		err = c.Lobby.Join(u)
 
 		if err != nil {
 			return nil, err
