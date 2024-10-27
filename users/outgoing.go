@@ -13,11 +13,11 @@ func (u *User) handleOutgoing() {
 		case <-u.Stop:
 			return
 		default:
-			n := u.Inputs.Dequeue()
-
-			if n == nil {
+			if u.Inputs.Len() == 0 {
 				continue
 			}
+
+			n := u.Inputs.Dequeue()
 
 			message, err := proto.Marshal(n.Value)
 
@@ -26,7 +26,12 @@ func (u *User) handleOutgoing() {
 				continue
 			}
 
-			u.Conn.Write(append(message, packet.INPUT_PACKET_DELIMITER))
+			_, err = u.Conn.Write(append(message, packet.INPUT_PACKET_DELIMITER))
+
+			if err != nil {
+				slog.Error(err.Error())
+				return
+			}
 		}
 	}
 }

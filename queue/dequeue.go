@@ -1,5 +1,7 @@
 package queue
 
+import "sync/atomic"
+
 func (q *Queue[T]) Dequeue() *Node[T] {
 	// spin형식이라 lock-contention이 높으면 안 좋을 것 같다.
 	// 다만, 내 서버의 경우에는 절대 높지 않다. 고루틴 하나가
@@ -20,6 +22,7 @@ func (q *Queue[T]) Dequeue() *Node[T] {
 
 		if q.head.CompareAndSwap(t, t.next.Load()) {
 			q.pool.Put(t)
+			atomic.AddUint32(&q.len, ^uint32(0))
 			return t
 		}
 	}

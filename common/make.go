@@ -6,7 +6,7 @@ import (
 )
 
 func (d *Distributable) Make() {
-	d.InputChannel = make(chan *message.Input)
+	d.InputChannel = make(chan *message.Input, 100)
 	d.Inputs = queue.New[*message.Input]()
 	d.Stop = make(chan Signal)
 }

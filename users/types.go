@@ -9,7 +9,7 @@ import (
 
 type DistributableUsers struct {
 	common.Distributable
-	Users *Users
+	*Users
 }
 
 type Users struct {
@@ -24,5 +24,3 @@ type User struct {
 	Id             string
 	produceChannel chan<- *message.Input
 }
-
-type OutgoingHandler func(*User)

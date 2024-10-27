@@ -7,12 +7,6 @@ import (
 )
 
 func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) {
-	u, err := c.Users.FindUserById(input.UserId)
-
-	if err != nil {
-		return nil, err
-	}
-
 	switch input.Type {
 	// 유저가 로그인 할 때
 	// 누군가가 방에 JOIN하거나 QUIT할 때마다 통전송
@@ -49,7 +43,7 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 			return nil, errors.New("room name not provided when join room")
 		}
 
-		err := c.Lobby.Quit(u)
+		u, err := c.Lobby.Quit(input.UserId)
 
 		if err != nil {
 			return nil, err
@@ -61,7 +55,6 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 			c.Lobby.Join(u)
 			return nil, err
 		}
-
 	}
 
 	return input, nil

@@ -17,6 +17,10 @@ func (d *Distributable) Receive(handler Handler) {
 				continue
 			}
 
+			if input == nil {
+				continue
+			}
+
 			d.Inputs.Enqueue(input)
 		}
 	}

@@ -3,9 +3,9 @@ package users
 import (
 	"animalized/message"
 	"animalized/packet"
+	"time"
 
 	"bytes"
-	"time"
 )
 
 // 유저로부터 수집된 인풋들을 중계 스택으로 쌓는다.
@@ -19,7 +19,7 @@ func (u *User) ProduceInput(buf *[]byte, inputBuf *bytes.Buffer) (*message.Input
 		return nil, err
 	}
 
-	err = validateInput(input, u.Id)
+	err = u.validateInput(input)
 
 	if err != nil {
 		return nil, err

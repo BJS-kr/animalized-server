@@ -6,8 +6,8 @@ import (
 	"errors"
 )
 
-func validateInput(input *message.Input, userId string) error {
-	if input.UserId != userId {
+func (u *User) validateInput(input *message.Input) error {
+	if input.UserId != u.Id {
 		return errors.New("user id not matched")
 	}
 

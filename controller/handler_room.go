@@ -9,10 +9,14 @@ import (
 )
 
 func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
+	if input.RoomName == nil {
+		return nil, errors.New("room name not provided in room handler")
+	}
+
 	r, ok := c.Rooms.NameMap[rooms.RoomName(*input.RoomName)]
 
 	if !ok {
-		return nil, errors.New("room not found")
+		return nil, errors.New("room not found in room handler")
 	}
 
 	switch input.Type {
@@ -29,23 +33,21 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 		r.Game.StartStreaming(c.makeHandleGame(r))
 		r.Status = rooms.PLAYING
 	case packet.QUIT:
-		u, err := r.Users.FindUserById(input.UserId)
-
-		if err != nil {
-			return nil, err
-		}
-
-		_, err = r.Users.Quit(u)
+		u, err := c.Rooms.Quit(*input.RoomName, input.UserId)
 
 		if err != nil {
 			return nil, err
 		}
 
 		err = c.Lobby.Join(u)
+		// lobby에 join한 이후이므로 room handler는 유저에게 인풋을 전달할 수 없으므로 lobby input으로 보내준다.
+		c.Lobby.InputChannel <- input
 
 		if err != nil {
 			return nil, err
 		}
+
+		return nil, nil
 	}
 
 	return input, nil

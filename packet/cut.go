@@ -12,7 +12,6 @@ func cutChunk(inputBuf *bytes.Buffer) (*[]byte, error) {
 	if err != nil {
 		if errors.Is(err, io.EOF) {
 			inputBuf.Write(chunk)
-			return &chunk, err
 		}
 
 		return &chunk, err

@@ -15,15 +15,17 @@ func (u *User) handleIncoming(users *Users) {
 		case <-u.Stop:
 			return
 		default:
-			input, err := u.ProduceInput(&buf, inputBuf)
+			if u.Inputs.Len() != 0 {
+				continue
+			}
 
+			input, err := u.ProduceInput(&buf, inputBuf)
 			if err != nil {
 				slog.Error(err.Error())
 				users.Quit(u)
 				u.Conn.Close()
 				return
 			}
-
 			u.produceChannel <- input
 		}
 	}

@@ -1,5 +1,7 @@
 package queue
 
+import "sync/atomic"
+
 func (q *Queue[T]) Enqueue(v T) {
 	// Get이 항상 유효하기 위해 New func를 정의해야 함
 	node := q.pool.Get().(*Node[T])
@@ -17,4 +19,6 @@ func (q *Queue[T]) Enqueue(v T) {
 		q.head.Load().next.Store(node)
 		q.tail.Store(node)
 	}
+
+	atomic.AddUint32(&q.len, 1)
 }

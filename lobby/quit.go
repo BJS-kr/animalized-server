@@ -2,8 +2,13 @@ package lobby
 
 import "animalized/users"
 
-func (l *Lobby) Quit(user *users.User) error {
-	_, err := l.Users.Quit(user)
+func (l *Lobby) Quit(userId string) (*users.User, error) {
+	u, err := l.Users.FindUserById(userId)
 
-	return err
+	if err != nil {
+		return nil, err
+	}
+	_, err = l.Users.Quit(u)
+
+	return u, err
 }
