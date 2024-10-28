@@ -6,21 +6,21 @@ import (
 	"net"
 )
 
-func ParseInput(conn net.Conn, buf *[]byte, inputBuf *bytes.Buffer) (*message.Input, error) {
+func ParseInput(conn net.Conn, buf []byte, inputBuf *bytes.Buffer) (*message.Input, error) {
 	chunk, err := makeChunk(conn, buf, inputBuf)
 
 	if err != nil {
 		return nil, err
 	}
 
-	err = stripDelimiter(chunk)
+	stripped, err := stripDelimiter(chunk)
 
 	if err != nil {
 		return nil, err
 	}
 
 	input := new(message.Input)
-	err = into(input, chunk)
+	err = into(input, stripped)
 
 	if err != nil {
 		return nil, err

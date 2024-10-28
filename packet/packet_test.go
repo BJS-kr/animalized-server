@@ -49,7 +49,7 @@ func TestInputParsing(t *testing.T) {
 		}()
 
 		buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
-		input, err := packet.ParseInput(server, &buf, inputBuf)
+		input, err := packet.ParseInput(server, buf, inputBuf)
 
 		if err != nil {
 			t.Fatal(err)
