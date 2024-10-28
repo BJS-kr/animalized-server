@@ -19,7 +19,7 @@ func (u *User) handleIncoming(users *Users) {
 				continue
 			}
 
-			input, err := u.ProduceInput(&buf, inputBuf)
+			input, err := u.ProduceInput(buf, inputBuf)
 			if err != nil {
 				slog.Error(err.Error())
 				users.Quit(u)

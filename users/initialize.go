@@ -12,7 +12,7 @@ import (
 
 func Initialize(conn net.Conn) (*User, error) {
 	buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
-	initInput, err := packet.ParseInput(conn, &buf, inputBuf)
+	initInput, err := packet.ParseInput(conn, buf, inputBuf)
 
 	if err != nil {
 		return nil, err
