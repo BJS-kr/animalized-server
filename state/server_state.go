@@ -2,7 +2,6 @@ package state
 
 import (
 	"animalized/message"
-	"animalized/packet"
 	"errors"
 	"time"
 )
@@ -26,7 +25,7 @@ func (ss *GameState) UpdateUserPosition(userId string, direction int32) {
 func (ss *GameState) SignalGameState(inputProduceChannel chan<- *message.Input) {
 	tick := time.Tick(SERVER_STATE_SIGNAL_INTERVAL)
 	tickMessage := &message.Input{
-		Type: packet.SERVER_STATE,
+		Kind: &message.Input_ServerState{},
 	}
 
 	for range tick {
@@ -34,19 +33,19 @@ func (ss *GameState) SignalGameState(inputProduceChannel chan<- *message.Input) 
 	}
 }
 
-func (ss *GameState) GetUserStates() []*message.UserState {
-	userStates := make([]*message.UserState, 0)
+func (ss *GameState) GetUserStates() *message.UserStates {
+	userStates := new(message.UserStates)
 
 	for _, us := range ss.UserStates {
-		mus := &message.UserState{
-			Position: &message.Position{
+		mus := &message.UserStates_UserState{
+			Position: &message.UserStates_Position{
 				X: us.position.X,
 				Y: us.position.Y,
 			},
 			Score: us.score,
 		}
 
-		userStates = append(userStates, mus)
+		userStates.UserStates = append(userStates.UserStates, mus)
 	}
 
 	return userStates

@@ -11,6 +11,7 @@ import (
 
 func (c *Controller) makeHandleGame(r *rooms.Room) common.Handler {
 	var context, prevContext int64
+
 	return func(input *message.Input) (*message.Input, error) {
 		switch input.Type {
 		case packet.MOVE:

@@ -20,20 +20,182 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type Move_Direction int32
+
+const (
+	Move_DIRECTION_UNSPECIFIED Move_Direction = 0
+	Move_UP                    Move_Direction = 1
+	Move_DOWN                  Move_Direction = 2
+	Move_LEFT                  Move_Direction = 3
+	Move_RIGHT                 Move_Direction = 4
+)
+
+// Enum value maps for Move_Direction.
+var (
+	Move_Direction_name = map[int32]string{
+		0: "DIRECTION_UNSPECIFIED",
+		1: "UP",
+		2: "DOWN",
+		3: "LEFT",
+		4: "RIGHT",
+	}
+	Move_Direction_value = map[string]int32{
+		"DIRECTION_UNSPECIFIED": 0,
+		"UP":                    1,
+		"DOWN":                  2,
+		"LEFT":                  3,
+		"RIGHT":                 4,
+	}
+)
+
+func (x Move_Direction) Enum() *Move_Direction {
+	p := new(Move_Direction)
+	*p = x
+	return p
+}
+
+func (x Move_Direction) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Move_Direction) Descriptor() protoreflect.EnumDescriptor {
+	return file_message_proto_input_proto_enumTypes[0].Descriptor()
+}
+
+func (Move_Direction) Type() protoreflect.EnumType {
+	return &file_message_proto_input_proto_enumTypes[0]
+}
+
+func (x Move_Direction) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Move_Direction.Descriptor instead.
+func (Move_Direction) EnumDescriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{1, 0}
+}
+
+type Lobby_LobbyType int32
+
+const (
+	Lobby_LOBBY_UNSPECIFIED Lobby_LobbyType = 0
+	Lobby_CREATE            Lobby_LobbyType = 1
+	Lobby_JOIN              Lobby_LobbyType = 2
+	Lobby_STATE             Lobby_LobbyType = 3
+)
+
+// Enum value maps for Lobby_LobbyType.
+var (
+	Lobby_LobbyType_name = map[int32]string{
+		0: "LOBBY_UNSPECIFIED",
+		1: "CREATE",
+		2: "JOIN",
+		3: "STATE",
+	}
+	Lobby_LobbyType_value = map[string]int32{
+		"LOBBY_UNSPECIFIED": 0,
+		"CREATE":            1,
+		"JOIN":              2,
+		"STATE":             3,
+	}
+)
+
+func (x Lobby_LobbyType) Enum() *Lobby_LobbyType {
+	p := new(Lobby_LobbyType)
+	*p = x
+	return p
+}
+
+func (x Lobby_LobbyType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Lobby_LobbyType) Descriptor() protoreflect.EnumDescriptor {
+	return file_message_proto_input_proto_enumTypes[1].Descriptor()
+}
+
+func (Lobby_LobbyType) Type() protoreflect.EnumType {
+	return &file_message_proto_input_proto_enumTypes[1]
+}
+
+func (x Lobby_LobbyType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Lobby_LobbyType.Descriptor instead.
+func (Lobby_LobbyType) EnumDescriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{5, 0}
+}
+
+type Room_RoomType int32
+
+const (
+	Room_ROOM_UNSPECIFIED Room_RoomType = 0
+	Room_QUIT             Room_RoomType = 1
+	Room_START            Room_RoomType = 2
+	Room_STATE            Room_RoomType = 3
+)
+
+// Enum value maps for Room_RoomType.
+var (
+	Room_RoomType_name = map[int32]string{
+		0: "ROOM_UNSPECIFIED",
+		1: "QUIT",
+		2: "START",
+		3: "STATE",
+	}
+	Room_RoomType_value = map[string]int32{
+		"ROOM_UNSPECIFIED": 0,
+		"QUIT":             1,
+		"START":            2,
+		"STATE":            3,
+	}
+)
+
+func (x Room_RoomType) Enum() *Room_RoomType {
+	p := new(Room_RoomType)
+	*p = x
+	return p
+}
+
+func (x Room_RoomType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Room_RoomType) Descriptor() protoreflect.EnumDescriptor {
+	return file_message_proto_input_proto_enumTypes[2].Descriptor()
+}
+
+func (Room_RoomType) Type() protoreflect.EnumType {
+	return &file_message_proto_input_proto_enumTypes[2]
+}
+
+func (x Room_RoomType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Room_RoomType.Descriptor instead.
+func (Room_RoomType) EnumDescriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{6, 0}
+}
+
 type Input struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type        int32        `protobuf:"varint,1,opt,name=type,proto3" json:"type,omitempty"`
-	UserId      string       `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Direction   *int32       `protobuf:"varint,3,opt,name=direction,proto3,oneof" json:"direction,omitempty"`
-	Context     *int64       `protobuf:"varint,4,opt,name=context,proto3,oneof" json:"context,omitempty"`
-	PrevContext *int64       `protobuf:"varint,5,opt,name=prev_context,json=prevContext,proto3,oneof" json:"prev_context,omitempty"`
-	RoomName    *string      `protobuf:"bytes,6,opt,name=room_name,json=roomName,proto3,oneof" json:"room_name,omitempty"`
-	MaxUsers    *int32       `protobuf:"varint,7,opt,name=max_users,json=maxUsers,proto3,oneof" json:"max_users,omitempty"`
-	LobbyStatus *LobbyStatus `protobuf:"bytes,8,opt,name=lobby_status,json=lobbyStatus,proto3,oneof" json:"lobby_status,omitempty"`
-	UserStates  []*UserState `protobuf:"bytes,9,rep,name=user_states,json=userStates,proto3" json:"user_states,omitempty"`
+	UserId string `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	// Types that are assignable to Kind:
+	//
+	//	*Input_Init
+	//	*Input_Move
+	//	*Input_Lobby
+	//	*Input_Room
+	//	*Input_UserStates
+	//	*Input_ServerState
+	Kind        isInput_Kind `protobuf_oneof:"kind"`
+	Context     int64        `protobuf:"varint,9,opt,name=context,proto3" json:"context,omitempty"`
+	PrevContext int64        `protobuf:"varint,10,opt,name=prev_context,json=prevContext,proto3" json:"prev_context,omitempty"`
 }
 
 func (x *Input) Reset() {
@@ -66,13 +228,6 @@ func (*Input) Descriptor() ([]byte, []int) {
 	return file_message_proto_input_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Input) GetType() int32 {
-	if x != nil {
-		return x.Type
-	}
-	return 0
-}
-
 func (x *Input) GetUserId() string {
 	if x != nil {
 		return x.UserId
@@ -80,78 +235,131 @@ func (x *Input) GetUserId() string {
 	return ""
 }
 
-func (x *Input) GetDirection() int32 {
-	if x != nil && x.Direction != nil {
-		return *x.Direction
-	}
-	return 0
-}
-
-func (x *Input) GetContext() int64 {
-	if x != nil && x.Context != nil {
-		return *x.Context
-	}
-	return 0
-}
-
-func (x *Input) GetPrevContext() int64 {
-	if x != nil && x.PrevContext != nil {
-		return *x.PrevContext
-	}
-	return 0
-}
-
-func (x *Input) GetRoomName() string {
-	if x != nil && x.RoomName != nil {
-		return *x.RoomName
-	}
-	return ""
-}
-
-func (x *Input) GetMaxUsers() int32 {
-	if x != nil && x.MaxUsers != nil {
-		return *x.MaxUsers
-	}
-	return 0
-}
-
-func (x *Input) GetLobbyStatus() *LobbyStatus {
-	if x != nil {
-		return x.LobbyStatus
+func (m *Input) GetKind() isInput_Kind {
+	if m != nil {
+		return m.Kind
 	}
 	return nil
 }
 
-func (x *Input) GetUserStates() []*UserState {
-	if x != nil {
+func (x *Input) GetInit() *Init {
+	if x, ok := x.GetKind().(*Input_Init); ok {
+		return x.Init
+	}
+	return nil
+}
+
+func (x *Input) GetMove() *Move {
+	if x, ok := x.GetKind().(*Input_Move); ok {
+		return x.Move
+	}
+	return nil
+}
+
+func (x *Input) GetLobby() *Lobby {
+	if x, ok := x.GetKind().(*Input_Lobby); ok {
+		return x.Lobby
+	}
+	return nil
+}
+
+func (x *Input) GetRoom() *Room {
+	if x, ok := x.GetKind().(*Input_Room); ok {
+		return x.Room
+	}
+	return nil
+}
+
+func (x *Input) GetUserStates() *UserStates {
+	if x, ok := x.GetKind().(*Input_UserStates); ok {
 		return x.UserStates
 	}
 	return nil
 }
 
-type UserState struct {
+func (x *Input) GetServerState() *ServerState {
+	if x, ok := x.GetKind().(*Input_ServerState); ok {
+		return x.ServerState
+	}
+	return nil
+}
+
+func (x *Input) GetContext() int64 {
+	if x != nil {
+		return x.Context
+	}
+	return 0
+}
+
+func (x *Input) GetPrevContext() int64 {
+	if x != nil {
+		return x.PrevContext
+	}
+	return 0
+}
+
+type isInput_Kind interface {
+	isInput_Kind()
+}
+
+type Input_Init struct {
+	Init *Init `protobuf:"bytes,2,opt,name=init,proto3,oneof"`
+}
+
+type Input_Move struct {
+	Move *Move `protobuf:"bytes,3,opt,name=move,proto3,oneof"`
+}
+
+type Input_Lobby struct {
+	Lobby *Lobby `protobuf:"bytes,4,opt,name=lobby,proto3,oneof"`
+}
+
+type Input_Room struct {
+	Room *Room `protobuf:"bytes,5,opt,name=room,proto3,oneof"`
+}
+
+type Input_UserStates struct {
+	UserStates *UserStates `protobuf:"bytes,6,opt,name=user_states,json=userStates,proto3,oneof"`
+}
+
+type Input_ServerState struct {
+	ServerState *ServerState `protobuf:"bytes,8,opt,name=server_state,json=serverState,proto3,oneof"`
+}
+
+func (*Input_Init) isInput_Kind() {}
+
+func (*Input_Move) isInput_Kind() {}
+
+func (*Input_Lobby) isInput_Kind() {}
+
+func (*Input_Room) isInput_Kind() {}
+
+func (*Input_UserStates) isInput_Kind() {}
+
+func (*Input_ServerState) isInput_Kind() {}
+
+type Move struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Position *Position `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
-	Score    int32     `protobuf:"varint,2,opt,name=score,proto3" json:"score,omitempty"`
+	Direction Move_Direction `protobuf:"varint,1,opt,name=direction,proto3,enum=input.Move_Direction" json:"direction,omitempty"`
 }
 
-func (x *UserState) Reset() {
-	*x = UserState{}
+func (x *Move) Reset() {
+	*x = Move{}
 	mi := &file_message_proto_input_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UserState) String() string {
+func (x *Move) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UserState) ProtoMessage() {}
+func (*Move) ProtoMessage() {}
 
-func (x *UserState) ProtoReflect() protoreflect.Message {
+func (x *Move) ProtoReflect() protoreflect.Message {
 	mi := &file_message_proto_input_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -163,26 +371,335 @@ func (x *UserState) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UserState.ProtoReflect.Descriptor instead.
-func (*UserState) Descriptor() ([]byte, []int) {
+// Deprecated: Use Move.ProtoReflect.Descriptor instead.
+func (*Move) Descriptor() ([]byte, []int) {
 	return file_message_proto_input_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *UserState) GetPosition() *Position {
+func (x *Move) GetDirection() Move_Direction {
 	if x != nil {
-		return x.Position
+		return x.Direction
 	}
-	return nil
+	return Move_DIRECTION_UNSPECIFIED
 }
 
-func (x *UserState) GetScore() int32 {
+type Init struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *Init) Reset() {
+	*x = Init{}
+	mi := &file_message_proto_input_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Init) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Init) ProtoMessage() {}
+
+func (x *Init) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_input_proto_msgTypes[2]
 	if x != nil {
-		return x.Score
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Init.ProtoReflect.Descriptor instead.
+func (*Init) Descriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{2}
+}
+
+type ServerState struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *ServerState) Reset() {
+	*x = ServerState{}
+	mi := &file_message_proto_input_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ServerState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ServerState) ProtoMessage() {}
+
+func (x *ServerState) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_input_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ServerState.ProtoReflect.Descriptor instead.
+func (*ServerState) Descriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{3}
+}
+
+type RoomState struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	RoomName string   `protobuf:"bytes,1,opt,name=room_name,json=roomName,proto3" json:"room_name,omitempty"`
+	MaxUsers int32    `protobuf:"varint,2,opt,name=max_users,json=maxUsers,proto3" json:"max_users,omitempty"`
+	UserIds  []string `protobuf:"bytes,3,rep,name=user_ids,json=userIds,proto3" json:"user_ids,omitempty"`
+}
+
+func (x *RoomState) Reset() {
+	*x = RoomState{}
+	mi := &file_message_proto_input_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RoomState) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RoomState) ProtoMessage() {}
+
+func (x *RoomState) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_input_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RoomState.ProtoReflect.Descriptor instead.
+func (*RoomState) Descriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *RoomState) GetRoomName() string {
+	if x != nil {
+		return x.RoomName
+	}
+	return ""
+}
+
+func (x *RoomState) GetMaxUsers() int32 {
+	if x != nil {
+		return x.MaxUsers
 	}
 	return 0
 }
 
-type Position struct {
+func (x *RoomState) GetUserIds() []string {
+	if x != nil {
+		return x.UserIds
+	}
+	return nil
+}
+
+type Lobby struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Type       Lobby_LobbyType `protobuf:"varint,1,opt,name=type,proto3,enum=input.Lobby_LobbyType" json:"type,omitempty"`
+	RoomName   string          `protobuf:"bytes,2,opt,name=room_name,json=roomName,proto3" json:"room_name,omitempty"`
+	MaxUsers   int32           `protobuf:"varint,3,opt,name=max_users,json=maxUsers,proto3" json:"max_users,omitempty"`
+	RoomStates []*RoomState    `protobuf:"bytes,4,rep,name=room_states,json=roomStates,proto3" json:"room_states,omitempty"`
+}
+
+func (x *Lobby) Reset() {
+	*x = Lobby{}
+	mi := &file_message_proto_input_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Lobby) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Lobby) ProtoMessage() {}
+
+func (x *Lobby) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_input_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Lobby.ProtoReflect.Descriptor instead.
+func (*Lobby) Descriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Lobby) GetType() Lobby_LobbyType {
+	if x != nil {
+		return x.Type
+	}
+	return Lobby_LOBBY_UNSPECIFIED
+}
+
+func (x *Lobby) GetRoomName() string {
+	if x != nil {
+		return x.RoomName
+	}
+	return ""
+}
+
+func (x *Lobby) GetMaxUsers() int32 {
+	if x != nil {
+		return x.MaxUsers
+	}
+	return 0
+}
+
+func (x *Lobby) GetRoomStates() []*RoomState {
+	if x != nil {
+		return x.RoomStates
+	}
+	return nil
+}
+
+type Room struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Type      Room_RoomType `protobuf:"varint,1,opt,name=type,proto3,enum=input.Room_RoomType" json:"type,omitempty"`
+	RoomName  string        `protobuf:"bytes,2,opt,name=room_name,json=roomName,proto3" json:"room_name,omitempty"`
+	MaxUsers  int32         `protobuf:"varint,3,opt,name=max_users,json=maxUsers,proto3" json:"max_users,omitempty"`
+	RoomState *RoomState    `protobuf:"bytes,4,opt,name=room_state,json=roomState,proto3" json:"room_state,omitempty"`
+}
+
+func (x *Room) Reset() {
+	*x = Room{}
+	mi := &file_message_proto_input_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Room) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Room) ProtoMessage() {}
+
+func (x *Room) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_input_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Room.ProtoReflect.Descriptor instead.
+func (*Room) Descriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *Room) GetType() Room_RoomType {
+	if x != nil {
+		return x.Type
+	}
+	return Room_ROOM_UNSPECIFIED
+}
+
+func (x *Room) GetRoomName() string {
+	if x != nil {
+		return x.RoomName
+	}
+	return ""
+}
+
+func (x *Room) GetMaxUsers() int32 {
+	if x != nil {
+		return x.MaxUsers
+	}
+	return 0
+}
+
+func (x *Room) GetRoomState() *RoomState {
+	if x != nil {
+		return x.RoomState
+	}
+	return nil
+}
+
+type UserStates struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserStates []*UserStates_UserState `protobuf:"bytes,1,rep,name=user_states,json=userStates,proto3" json:"user_states,omitempty"`
+}
+
+func (x *UserStates) Reset() {
+	*x = UserStates{}
+	mi := &file_message_proto_input_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserStates) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserStates) ProtoMessage() {}
+
+func (x *UserStates) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_input_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserStates.ProtoReflect.Descriptor instead.
+func (*UserStates) Descriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *UserStates) GetUserStates() []*UserStates_UserState {
+	if x != nil {
+		return x.UserStates
+	}
+	return nil
+}
+
+type UserStates_Position struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -191,21 +708,21 @@ type Position struct {
 	Y int32 `protobuf:"varint,2,opt,name=y,proto3" json:"y,omitempty"`
 }
 
-func (x *Position) Reset() {
-	*x = Position{}
-	mi := &file_message_proto_input_proto_msgTypes[2]
+func (x *UserStates_Position) Reset() {
+	*x = UserStates_Position{}
+	mi := &file_message_proto_input_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Position) String() string {
+func (x *UserStates_Position) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Position) ProtoMessage() {}
+func (*UserStates_Position) ProtoMessage() {}
 
-func (x *Position) ProtoReflect() protoreflect.Message {
-	mi := &file_message_proto_input_proto_msgTypes[2]
+func (x *UserStates_Position) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_input_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -216,48 +733,49 @@ func (x *Position) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Position.ProtoReflect.Descriptor instead.
-func (*Position) Descriptor() ([]byte, []int) {
-	return file_message_proto_input_proto_rawDescGZIP(), []int{2}
+// Deprecated: Use UserStates_Position.ProtoReflect.Descriptor instead.
+func (*UserStates_Position) Descriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{7, 0}
 }
 
-func (x *Position) GetX() int32 {
+func (x *UserStates_Position) GetX() int32 {
 	if x != nil {
 		return x.X
 	}
 	return 0
 }
 
-func (x *Position) GetY() int32 {
+func (x *UserStates_Position) GetY() int32 {
 	if x != nil {
 		return x.Y
 	}
 	return 0
 }
 
-type LobbyStatus struct {
+type UserStates_UserState struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	RoomStatuses []*RoomStatus `protobuf:"bytes,1,rep,name=room_statuses,json=roomStatuses,proto3" json:"room_statuses,omitempty"`
+	Position *UserStates_Position `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
+	Score    int32                `protobuf:"varint,2,opt,name=score,proto3" json:"score,omitempty"`
 }
 
-func (x *LobbyStatus) Reset() {
-	*x = LobbyStatus{}
-	mi := &file_message_proto_input_proto_msgTypes[3]
+func (x *UserStates_UserState) Reset() {
+	*x = UserStates_UserState{}
+	mi := &file_message_proto_input_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *LobbyStatus) String() string {
+func (x *UserStates_UserState) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LobbyStatus) ProtoMessage() {}
+func (*UserStates_UserState) ProtoMessage() {}
 
-func (x *LobbyStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_message_proto_input_proto_msgTypes[3]
+func (x *UserStates_UserState) ProtoReflect() protoreflect.Message {
+	mi := &file_message_proto_input_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -268,138 +786,23 @@ func (x *LobbyStatus) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LobbyStatus.ProtoReflect.Descriptor instead.
-func (*LobbyStatus) Descriptor() ([]byte, []int) {
-	return file_message_proto_input_proto_rawDescGZIP(), []int{3}
+// Deprecated: Use UserStates_UserState.ProtoReflect.Descriptor instead.
+func (*UserStates_UserState) Descriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{7, 1}
 }
 
-func (x *LobbyStatus) GetRoomStatuses() []*RoomStatus {
+func (x *UserStates_UserState) GetPosition() *UserStates_Position {
 	if x != nil {
-		return x.RoomStatuses
+		return x.Position
 	}
 	return nil
 }
 
-type RoomStatus struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Name       string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	MaxUsers   int32  `protobuf:"varint,2,opt,name=max_users,json=maxUsers,proto3" json:"max_users,omitempty"`
-	UsersCount int32  `protobuf:"varint,3,opt,name=users_count,json=usersCount,proto3" json:"users_count,omitempty"`
-}
-
-func (x *RoomStatus) Reset() {
-	*x = RoomStatus{}
-	mi := &file_message_proto_input_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RoomStatus) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RoomStatus) ProtoMessage() {}
-
-func (x *RoomStatus) ProtoReflect() protoreflect.Message {
-	mi := &file_message_proto_input_proto_msgTypes[4]
+func (x *UserStates_UserState) GetScore() int32 {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RoomStatus.ProtoReflect.Descriptor instead.
-func (*RoomStatus) Descriptor() ([]byte, []int) {
-	return file_message_proto_input_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *RoomStatus) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *RoomStatus) GetMaxUsers() int32 {
-	if x != nil {
-		return x.MaxUsers
+		return x.Score
 	}
 	return 0
-}
-
-func (x *RoomStatus) GetUsersCount() int32 {
-	if x != nil {
-		return x.UsersCount
-	}
-	return 0
-}
-
-type RoomInfo struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Name     string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	MaxUsers int32    `protobuf:"varint,2,opt,name=max_users,json=maxUsers,proto3" json:"max_users,omitempty"`
-	UserIds  []string `protobuf:"bytes,3,rep,name=user_ids,json=userIds,proto3" json:"user_ids,omitempty"`
-}
-
-func (x *RoomInfo) Reset() {
-	*x = RoomInfo{}
-	mi := &file_message_proto_input_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RoomInfo) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RoomInfo) ProtoMessage() {}
-
-func (x *RoomInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_message_proto_input_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RoomInfo.ProtoReflect.Descriptor instead.
-func (*RoomInfo) Descriptor() ([]byte, []int) {
-	return file_message_proto_input_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *RoomInfo) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *RoomInfo) GetMaxUsers() int32 {
-	if x != nil {
-		return x.MaxUsers
-	}
-	return 0
-}
-
-func (x *RoomInfo) GetUserIds() []string {
-	if x != nil {
-		return x.UserIds
-	}
-	return nil
 }
 
 var File_message_proto_input_proto protoreflect.FileDescriptor
@@ -407,58 +810,88 @@ var File_message_proto_input_proto protoreflect.FileDescriptor
 var file_message_proto_input_proto_rawDesc = []byte{
 	0x0a, 0x19, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f,
 	0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x05, 0x69, 0x6e, 0x70,
-	0x75, 0x74, 0x22, 0xa9, 0x03, 0x0a, 0x05, 0x49, 0x6e, 0x70, 0x75, 0x74, 0x12, 0x12, 0x0a, 0x04,
-	0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65,
-	0x12, 0x17, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x21, 0x0a, 0x09, 0x64, 0x69, 0x72,
-	0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x48, 0x00, 0x52, 0x09,
-	0x64, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x88, 0x01, 0x01, 0x12, 0x1d, 0x0a, 0x07,
-	0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x48, 0x01, 0x52,
-	0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x88, 0x01, 0x01, 0x12, 0x26, 0x0a, 0x0c, 0x70,
-	0x72, 0x65, 0x76, 0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28,
-	0x03, 0x48, 0x02, 0x52, 0x0b, 0x70, 0x72, 0x65, 0x76, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74,
-	0x88, 0x01, 0x01, 0x12, 0x20, 0x0a, 0x09, 0x72, 0x6f, 0x6f, 0x6d, 0x5f, 0x6e, 0x61, 0x6d, 0x65,
-	0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x48, 0x03, 0x52, 0x08, 0x72, 0x6f, 0x6f, 0x6d, 0x4e, 0x61,
-	0x6d, 0x65, 0x88, 0x01, 0x01, 0x12, 0x20, 0x0a, 0x09, 0x6d, 0x61, 0x78, 0x5f, 0x75, 0x73, 0x65,
-	0x72, 0x73, 0x18, 0x07, 0x20, 0x01, 0x28, 0x05, 0x48, 0x04, 0x52, 0x08, 0x6d, 0x61, 0x78, 0x55,
-	0x73, 0x65, 0x72, 0x73, 0x88, 0x01, 0x01, 0x12, 0x3a, 0x0a, 0x0c, 0x6c, 0x6f, 0x62, 0x62, 0x79,
-	0x5f, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x08, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e,
-	0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x4c, 0x6f, 0x62, 0x62, 0x79, 0x53, 0x74, 0x61, 0x74, 0x75,
-	0x73, 0x48, 0x05, 0x52, 0x0b, 0x6c, 0x6f, 0x62, 0x62, 0x79, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73,
-	0x88, 0x01, 0x01, 0x12, 0x31, 0x0a, 0x0b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x73, 0x74, 0x61, 0x74,
-	0x65, 0x73, 0x18, 0x09, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74,
-	0x2e, 0x55, 0x73, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x0a, 0x75, 0x73, 0x65, 0x72,
-	0x53, 0x74, 0x61, 0x74, 0x65, 0x73, 0x42, 0x0c, 0x0a, 0x0a, 0x5f, 0x64, 0x69, 0x72, 0x65, 0x63,
-	0x74, 0x69, 0x6f, 0x6e, 0x42, 0x0a, 0x0a, 0x08, 0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74,
-	0x42, 0x0f, 0x0a, 0x0d, 0x5f, 0x70, 0x72, 0x65, 0x76, 0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78,
-	0x74, 0x42, 0x0c, 0x0a, 0x0a, 0x5f, 0x72, 0x6f, 0x6f, 0x6d, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x42,
-	0x0c, 0x0a, 0x0a, 0x5f, 0x6d, 0x61, 0x78, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x42, 0x0f, 0x0a,
-	0x0d, 0x5f, 0x6c, 0x6f, 0x62, 0x62, 0x79, 0x5f, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x4e,
-	0x0a, 0x09, 0x55, 0x73, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x2b, 0x0a, 0x08, 0x70,
-	0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0f, 0x2e,
-	0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x08,
-	0x70, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72,
-	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x22, 0x26,
-	0x0a, 0x08, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x0c, 0x0a, 0x01, 0x78, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x78, 0x12, 0x0c, 0x0a, 0x01, 0x79, 0x18, 0x02, 0x20,
-	0x01, 0x28, 0x05, 0x52, 0x01, 0x79, 0x22, 0x45, 0x0a, 0x0b, 0x4c, 0x6f, 0x62, 0x62, 0x79, 0x53,
-	0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x36, 0x0a, 0x0d, 0x72, 0x6f, 0x6f, 0x6d, 0x5f, 0x73, 0x74,
-	0x61, 0x74, 0x75, 0x73, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x69,
-	0x6e, 0x70, 0x75, 0x74, 0x2e, 0x52, 0x6f, 0x6f, 0x6d, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52,
-	0x0c, 0x72, 0x6f, 0x6f, 0x6d, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x65, 0x73, 0x22, 0x5e, 0x0a,
-	0x0a, 0x52, 0x6f, 0x6f, 0x6d, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x6e,
-	0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12,
-	0x1b, 0x0a, 0x09, 0x6d, 0x61, 0x78, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x05, 0x52, 0x08, 0x6d, 0x61, 0x78, 0x55, 0x73, 0x65, 0x72, 0x73, 0x12, 0x1f, 0x0a, 0x0b,
-	0x75, 0x73, 0x65, 0x72, 0x73, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28,
-	0x05, 0x52, 0x0a, 0x75, 0x73, 0x65, 0x72, 0x73, 0x43, 0x6f, 0x75, 0x6e, 0x74, 0x22, 0x56, 0x0a,
-	0x08, 0x52, 0x6f, 0x6f, 0x6d, 0x49, 0x6e, 0x66, 0x6f, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d,
-	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1b, 0x0a,
-	0x09, 0x6d, 0x61, 0x78, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05,
-	0x52, 0x08, 0x6d, 0x61, 0x78, 0x55, 0x73, 0x65, 0x72, 0x73, 0x12, 0x19, 0x0a, 0x08, 0x75, 0x73,
-	0x65, 0x72, 0x5f, 0x69, 0x64, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x75, 0x73,
-	0x65, 0x72, 0x49, 0x64, 0x73, 0x42, 0x0b, 0x5a, 0x09, 0x2e, 0x2f, 0x6d, 0x65, 0x73, 0x73, 0x61,
-	0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x75, 0x74, 0x22, 0xe3, 0x02, 0x0a, 0x05, 0x49, 0x6e, 0x70, 0x75, 0x74, 0x12, 0x17, 0x0a, 0x07,
+	0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75,
+	0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x21, 0x0a, 0x04, 0x69, 0x6e, 0x69, 0x74, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x49, 0x6e, 0x69, 0x74,
+	0x48, 0x00, 0x52, 0x04, 0x69, 0x6e, 0x69, 0x74, 0x12, 0x21, 0x0a, 0x04, 0x6d, 0x6f, 0x76, 0x65,
+	0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x4d,
+	0x6f, 0x76, 0x65, 0x48, 0x00, 0x52, 0x04, 0x6d, 0x6f, 0x76, 0x65, 0x12, 0x24, 0x0a, 0x05, 0x6c,
+	0x6f, 0x62, 0x62, 0x79, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0c, 0x2e, 0x69, 0x6e, 0x70,
+	0x75, 0x74, 0x2e, 0x4c, 0x6f, 0x62, 0x62, 0x79, 0x48, 0x00, 0x52, 0x05, 0x6c, 0x6f, 0x62, 0x62,
+	0x79, 0x12, 0x21, 0x0a, 0x04, 0x72, 0x6f, 0x6f, 0x6d, 0x18, 0x05, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x0b, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x52, 0x6f, 0x6f, 0x6d, 0x48, 0x00, 0x52, 0x04,
+	0x72, 0x6f, 0x6f, 0x6d, 0x12, 0x34, 0x0a, 0x0b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x73, 0x74, 0x61,
+	0x74, 0x65, 0x73, 0x18, 0x06, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x11, 0x2e, 0x69, 0x6e, 0x70, 0x75,
+	0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x73, 0x48, 0x00, 0x52, 0x0a,
+	0x75, 0x73, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x73, 0x12, 0x37, 0x0a, 0x0c, 0x73, 0x65,
+	0x72, 0x76, 0x65, 0x72, 0x5f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x18, 0x08, 0x20, 0x01, 0x28, 0x0b,
+	0x32, 0x12, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x53,
+	0x74, 0x61, 0x74, 0x65, 0x48, 0x00, 0x52, 0x0b, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x53, 0x74,
+	0x61, 0x74, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x18, 0x09,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x12, 0x21, 0x0a,
+	0x0c, 0x70, 0x72, 0x65, 0x76, 0x5f, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x18, 0x0a, 0x20,
+	0x01, 0x28, 0x03, 0x52, 0x0b, 0x70, 0x72, 0x65, 0x76, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74,
+	0x42, 0x06, 0x0a, 0x04, 0x6b, 0x69, 0x6e, 0x64, 0x22, 0x8a, 0x01, 0x0a, 0x04, 0x4d, 0x6f, 0x76,
+	0x65, 0x12, 0x33, 0x0a, 0x09, 0x64, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0e, 0x32, 0x15, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x4d, 0x6f, 0x76,
+	0x65, 0x2e, 0x44, 0x69, 0x72, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x09, 0x64, 0x69, 0x72,
+	0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x4d, 0x0a, 0x09, 0x44, 0x69, 0x72, 0x65, 0x63, 0x74,
+	0x69, 0x6f, 0x6e, 0x12, 0x19, 0x0a, 0x15, 0x44, 0x49, 0x52, 0x45, 0x43, 0x54, 0x49, 0x4f, 0x4e,
+	0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46, 0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x06,
+	0x0a, 0x02, 0x55, 0x50, 0x10, 0x01, 0x12, 0x08, 0x0a, 0x04, 0x44, 0x4f, 0x57, 0x4e, 0x10, 0x02,
+	0x12, 0x08, 0x0a, 0x04, 0x4c, 0x45, 0x46, 0x54, 0x10, 0x03, 0x12, 0x09, 0x0a, 0x05, 0x52, 0x49,
+	0x47, 0x48, 0x54, 0x10, 0x04, 0x22, 0x06, 0x0a, 0x04, 0x49, 0x6e, 0x69, 0x74, 0x22, 0x0d, 0x0a,
+	0x0b, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x22, 0x60, 0x0a, 0x09,
+	0x52, 0x6f, 0x6f, 0x6d, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x72, 0x6f, 0x6f,
+	0x6d, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x6f,
+	0x6f, 0x6d, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x6d, 0x61, 0x78, 0x5f, 0x75, 0x73,
+	0x65, 0x72, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x6d, 0x61, 0x78, 0x55, 0x73,
+	0x65, 0x72, 0x73, 0x12, 0x19, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x73, 0x18,
+	0x03, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x73, 0x22, 0xe5,
+	0x01, 0x0a, 0x05, 0x4c, 0x6f, 0x62, 0x62, 0x79, 0x12, 0x2a, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x16, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x4c,
+	0x6f, 0x62, 0x62, 0x79, 0x2e, 0x4c, 0x6f, 0x62, 0x62, 0x79, 0x54, 0x79, 0x70, 0x65, 0x52, 0x04,
+	0x74, 0x79, 0x70, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x72, 0x6f, 0x6f, 0x6d, 0x5f, 0x6e, 0x61, 0x6d,
+	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x6f, 0x6f, 0x6d, 0x4e, 0x61, 0x6d,
+	0x65, 0x12, 0x1b, 0x0a, 0x09, 0x6d, 0x61, 0x78, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x73, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x6d, 0x61, 0x78, 0x55, 0x73, 0x65, 0x72, 0x73, 0x12, 0x31,
+	0x0a, 0x0b, 0x72, 0x6f, 0x6f, 0x6d, 0x5f, 0x73, 0x74, 0x61, 0x74, 0x65, 0x73, 0x18, 0x04, 0x20,
+	0x03, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x52, 0x6f, 0x6f, 0x6d,
+	0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x0a, 0x72, 0x6f, 0x6f, 0x6d, 0x53, 0x74, 0x61, 0x74, 0x65,
+	0x73, 0x22, 0x43, 0x0a, 0x09, 0x4c, 0x6f, 0x62, 0x62, 0x79, 0x54, 0x79, 0x70, 0x65, 0x12, 0x15,
+	0x0a, 0x11, 0x4c, 0x4f, 0x42, 0x42, 0x59, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46,
+	0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x0a, 0x0a, 0x06, 0x43, 0x52, 0x45, 0x41, 0x54, 0x45, 0x10,
+	0x01, 0x12, 0x08, 0x0a, 0x04, 0x4a, 0x4f, 0x49, 0x4e, 0x10, 0x02, 0x12, 0x09, 0x0a, 0x05, 0x53,
+	0x54, 0x41, 0x54, 0x45, 0x10, 0x03, 0x22, 0xdd, 0x01, 0x0a, 0x04, 0x52, 0x6f, 0x6f, 0x6d, 0x12,
+	0x28, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x14, 0x2e,
+	0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x52, 0x6f, 0x6f, 0x6d, 0x2e, 0x52, 0x6f, 0x6f, 0x6d, 0x54,
+	0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x72, 0x6f, 0x6f,
+	0x6d, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x72, 0x6f,
+	0x6f, 0x6d, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x6d, 0x61, 0x78, 0x5f, 0x75, 0x73,
+	0x65, 0x72, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x6d, 0x61, 0x78, 0x55, 0x73,
+	0x65, 0x72, 0x73, 0x12, 0x2f, 0x0a, 0x0a, 0x72, 0x6f, 0x6f, 0x6d, 0x5f, 0x73, 0x74, 0x61, 0x74,
+	0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e,
+	0x52, 0x6f, 0x6f, 0x6d, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x09, 0x72, 0x6f, 0x6f, 0x6d, 0x53,
+	0x74, 0x61, 0x74, 0x65, 0x22, 0x40, 0x0a, 0x08, 0x52, 0x6f, 0x6f, 0x6d, 0x54, 0x79, 0x70, 0x65,
+	0x12, 0x14, 0x0a, 0x10, 0x52, 0x4f, 0x4f, 0x4d, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49,
+	0x46, 0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x51, 0x55, 0x49, 0x54, 0x10, 0x01,
+	0x12, 0x09, 0x0a, 0x05, 0x53, 0x54, 0x41, 0x52, 0x54, 0x10, 0x02, 0x12, 0x09, 0x0a, 0x05, 0x53,
+	0x54, 0x41, 0x54, 0x45, 0x10, 0x03, 0x22, 0xcd, 0x01, 0x0a, 0x0a, 0x55, 0x73, 0x65, 0x72, 0x53,
+	0x74, 0x61, 0x74, 0x65, 0x73, 0x12, 0x3c, 0x0a, 0x0b, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x73, 0x74,
+	0x61, 0x74, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1b, 0x2e, 0x69, 0x6e, 0x70,
+	0x75, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x73, 0x2e, 0x55, 0x73,
+	0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x0a, 0x75, 0x73, 0x65, 0x72, 0x53, 0x74, 0x61,
+	0x74, 0x65, 0x73, 0x1a, 0x26, 0x0a, 0x08, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12,
+	0x0c, 0x0a, 0x01, 0x78, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x78, 0x12, 0x0c, 0x0a,
+	0x01, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52, 0x01, 0x79, 0x1a, 0x59, 0x0a, 0x09, 0x55,
+	0x73, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x36, 0x0a, 0x08, 0x70, 0x6f, 0x73, 0x69,
+	0x74, 0x69, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1a, 0x2e, 0x69, 0x6e, 0x70,
+	0x75, 0x74, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x53, 0x74, 0x61, 0x74, 0x65, 0x73, 0x2e, 0x50, 0x6f,
+	0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x08, 0x70, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e,
+	0x12, 0x14, 0x0a, 0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x05, 0x52,
+	0x05, 0x73, 0x63, 0x6f, 0x72, 0x65, 0x42, 0x0b, 0x5a, 0x09, 0x2e, 0x2f, 0x6d, 0x65, 0x73, 0x73,
+	0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -473,25 +906,42 @@ func file_message_proto_input_proto_rawDescGZIP() []byte {
 	return file_message_proto_input_proto_rawDescData
 }
 
-var file_message_proto_input_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_message_proto_input_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_message_proto_input_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_message_proto_input_proto_goTypes = []any{
-	(*Input)(nil),       // 0: input.Input
-	(*UserState)(nil),   // 1: input.UserState
-	(*Position)(nil),    // 2: input.Position
-	(*LobbyStatus)(nil), // 3: input.LobbyStatus
-	(*RoomStatus)(nil),  // 4: input.RoomStatus
-	(*RoomInfo)(nil),    // 5: input.RoomInfo
+	(Move_Direction)(0),          // 0: input.Move.Direction
+	(Lobby_LobbyType)(0),         // 1: input.Lobby.LobbyType
+	(Room_RoomType)(0),           // 2: input.Room.RoomType
+	(*Input)(nil),                // 3: input.Input
+	(*Move)(nil),                 // 4: input.Move
+	(*Init)(nil),                 // 5: input.Init
+	(*ServerState)(nil),          // 6: input.ServerState
+	(*RoomState)(nil),            // 7: input.RoomState
+	(*Lobby)(nil),                // 8: input.Lobby
+	(*Room)(nil),                 // 9: input.Room
+	(*UserStates)(nil),           // 10: input.UserStates
+	(*UserStates_Position)(nil),  // 11: input.UserStates.Position
+	(*UserStates_UserState)(nil), // 12: input.UserStates.UserState
 }
 var file_message_proto_input_proto_depIdxs = []int32{
-	3, // 0: input.Input.lobby_status:type_name -> input.LobbyStatus
-	1, // 1: input.Input.user_states:type_name -> input.UserState
-	2, // 2: input.UserState.position:type_name -> input.Position
-	4, // 3: input.LobbyStatus.room_statuses:type_name -> input.RoomStatus
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	5,  // 0: input.Input.init:type_name -> input.Init
+	4,  // 1: input.Input.move:type_name -> input.Move
+	8,  // 2: input.Input.lobby:type_name -> input.Lobby
+	9,  // 3: input.Input.room:type_name -> input.Room
+	10, // 4: input.Input.user_states:type_name -> input.UserStates
+	6,  // 5: input.Input.server_state:type_name -> input.ServerState
+	0,  // 6: input.Move.direction:type_name -> input.Move.Direction
+	1,  // 7: input.Lobby.type:type_name -> input.Lobby.LobbyType
+	7,  // 8: input.Lobby.room_states:type_name -> input.RoomState
+	2,  // 9: input.Room.type:type_name -> input.Room.RoomType
+	7,  // 10: input.Room.room_state:type_name -> input.RoomState
+	12, // 11: input.UserStates.user_states:type_name -> input.UserStates.UserState
+	11, // 12: input.UserStates.UserState.position:type_name -> input.UserStates.Position
+	13, // [13:13] is the sub-list for method output_type
+	13, // [13:13] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_message_proto_input_proto_init() }
@@ -499,19 +949,27 @@ func file_message_proto_input_proto_init() {
 	if File_message_proto_input_proto != nil {
 		return
 	}
-	file_message_proto_input_proto_msgTypes[0].OneofWrappers = []any{}
+	file_message_proto_input_proto_msgTypes[0].OneofWrappers = []any{
+		(*Input_Init)(nil),
+		(*Input_Move)(nil),
+		(*Input_Lobby)(nil),
+		(*Input_Room)(nil),
+		(*Input_UserStates)(nil),
+		(*Input_ServerState)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_message_proto_input_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   6,
+			NumEnums:      3,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_message_proto_input_proto_goTypes,
 		DependencyIndexes: file_message_proto_input_proto_depIdxs,
+		EnumInfos:         file_message_proto_input_proto_enumTypes,
 		MessageInfos:      file_message_proto_input_proto_msgTypes,
 	}.Build()
 	File_message_proto_input_proto = out.File

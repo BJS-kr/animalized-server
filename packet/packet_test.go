@@ -12,32 +12,40 @@ import (
 
 func TestInputParsing(t *testing.T) {
 	server, client := net.Pipe()
-	direction := int32(1)
 
 	tcs := []struct {
 		desc  string
 		input *message.Input
 	}{
 		{
-			desc: "parse single packet",
+			desc: "parse init packet",
 			input: &message.Input{
-				Type:   1,
 				UserId: "test",
+				Kind:   &message.Input_Init{},
 			},
 		},
 		{
-			desc: "parse optional field packet",
+			desc: "parse move packet",
 			input: &message.Input{
-				Type:      1,
-				UserId:    "test",
-				Direction: &direction,
+
+				UserId: "test",
+				Kind: &message.Input_Move{
+					Move: &message.Move{
+						Direction: message.Move_UP,
+					},
+				},
 			},
 		},
 		{
-			desc: "parse type 2 packet",
+			desc: "parse lobby packet",
 			input: &message.Input{
-				Type:   2,
 				UserId: "test",
+				Kind: &message.Input_Lobby{
+					Lobby: &message.Lobby{
+						Type:     message.Lobby_CREATE,
+						RoomName: "test",
+					},
+				},
 			},
 		},
 	}

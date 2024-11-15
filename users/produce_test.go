@@ -27,8 +27,10 @@ func TestProduce(t *testing.T) {
 	user.SetProduceChannel(inputProduceChan)
 	go func() {
 		input := &message.Input{
-			Type:   1,
 			UserId: "test",
+			Kind: &message.Input_Init{
+				Init: &message.Init{},
+			},
 		}
 
 		message, _ := proto.Marshal(input)
@@ -57,10 +59,14 @@ func TestProduce(t *testing.T) {
 	count := 0
 	for {
 		input := q.Dequeue()
+
 		if input == nil {
 			break
 		}
-		count += int(input.Value.Type)
+
+		if input.Value.UserId == "test" {
+			count++
+		}
 	}
 
 	// 오차가 생김. 여러번 돌려보니 오차가 2개 이상은 안 생겨서 -2 함

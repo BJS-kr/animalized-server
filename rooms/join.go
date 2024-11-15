@@ -1,31 +1,22 @@
 package rooms
 
 import (
-	"animalized/message"
-	"animalized/packet"
 	"animalized/users"
 	"errors"
 )
 
-func (rs *Rooms) Join(roomName string, user *users.User) error {
+func (rs *Rooms) Join(roomName string, user *users.User) (*Room, error) {
 	r, ok := rs.NameMap[RoomName(roomName)]
 
 	if !ok {
-		return errors.New("room not exists")
+		return nil, errors.New("room not exists")
 	}
 
 	if err := r.Join(user); err != nil {
-		return err
+		return nil, err
 	}
 
-	r.Inputs.Enqueue(&message.Input{
-		UserId:   user.Id,
-		Type:     packet.JOIN,
-		RoomName: &roomName,
-	})
-
-	// send when join or qui
-	return nil
+	return r, nil
 }
 
 func (r *Room) Join(user *users.User) error {
