@@ -5,33 +5,73 @@ package input;
 option go_package = "./message";
 
 message Input {
-  int32 type = 1;
+  oneof kind {
+    Init init = 1;
+    Move move = 2;
+    Lobby lobby = 3;
+    Room room = 4;
+    UserStates user_states = 5;
+    RoomStates room_states = 6;
+  }
+
+  int64 context = 7;
+  int64 prev_context = 8;
+}
+
+message Move {
+  int32 direction = 1;
+}
+
+message Init {
+  string user_id = 1;
+}
+
+message Lobby {
+  enum LobbyType {
+    LOBBY_UNSPECIFIED = 0;
+    CREATE = 1;
+    JOIN = 2;
+  }
+
+  LobbyType type = 1;
   string user_id = 2;
-  optional int32 direction = 3;
-  optional int64 context = 4;
-  optional int64 prev_context = 5;
-  optional string room_name = 6;
-  optional int32 max_users = 7;
-  optional LobbyStatus lobby_status = 8;
-  repeated UserState user_states = 9;
 }
 
-message UserState {
-  Position position = 1;
-  int32 score = 2;
+message Room {
+  enum RoomType {
+    ROOM_UNSPECIFIED = 0;
+    LEAVE = 1;
+    START = 2;
+  }
+
+  RoomType type = 1;
+  string user_id = 2;
+  string room_name = 3;
+  int32 max_users = 4;
 }
 
-message Position {
-  int32 x = 1;
-  int32 y = 2;
+message UserStates {
+  message Position {
+    int32 x = 1;
+    int32 y = 2;
+  }
+
+  message UserState {
+    Position position = 1;
+    int32 score = 2;
+  }
+
+  repeated UserState user_states = 1;
 }
 
-message LobbyStatus {
-  repeated RoomStatus room_statuses = 1;
+
+message RoomStates {
+  message RoomState {
+    string room_name = 1;
+    int32 max_users = 2;
+    repeated string user_ids = 3;
+  }
+
+  repeated RoomState room_states = 1;
 }
 
-message RoomStatus {
-  string name = 1;
-  int32 max_users = 2;
-  int32 users_count = 3;
-}
