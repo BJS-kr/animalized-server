@@ -17,30 +17,58 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 	lobbyInput = lobbyInputKind.Lobby
 
 	switch lobbyInput.Type {
-	// 유저가 로그인 할 때
-	// 누군가가 방에 JOIN하거나 QUIT할 때마다 통전송
-	case message.Lobby_STATE:
-		lobbyInput.RoomStates = make([]*message.RoomState, 0, len(c.Rooms.NameMap))
-
-		for name, room := range c.Rooms.NameMap {
-			lobbyInput.RoomStates = append(lobbyInput.RoomStates, &message.RoomState{
-				RoomName: string(name),
-				MaxUsers: int32(room.Users.Max),
-				UserIds:  room.Users.LockedIds(),
-			})
-		}
 	case message.Lobby_CREATE:
-		// TODO lobby status input 추가
+		u, err := c.FindUserById(input.UserId)
+
+		if err != nil {
+			return nil, err
+		}
+
 		r, err := c.Rooms.Create(lobbyInput.RoomName, int(lobbyInput.MaxUsers))
 
 		if err != nil {
 			return nil, err
 		}
 
+		u, err = c.Lobby.Quit(u.Id)
+
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = c.Rooms.Join(lobbyInput.RoomName, u)
+
+		if err != nil {
+			c.Lobby.Join(u)
+
+			return nil, err
+		}
+
+		c.Lobby.SystemInput(c.MakeLobbyState())
 		r.StartStreaming(c.roomHandler)
 	case message.Lobby_JOIN:
-		// TODO lobby status input 추가
-		// TODO room에 status input broadcast
+		u, err := c.FindUserById(input.UserId)
+
+		if err != nil {
+			return nil, err
+		}
+
+		u, err = c.Lobby.Quit(u.Id)
+
+		if err != nil {
+			return nil, err
+		}
+
+		r, err := c.Rooms.Join(lobbyInput.RoomName, u)
+
+		if err != nil {
+			c.Lobby.Join(u)
+
+			return nil, err
+		}
+
+		c.Lobby.SystemInput(c.MakeLobbyState())
+		r.SystemInput(r.MakeRoomStateInput(lobbyInput.RoomName))
 	default:
 		return nil, errors.New("unknown lobby input type")
 

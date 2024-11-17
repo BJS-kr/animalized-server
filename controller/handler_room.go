@@ -30,7 +30,7 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 
 	switch roomInput.Type {
 	case message.Room_STATE:
-		return nil, errors.New("ROOM_STATUS not implemented")
+		roomInput.RoomState = r.MakeRoomState(roomInput.RoomName)
 	case message.Room_START:
 		r.Game = game.New(r.Users.Max)
 
@@ -42,7 +42,6 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 		r.Game.StartStreaming(c.makeGameHandler(r))
 		r.SetStatus(message.RoomState_PLAYING)
 	case message.Room_QUIT:
-		// TODO lobby status broadcast
 		u, err := c.Rooms.Quit(roomInput.RoomName, input.UserId)
 
 		if err != nil {
@@ -50,15 +49,16 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 		}
 
 		err = c.Lobby.Join(u)
-		// lobby에 join한 이후이므로 room handler는 유저에게 인풋을 전달할 수 없으므로 lobby input으로 보내준다.
-		c.Lobby.Inputs.Enqueue(input)
 
 		if err != nil {
 			return nil, err
 		}
 
-		return nil, nil
-
+		if c.Rooms.NameMap[rooms.RoomName(roomInput.RoomName)] == nil {
+			c.Lobby.SystemInput(c.MakeLobbyState())
+		} else {
+			r.SystemInput(r.MakeRoomStateInput(roomInput.RoomName))
+		}
 	default:
 		return nil, errors.New("unknown room input type")
 	}

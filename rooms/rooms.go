@@ -57,16 +57,6 @@ func (rs *Rooms) Join(roomName string, user *users.User) (*Room, error) {
 	return r, nil
 }
 
-func (rs *Rooms) RemoveRoom(room *Room) {
-	for k, v := range rs.NameMap {
-		if v == room {
-			room.StopStreaming()
-			delete(rs.NameMap, k)
-			return
-		}
-	}
-}
-
 func (rs *Rooms) Quit(roomName string, userName string) (*users.User, error) {
 	r, ok := rs.NameMap[RoomName(roomName)]
 
@@ -87,8 +77,33 @@ func (rs *Rooms) Quit(roomName string, userName string) (*users.User, error) {
 	}
 
 	if remain <= 0 {
-		delete(rs.NameMap, RoomName(roomName))
+		if err = rs.removeRoom(roomName); err != nil {
+			return user, err
+		}
 	}
 
 	return user, nil
+}
+
+func (rs *Rooms) removeRoom(roomName string) error {
+	r, ok := rs.NameMap[RoomName(roomName)]
+
+	if !ok {
+		return errors.New("removeRoom: room not exists")
+	}
+
+	r.StopStreaming()
+	delete(rs.NameMap, RoomName(roomName))
+
+	return nil
+}
+
+func (rs *Rooms) MakeRoomStates() []*message.RoomState {
+	rss := make([]*message.RoomState, 0, len(rs.NameMap))
+
+	for rName, r := range rs.NameMap {
+		rss = append(rss, r.MakeRoomState(string(rName)))
+	}
+
+	return rss
 }

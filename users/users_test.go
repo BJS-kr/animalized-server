@@ -3,6 +3,7 @@ package users_test
 import (
 	"animalized/message"
 	"animalized/packet"
+	"time"
 
 	"animalized/queue"
 	"animalized/users"
@@ -18,10 +19,10 @@ func TestProduce(t *testing.T) {
 	server, client := net.Pipe()
 	goal := 1000
 	q := queue.New[*message.Input]()
-
 	user, _ := users.NewUser(server, "test", packet.NewStore())
-
 	user.SetProduceChannel(inputProduceChan)
+	user.StartPacketHandlers(users.NewUsers(1))
+
 	go func() {
 		input := &message.Input{
 			UserId: "test",
@@ -30,7 +31,11 @@ func TestProduce(t *testing.T) {
 			},
 		}
 
-		message, _ := proto.Marshal(input)
+		message, err := proto.Marshal(input)
+
+		if err != nil {
+			panic(err)
+		}
 
 		for i := 0; i < goal; i++ {
 			client.Write(append(message, packet.INPUT_PACKET_DELIMITER))
@@ -47,11 +52,7 @@ func TestProduce(t *testing.T) {
 		}
 	}()
 
-	for {
-		if _, err := user.ProduceInput(); err != nil {
-			break
-		}
-	}
+	time.Sleep(time.Second)
 
 	count := 0
 	for {

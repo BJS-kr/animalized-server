@@ -2,6 +2,7 @@ package controller
 
 import (
 	"animalized/lobby"
+	"animalized/message"
 	"animalized/rooms"
 )
 
@@ -19,4 +20,15 @@ func New(maxUsers int) *Controller {
 	c.Lobby.StartStreaming(c.lobbyHandler)
 
 	return c
+}
+
+func (c *Controller) MakeLobbyState() *message.Input {
+	return &message.Input{
+		Kind: &message.Input_Lobby{
+			Lobby: &message.Lobby{
+				Type:       message.Lobby_STATE,
+				RoomStates: c.MakeRoomStates(),
+			},
+		},
+	}
 }

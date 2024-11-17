@@ -39,3 +39,7 @@ func (d *Distributable) Receive(handler Handler) {
 		}
 	}
 }
+
+func (d *Distributable) SystemInput(message *message.Input) {
+	d.Inputs.Enqueue(message)
+}

@@ -93,12 +93,14 @@ func (u *User) handleIncoming(users *Users) {
 			}
 
 			input, err := u.ProduceInput()
+
 			if err != nil {
 				slog.Error(err.Error())
 				users.Quit(u)
 				u.Conn.Close()
 				return
 			}
+
 			u.produceChannel <- input
 		}
 	}
