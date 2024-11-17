@@ -1,6 +1,10 @@
 package users
 
-import "animalized/common"
+import (
+	"animalized/common"
+	"animalized/message"
+	"animalized/queue"
+)
 
 type DistributableUsers struct {
 	common.Distributable
@@ -38,4 +42,6 @@ func (du *DistributableUsers) StartStreaming(handler common.Handler) {
 
 func (du *DistributableUsers) StopStreaming() {
 	close(du.Stop)
+	du.Stop = make(chan common.Signal)
+	du.Inputs = queue.New[*message.Input]()
 }

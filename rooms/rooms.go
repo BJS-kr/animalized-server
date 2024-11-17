@@ -1,6 +1,7 @@
 package rooms
 
 import (
+	"animalized/game"
 	"animalized/message"
 	"animalized/users"
 	"errors"
@@ -38,6 +39,7 @@ func (rs *Rooms) Create(roomName string, maxUsers int) (*Room, error) {
 
 	r.MakeWithUsers(maxUsers)
 	r.SetStatus(message.RoomState_WAITING)
+	r.Game = game.New(maxUsers)
 	rs.NameMap[RoomName(roomName)] = r
 
 	return r, nil

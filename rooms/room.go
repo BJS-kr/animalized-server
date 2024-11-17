@@ -14,6 +14,10 @@ type Room struct {
 }
 
 func (r *Room) Join(user *users.User) error {
+	if r.Status != message.RoomState_WAITING {
+		return errors.New("room is not waiting")
+	}
+
 	if err := r.Users.Join(user, r.InputChannel); err != nil {
 		return err
 	}

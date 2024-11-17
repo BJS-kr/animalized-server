@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"animalized/game"
 	"animalized/message"
 	"animalized/rooms"
 	"errors"
@@ -32,14 +31,8 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 	case message.Room_STATE:
 		roomInput.RoomState = r.MakeRoomState(roomInput.RoomName)
 	case message.Room_START:
-		r.Game = game.New(r.Users.Max)
-
-		for u := range r.Users.LockedRange() {
-			r.Game.Users.Join(u, r.Game.InputChannel)
-			r.Users.Quit(u)
-		}
-
-		r.Game.StartStreaming(c.makeGameHandler(r))
+		r.StopStreaming()
+		r.StartStreaming(c.makeGameHandler(r))
 		r.SetStatus(message.RoomState_PLAYING)
 	case message.Room_QUIT:
 		u, err := c.Rooms.Quit(roomInput.RoomName, input.UserId)
