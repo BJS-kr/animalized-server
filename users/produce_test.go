@@ -19,11 +19,8 @@ func TestProduce(t *testing.T) {
 	goal := 1000
 	q := queue.New[*message.Input]()
 
-	user := &users.User{
-		Conn: server,
-		Id:   "test",
-	}
-	user.SetPacketStore(packet.NewStore())
+	user, _ := users.NewUser(server, "test", packet.NewStore())
+
 	user.SetProduceChannel(inputProduceChan)
 	go func() {
 		input := &message.Input{

@@ -1,6 +1,14 @@
 package game
 
-import "animalized/state"
+import (
+	"animalized/state"
+	"animalized/users"
+)
+
+type Game struct {
+	users.DistributableUsers
+	State *state.GameState
+}
 
 func New(maxUsers int) *Game {
 	g := new(Game)
