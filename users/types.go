@@ -3,6 +3,7 @@ package users
 import (
 	"animalized/common"
 	"animalized/message"
+	"animalized/packet"
 	"net"
 	"sync"
 )
@@ -22,5 +23,6 @@ type User struct {
 	common.Distributable
 	Conn           net.Conn
 	Id             string
+	packetStore    *packet.PacketStore
 	produceChannel chan<- *message.Input
 }

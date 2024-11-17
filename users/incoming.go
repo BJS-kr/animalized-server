@@ -1,14 +1,10 @@
 package users
 
 import (
-	"animalized/packet"
-
-	"bytes"
 	"log/slog"
 )
 
 func (u *User) handleIncoming(users *Users) {
-	buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
 
 	for {
 		select {
@@ -19,7 +15,7 @@ func (u *User) handleIncoming(users *Users) {
 				continue
 			}
 
-			input, err := u.ProduceInput(buf, inputBuf)
+			input, err := u.ProduceInput()
 			if err != nil {
 				slog.Error(err.Error())
 				users.Quit(u)

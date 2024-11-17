@@ -5,6 +5,8 @@ import (
 	"errors"
 )
 
+var lobbyInput *message.Lobby
+
 func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) {
 	lobbyInputKind, ok := input.Kind.(*message.Input_Lobby)
 
@@ -12,7 +14,7 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 		return nil, errors.New("not lobby input")
 	}
 
-	lobbyInput := lobbyInputKind.Lobby
+	lobbyInput = lobbyInputKind.Lobby
 
 	switch lobbyInput.Type {
 	// 유저가 로그인 할 때
@@ -39,6 +41,8 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 	case message.Lobby_JOIN:
 		// TODO lobby status input 추가
 		// TODO room에 status input broadcast
+	default:
+		return nil, errors.New("unknown lobby input type")
 
 	}
 

@@ -2,12 +2,11 @@ package packet
 
 import (
 	"animalized/message"
-	"bytes"
 	"net"
 )
 
-func ParseInput(conn net.Conn, buf []byte, inputBuf *bytes.Buffer) (*message.Input, error) {
-	chunk, err := makeChunk(conn, buf, inputBuf)
+func (ps *PacketStore) ParseInput(conn net.Conn) (*message.Input, error) {
+	chunk, err := ps.makeChunk(conn)
 
 	if err != nil {
 		return nil, err

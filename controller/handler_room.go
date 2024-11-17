@@ -7,6 +7,8 @@ import (
 	"errors"
 )
 
+var roomInput *message.Room
+
 func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 	roomInputKind, ok := input.Kind.(*message.Input_Room)
 
@@ -14,7 +16,7 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 		return nil, errors.New("not room input")
 	}
 
-	roomInput := roomInputKind.Room
+	roomInput = roomInputKind.Room
 
 	if roomInput.RoomName == "" {
 		return nil, errors.New("room name not provided in room handler")
@@ -37,8 +39,8 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 			r.Users.Quit(u)
 		}
 
-		r.Game.StartStreaming(c.makeHandleGame(r))
-		r.Status = rooms.PLAYING
+		r.Game.StartStreaming(c.makeGameHandler(r))
+		r.SetStatus(message.RoomState_PLAYING)
 	case message.Room_QUIT:
 		// TODO lobby status broadcast
 		u, err := c.Rooms.Quit(roomInput.RoomName, input.UserId)
@@ -56,6 +58,9 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 		}
 
 		return nil, nil
+
+	default:
+		return nil, errors.New("unknown room input type")
 	}
 
 	return input, nil

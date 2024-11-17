@@ -1,6 +1,7 @@
 package rooms
 
 import (
+	"animalized/message"
 	"errors"
 )
 
@@ -9,7 +10,7 @@ func (rs *Rooms) Create(roomName string, maxUsers int) (*Room, error) {
 		return nil, errors.New("room name not provided when creating room")
 	}
 
-	if maxUsers <= 0 || maxUsers > 8 {
+	if maxUsers <= 0 || maxUsers > MAX_USERS_LIMIT {
 		return nil, errors.New("max users not in valid range")
 	}
 
@@ -24,7 +25,7 @@ func (rs *Rooms) Create(roomName string, maxUsers int) (*Room, error) {
 	}
 
 	r.MakeWithUsers(maxUsers)
-	r.Status = READY
+	r.SetStatus(message.RoomState_WAITING)
 	rs.NameMap[RoomName(roomName)] = r
 
 	return r, nil

@@ -1,15 +1,14 @@
 package packet
 
 import (
-	"bytes"
 	"errors"
 	"io"
 	"net"
 )
 
-func makeChunk(conn net.Conn, buf []byte, inputBuf *bytes.Buffer) ([]byte, error) {
+func (ps *PacketStore) makeChunk(conn net.Conn) ([]byte, error) {
 	for {
-		chunk, err := cutChunk(inputBuf)
+		chunk, err := ps.cutChunk()
 
 		if err == nil {
 			return chunk, nil
@@ -19,14 +18,14 @@ func makeChunk(conn net.Conn, buf []byte, inputBuf *bytes.Buffer) ([]byte, error
 			return chunk, err
 		}
 
-		size, err := readInput(buf, conn)
+		size, err := ps.readInput(conn)
 
 		if err != nil {
-			return buf, err
+			return ps.incomingBuf, err
 		}
 
-		if err := writeInput((buf)[:size], inputBuf); err != nil {
-			return buf, err
+		if err := ps.writeInput(size); err != nil {
+			return ps.incomingBuf, err
 		}
 	}
 }

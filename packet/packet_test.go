@@ -3,7 +3,6 @@ package packet_test
 import (
 	"animalized/message"
 	"animalized/packet"
-	"bytes"
 	"net"
 	"testing"
 
@@ -29,9 +28,10 @@ func TestInputParsing(t *testing.T) {
 			input: &message.Input{
 
 				UserId: "test",
-				Kind: &message.Input_Move{
-					Move: &message.Move{
-						Direction: message.Move_UP,
+				Kind: &message.Input_Operation{
+					Operation: &message.Operation{
+						Type:      message.Operation_MOVE,
+						Direction: message.Operation_UP,
 					},
 				},
 			},
@@ -56,8 +56,8 @@ func TestInputParsing(t *testing.T) {
 			client.Write(append(message, packet.INPUT_PACKET_DELIMITER))
 		}()
 
-		buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
-		input, err := packet.ParseInput(server, buf, inputBuf)
+		packetStore := packet.NewStore()
+		input, err := packetStore.ParseInput(server)
 
 		if err != nil {
 			t.Fatal(err)

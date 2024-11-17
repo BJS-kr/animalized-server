@@ -6,8 +6,8 @@ import (
 	"net"
 )
 
-func readInput(buf []byte, conn net.Conn) (int, error) {
-	size, err := conn.Read(buf)
+func (ps *PacketStore) readInput(conn net.Conn) (int, error) {
+	size, err := conn.Read(ps.incomingBuf)
 
 	if err != nil {
 		if errors.Is(err, io.EOF) {

@@ -6,7 +6,7 @@ import (
 
 	"animalized/queue"
 	"animalized/users"
-	"bytes"
+
 	"net"
 	"testing"
 
@@ -15,7 +15,6 @@ import (
 
 func TestProduce(t *testing.T) {
 	inputProduceChan := make(chan *message.Input)
-	buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
 	server, client := net.Pipe()
 	goal := 1000
 	q := queue.New[*message.Input]()
@@ -24,6 +23,7 @@ func TestProduce(t *testing.T) {
 		Conn: server,
 		Id:   "test",
 	}
+	user.SetPacketStore(packet.NewStore())
 	user.SetProduceChannel(inputProduceChan)
 	go func() {
 		input := &message.Input{
@@ -51,7 +51,7 @@ func TestProduce(t *testing.T) {
 	}()
 
 	for {
-		if _, err := user.ProduceInput(buf, inputBuf); err != nil {
+		if _, err := user.ProduceInput(); err != nil {
 			break
 		}
 	}

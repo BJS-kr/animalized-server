@@ -9,18 +9,14 @@ message Input {
 
   oneof kind {
     Init init = 2;
-    Move move = 3;
+    Operation operation = 3;
     Lobby lobby = 4;
     Room room = 5;
     UserStates user_states = 6;
-    ServerState server_state = 8;   
   }
-
-  int64 context = 9;
-  int64 prev_context = 10;
 }
 
-message Move {
+message Operation {
   enum Direction {
     DIRECTION_UNSPECIFIED = 0;
     UP = 1;
@@ -29,17 +25,34 @@ message Move {
     RIGHT = 4;
   }
 
-  Direction direction = 1;
+  enum OperationType {
+    OPERATION_UNSPECIFIED = 0;
+    MOVE = 1;
+    ATTACK = 2;
+    HIT = 3;
+    GAME_STATE = 4;
+  }
+
+  OperationType type = 1;
+  Direction direction = 2;
+  int64 context = 3;
+  int64 prev_context = 4;
 }
+
 
 message Init {}
 
-message ServerState {}
-
 message RoomState {
-  string room_name = 1;
-  int32 max_users = 2;
-  repeated string user_ids = 3;
+  enum RoomStatusType {
+    ROOM_STATUS_UNSPECIFIED = 0;
+    WAITING = 1;
+    PLAYING = 2;
+  }
+
+  RoomStatusType status = 1;
+  string room_name = 2;
+  int32 max_users = 3;
+  repeated string user_ids = 4;
 }
 
 message Lobby {

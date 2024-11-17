@@ -18,14 +18,18 @@ func New() *GameState {
 	return gs
 }
 
-func (ss *GameState) UpdateUserPosition(userId string, direction int32) {
+func (ss *GameState) UpdateUserPosition(userId string, direction message.Operation_Direction) {
 	ss.UserStates[UserID(userId)].position.determinePosition(direction)
 }
 
 func (ss *GameState) SignalGameState(inputProduceChannel chan<- *message.Input) {
 	tick := time.Tick(SERVER_STATE_SIGNAL_INTERVAL)
 	tickMessage := &message.Input{
-		Kind: &message.Input_ServerState{},
+		Kind: &message.Input_Operation{
+			Operation: &message.Operation{
+				Type: message.Operation_GAME_STATE,
+			},
+		},
 	}
 
 	for range tick {

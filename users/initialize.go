@@ -1,18 +1,14 @@
 package users
 
 import (
-	"animalized/common"
-	"animalized/message"
 	"animalized/packet"
-	"animalized/queue"
-	"bytes"
 	"errors"
 	"net"
 )
 
 func Initialize(conn net.Conn) (*User, error) {
-	buf, inputBuf := make([]byte, packet.BUFFER_SIZE), bytes.NewBuffer(nil)
-	input, err := packet.ParseInput(conn, buf, inputBuf)
+	personalPacketStore := packet.NewStore()
+	input, err := personalPacketStore.ParseInput(conn)
 
 	if err != nil {
 		return nil, err
@@ -22,19 +18,11 @@ func Initialize(conn net.Conn) (*User, error) {
 		return nil, errors.New("invalid init packet type")
 	}
 
-	userIdLen := len(input.UserId)
+	user, err := NewUser(conn, input.UserId, personalPacketStore)
 
-	if userIdLen == 0 || userIdLen > 10 {
-		return nil, errors.New("empty or longer than 10 length id not allowed")
+	if err != nil {
+		return nil, err
 	}
 
-	u := &User{
-		Conn: conn,
-		Id:   input.UserId,
-		Distributable: common.Distributable{
-			Inputs: queue.New[*message.Input](),
-		},
-	}
-
-	return u, nil
+	return user, nil
 }
