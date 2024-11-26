@@ -8,25 +8,25 @@ import (
 
 type UserID string
 type GameState struct {
-	UserStates map[UserID]UserState
+	UserStates map[UserID]*UserState
 }
 
 func New() *GameState {
 	gs := new(GameState)
-	gs.UserStates = make(map[UserID]UserState)
+	gs.UserStates = make(map[UserID]*UserState)
 
 	return gs
 }
 
 func (ss *GameState) UpdateUserPosition(userId string, direction message.Operation_Direction) {
-	ss.UserStates[UserID(userId)].position.determinePosition(direction)
+	ss.UserStates[UserID(userId)].Position.determinePosition(direction)
 }
 
 func (ss *GameState) SignalGameState(inputProduceChannel chan<- *message.Input) {
 	tick := time.Tick(SERVER_STATE_SIGNAL_INTERVAL)
 	tickMessage := &message.Input{
-		Kind: &message.Input_Operation{
-			Operation: &message.Operation{
+		Kind: &message.Input_Op{
+			Op: &message.Operation{
 				Type: message.Operation_GAME_STATE,
 			},
 		},
@@ -37,22 +37,22 @@ func (ss *GameState) SignalGameState(inputProduceChannel chan<- *message.Input) 
 	}
 }
 
-func (ss *GameState) GetUserStates() *message.UserStates {
-	userStates := new(message.UserStates)
+func (ss *GameState) GetGameState() *message.Operation_GameState {
+	gameState := new(message.Operation_GameState)
 
 	for _, us := range ss.UserStates {
-		mus := &message.UserStates_UserState{
-			Position: &message.UserStates_Position{
-				X: us.position.X,
-				Y: us.position.Y,
+		mus := &message.Operation_GameState_UserState{
+			Position: &message.Position{
+				X: us.Position.X,
+				Y: us.Position.Y,
 			},
 			Score: us.score,
 		}
 
-		userStates.UserStates = append(userStates.UserStates, mus)
+		gameState.UserStates = append(gameState.UserStates, mus)
 	}
 
-	return userStates
+	return gameState
 }
 
 func (ss *GameState) AddUserState(userId UserID) error {
@@ -61,12 +61,12 @@ func (ss *GameState) AddUserState(userId UserID) error {
 	}
 
 	us := UserState{}
-	us.position = &Position{
+	us.Position = &Position{
 		X: 0,
 		Y: 0,
 	}
 
-	ss.UserStates[userId] = us
+	ss.UserStates[userId] = &us
 
 	return nil
 }

@@ -40,3 +40,7 @@ func (p *Position) determinePosition(direction message.Operation_Direction) {
 		slog.Error("unknown direction detected")
 	}
 }
+
+func (p *Position) IsHit(hitRange *message.Operation_HitRange) bool {
+	return p.X >= hitRange.LeftBottom.X && p.X <= hitRange.RightTop.X && p.Y >= hitRange.LeftBottom.Y && p.Y <= hitRange.RightTop.Y
+}

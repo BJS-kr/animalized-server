@@ -28,8 +28,8 @@ func TestInputParsing(t *testing.T) {
 			input: &message.Input{
 
 				UserId: "test",
-				Kind: &message.Input_Operation{
-					Operation: &message.Operation{
+				Kind: &message.Input_Op{
+					Op: &message.Operation{
 						Type:      message.Operation_MOVE,
 						Direction: message.Operation_UP,
 					},
@@ -42,7 +42,7 @@ func TestInputParsing(t *testing.T) {
 				UserId: "test",
 				Kind: &message.Input_Lobby{
 					Lobby: &message.Lobby{
-						Type:     message.Lobby_CREATE,
+						Type:     message.Lobby_CREATE_ROOM,
 						RoomName: "test",
 					},
 				},

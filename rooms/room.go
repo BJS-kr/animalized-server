@@ -39,6 +39,7 @@ func (r *Room) Quit(user *users.User) (int, error) {
 	return r.Users.Quit(user)
 }
 
+// Room struct 자체는 Name을 가지고 있지 않으므로 인자로 받는다.
 func (r *Room) MakeRoomState(roomName string) *message.RoomState {
 	rs := new(message.RoomState)
 
@@ -48,15 +49,4 @@ func (r *Room) MakeRoomState(roomName string) *message.RoomState {
 	rs.UserIds = r.Users.LockedIds()
 
 	return rs
-}
-
-func (r *Room) MakeRoomStateInput(roomName string) *message.Input {
-	return &message.Input{
-		Kind: &message.Input_Room{
-			Room: &message.Room{
-				Type:      message.Room_STATE,
-				RoomState: r.MakeRoomState(roomName),
-			},
-		},
-	}
 }

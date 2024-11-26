@@ -9,14 +9,26 @@ message Input {
 
   oneof kind {
     Init init = 2;
-    Operation operation = 3;
+    Operation op = 3;
     Lobby lobby = 4;
     Room room = 5;
-    UserStates user_states = 6;
   }
 }
 
+message Position {
+  int32 x = 1;
+  int32 y = 2;
+}
+
 message Operation {
+  OperationType type = 1;
+  Direction direction = 2;
+  HitRange hit_range = 3;
+  GameState game_state = 4;
+  int64 context = 5;
+  int64 prev_context = 6;
+  
+
   enum Direction {
     DIRECTION_UNSPECIFIED = 0;
     UP = 1;
@@ -33,69 +45,68 @@ message Operation {
     GAME_STATE = 4;
   }
 
-  OperationType type = 1;
-  Direction direction = 2;
-  int64 context = 3;
-  int64 prev_context = 4;
-}
+  message HitRange {
+    Position left_bottom = 1;
+    Position right_top = 2;
+  }
 
+  message GameState {
+    repeated UserState user_states = 1;
+
+    message UserState {
+      Position position = 1;
+      int32 score = 2;
+    }
+  }
+}
 
 message Init {}
 
 message RoomState {
+  RoomStatusType status = 1;
+  string room_name = 2;
+  int32 max_users = 3;
+  repeated string user_ids = 4;
+
   enum RoomStatusType {
     ROOM_STATUS_UNSPECIFIED = 0;
     WAITING = 1;
     PLAYING = 2;
   }
-
-  RoomStatusType status = 1;
-  string room_name = 2;
-  int32 max_users = 3;
-  repeated string user_ids = 4;
 }
 
 message Lobby {
-  enum LobbyType {
-    LOBBY_UNSPECIFIED = 0;
-    CREATE = 1;
-    JOIN = 2;
-    STATE = 3;
-  }
-
   LobbyType type = 1;
   string room_name = 2;
   int32 max_users = 3;
   repeated RoomState room_states = 4;
+
+  enum LobbyType {
+    LOBBY_UNSPECIFIED = 0;
+    CREATE_ROOM = 1;
+    JOIN_ROOM = 2;
+    QUIT_ROOM = 3;
+    STATE = 4;
+  }
 }
 
 message Room {
+  RoomType type = 1;
+  string room_name = 2;
+  RoomState room_state = 4;
+
   enum RoomType {
     ROOM_UNSPECIFIED = 0;
     QUIT = 1;
     START = 2;
     STATE = 3;
   }
-
-  RoomType type = 1;
-  string room_name = 2;
-  int32 max_users = 3;
-  RoomState room_state = 4;
 }
 
-message UserStates {
-  message Position {
-    int32 x = 1;
-    int32 y = 2;
-  }
 
-  message UserState {
-    Position position = 1;
-    int32 score = 2;
-  }
 
-  repeated UserState user_states = 1;
-}
+
+
 
 
 

@@ -79,7 +79,7 @@ func (rs *Rooms) Quit(roomName string, userName string) (*users.User, error) {
 	}
 
 	if remain <= 0 {
-		if err = rs.removeRoom(roomName); err != nil {
+		if err = rs.Remove(roomName); err != nil {
 			return user, err
 		}
 	}
@@ -87,7 +87,7 @@ func (rs *Rooms) Quit(roomName string, userName string) (*users.User, error) {
 	return user, nil
 }
 
-func (rs *Rooms) removeRoom(roomName string) error {
+func (rs *Rooms) Remove(roomName string) error {
 	r, ok := rs.NameMap[RoomName(roomName)]
 
 	if !ok {

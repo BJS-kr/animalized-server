@@ -118,6 +118,10 @@ func (u *User) handleOutgoing() {
 
 			n := u.Inputs.Dequeue()
 
+			if n == nil || n.Value == nil {
+				continue
+			}
+
 			message, err := proto.Marshal(n.Value)
 
 			if err != nil {
@@ -129,7 +133,7 @@ func (u *User) handleOutgoing() {
 
 			if err != nil {
 				slog.Error(err.Error())
-				return
+				continue
 			}
 		}
 	}

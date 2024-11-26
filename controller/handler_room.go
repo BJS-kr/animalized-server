@@ -6,8 +6,6 @@ import (
 	"errors"
 )
 
-var roomInput *message.Room
-
 func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 	roomInputKind, ok := input.Kind.(*message.Input_Room)
 
@@ -15,7 +13,7 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 		return nil, errors.New("not room input")
 	}
 
-	roomInput = roomInputKind.Room
+	roomInput := roomInputKind.Room
 
 	if roomInput.RoomName == "" {
 		return nil, errors.New("room name not provided in room handler")
@@ -47,11 +45,13 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 			return nil, err
 		}
 
-		if c.Rooms.NameMap[rooms.RoomName(roomInput.RoomName)] == nil {
-			c.Lobby.SystemInput(c.MakeLobbyState())
-		} else {
-			r.SystemInput(r.MakeRoomStateInput(roomInput.RoomName))
+		c.Lobby.SystemDirectInput(c.MakeLobbyState(input.UserId))
+
+		if c.Rooms.NameMap[rooms.RoomName(roomInput.RoomName)] != nil {
+			r.SystemDirectInput(c.MakeRoomStateDirectInput(input.UserId, roomInput.RoomName, r))
 		}
+
+		c.Lobby.SystemDirectInput(c.MakeQuitRoomInput(input.UserId, roomInput.RoomName))
 	default:
 		return nil, errors.New("unknown room input type")
 	}

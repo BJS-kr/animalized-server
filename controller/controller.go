@@ -22,12 +22,77 @@ func New(maxUsers int) *Controller {
 	return c
 }
 
-func (c *Controller) MakeLobbyState() *message.Input {
+/**
+ * CAUTION: Use as System Direct Input
+ */
+func (c *Controller) MakeLobbyState(userId string) *message.Input {
 	return &message.Input{
+		UserId: userId,
 		Kind: &message.Input_Lobby{
 			Lobby: &message.Lobby{
 				Type:       message.Lobby_STATE,
 				RoomStates: c.MakeRoomStates(),
+			},
+		},
+	}
+}
+
+/**
+ * CAUTION: Use as System Direct Input
+ */
+func (c *Controller) MakeJoinInput(userId string, roomName string) *message.Input {
+	return &message.Input{
+		UserId: userId,
+		Kind: &message.Input_Lobby{
+			Lobby: &message.Lobby{
+				Type:     message.Lobby_JOIN_ROOM,
+				RoomName: roomName,
+			},
+		},
+	}
+}
+
+/**
+ * CAUTION: Use as System Input
+ */
+func (c *Controller) MakeRoomStateInput(userId string, roomName string) *message.Input {
+	return &message.Input{
+		UserId: userId,
+		Kind: &message.Input_Room{
+			Room: &message.Room{
+				Type:     message.Room_STATE,
+				RoomName: roomName,
+			},
+		},
+	}
+}
+
+/**
+ * CAUTION: Use as System Direct Input
+ */
+func (c *Controller) MakeRoomStateDirectInput(userId string, roomName string, room *rooms.Room) *message.Input {
+	return &message.Input{
+		UserId: userId,
+		Kind: &message.Input_Room{
+			Room: &message.Room{
+				Type:      message.Room_STATE,
+				RoomName:  roomName,
+				RoomState: room.MakeRoomState(roomName),
+			},
+		},
+	}
+}
+
+/**
+ * CAUTION: Use as System Direct Input
+ */
+func (c *Controller) MakeQuitRoomInput(userId string, roomName string) *message.Input {
+	return &message.Input{
+		UserId: userId,
+		Kind: &message.Input_Lobby{
+			Lobby: &message.Lobby{
+				Type:     message.Lobby_QUIT_ROOM,
+				RoomName: roomName,
 			},
 		},
 	}
