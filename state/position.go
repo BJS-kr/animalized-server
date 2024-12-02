@@ -2,6 +2,7 @@ package state
 
 import (
 	"animalized/message"
+	"fmt"
 	"log/slog"
 )
 
@@ -42,5 +43,7 @@ func (p *Position) determinePosition(direction message.Operation_Direction) {
 }
 
 func (p *Position) IsHit(hitRange *message.Operation_HitRange) bool {
+	fmt.Println(p)
+	fmt.Println(hitRange)
 	return p.X >= hitRange.LeftBottom.X && p.X <= hitRange.RightTop.X && p.Y >= hitRange.LeftBottom.Y && p.Y <= hitRange.RightTop.Y
 }

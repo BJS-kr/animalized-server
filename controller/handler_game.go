@@ -26,7 +26,9 @@ func (c *Controller) makeGameHandler(r *rooms.Room) common.Handler {
 
 		switch opInput.Type {
 		case message.Operation_MOVE:
-			r.Game.State.UpdateUserPosition(input.UserId, opInput.Direction)
+			if err := r.Game.State.UpdateUserPosition(state.UserID(input.UserId), opInput.Direction); err != nil {
+				return nil, err
+			}
 		case message.Operation_ATTACK:
 		case message.Operation_HIT:
 			userState = r.Game.State.UserStates[state.UserID(input.UserId)]

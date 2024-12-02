@@ -4,8 +4,11 @@ import (
 	"animalized/message"
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"net"
+
+	"google.golang.org/protobuf/proto"
 )
 
 type PacketStore struct {
@@ -23,6 +26,7 @@ func NewStore() *PacketStore {
 
 func (ps *PacketStore) ParseInput(conn net.Conn) (*message.Input, error) {
 	chunk, err := ps.makeChunk(conn)
+	fmt.Println("chunk: ", chunk)
 
 	if err != nil {
 		return nil, err
@@ -33,11 +37,10 @@ func (ps *PacketStore) ParseInput(conn net.Conn) (*message.Input, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("stripped: ", stripped)
 
 	input := new(message.Input)
-	err = into(input, stripped)
-
-	if err != nil {
+	if err := proto.Unmarshal(stripped, input); err != nil {
 		return nil, err
 	}
 

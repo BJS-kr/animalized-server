@@ -18,11 +18,19 @@ func New() *GameState {
 	return gs
 }
 
-func (ss *GameState) UpdateUserPosition(userId string, direction message.Operation_Direction) {
-	ss.UserStates[UserID(userId)].Position.determinePosition(direction)
+func (gs *GameState) UpdateUserPosition(userId UserID, direction message.Operation_Direction) error {
+	us, ok := gs.UserStates[userId]
+
+	if !ok {
+		return errors.New("user state not found")
+	}
+
+	us.Position.determinePosition(direction)
+
+	return nil
 }
 
-func (ss *GameState) SignalGameState(inputProduceChannel chan<- *message.Input) {
+func (gs *GameState) SignalGameState(inputProduceChannel chan<- *message.Input) {
 	tick := time.Tick(SERVER_STATE_SIGNAL_INTERVAL)
 	tickMessage := &message.Input{
 		Kind: &message.Input_Op{
@@ -37,10 +45,10 @@ func (ss *GameState) SignalGameState(inputProduceChannel chan<- *message.Input) 
 	}
 }
 
-func (ss *GameState) GetGameState() *message.Operation_GameState {
+func (gs *GameState) GetGameState() *message.Operation_GameState {
 	gameState := new(message.Operation_GameState)
 
-	for _, us := range ss.UserStates {
+	for _, us := range gs.UserStates {
 		mus := &message.Operation_GameState_UserState{
 			Position: &message.Position{
 				X: us.Position.X,
@@ -55,8 +63,8 @@ func (ss *GameState) GetGameState() *message.Operation_GameState {
 	return gameState
 }
 
-func (ss *GameState) AddUserState(userId UserID) error {
-	if _, ok := ss.UserStates[userId]; ok {
+func (gs *GameState) AddUserState(userId UserID) error {
+	if _, ok := gs.UserStates[userId]; ok {
 		return errors.New("user id already exists")
 	}
 
@@ -66,7 +74,7 @@ func (ss *GameState) AddUserState(userId UserID) error {
 		Y: 0,
 	}
 
-	ss.UserStates[userId] = &us
+	gs.UserStates[userId] = &us
 
 	return nil
 }

@@ -3,6 +3,7 @@ package packet_test
 import (
 	"animalized/message"
 	"animalized/packet"
+	"fmt"
 	"net"
 	"testing"
 
@@ -48,6 +49,26 @@ func TestInputParsing(t *testing.T) {
 				},
 			},
 		},
+		{
+			desc: "parse negative int32 case",
+			input: &message.Input{
+				UserId: "test",
+				Kind: &message.Input_Op{
+					Op: &message.Operation{
+						Type: message.Operation_HIT,
+						HitRange: &message.Operation_HitRange{
+							LeftBottom: &message.Position{
+								X: -3,
+								Y: -3,
+							},
+							RightTop: &message.Position{
+								X: 3,
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for _, tc := range tcs {
@@ -58,6 +79,8 @@ func TestInputParsing(t *testing.T) {
 
 		packetStore := packet.NewStore()
 		input, err := packetStore.ParseInput(server)
+
+		fmt.Println(input)
 
 		if err != nil {
 			t.Fatal(err)
