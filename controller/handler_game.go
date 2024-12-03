@@ -31,11 +31,17 @@ func (c *Controller) makeGameHandler(r *rooms.Room) common.Handler {
 			}
 		case message.Operation_ATTACK:
 		case message.Operation_HIT:
-			userState = r.Game.State.UserStates[state.UserID(input.UserId)]
-
-			if userState.Position.IsHit(opInput.HitRange) {
-				userState.IncreaseUserScore(1)
+			if opInput.TargetUserId == "" {
+				return nil, errors.New("target user id not provided in hit operation. not fatal")
 			}
+
+			userState = r.Game.State.UserStates[state.UserID(opInput.TargetUserId)]
+
+			if !userState.Position.IsHit(opInput.HitRange) {
+				return nil, errors.New("target user is not in hit range")
+			}
+
+			userState.IncreaseUserScore(1)
 		case message.Operation_GAME_STATE:
 			opInput.GameState = r.Game.State.GetGameState()
 		default:

@@ -2,7 +2,6 @@ package state
 
 import (
 	"animalized/message"
-	"fmt"
 	"log/slog"
 )
 
@@ -14,28 +13,28 @@ type Position struct {
 func (p *Position) determinePosition(direction message.Operation_Direction) {
 	switch direction {
 	case message.Operation_UP:
-		if p.Y-1 < 0 {
-			p.Y = MAP_SIZE - 1
+		if p.Y-CLIENT_CELL_SIZE < 0 {
+			p.Y = MAX_SPACE
 		} else {
-			p.Y--
+			p.Y -= CLIENT_CELL_SIZE
 		}
 	case message.Operation_DOWN:
-		if p.Y+1 >= MAP_SIZE {
+		if p.Y+CLIENT_CELL_SIZE >= MAX_SPACE {
 			p.Y = 0
 		} else {
-			p.Y++
+			p.Y += CLIENT_CELL_SIZE
 		}
 	case message.Operation_LEFT:
-		if p.X-1 < 0 {
-			p.X = MAP_SIZE - 1
+		if p.X-CLIENT_CELL_SIZE < 0 {
+			p.X = MAX_SPACE
 		} else {
-			p.X--
+			p.X -= CLIENT_CELL_SIZE
 		}
 	case message.Operation_RIGHT:
-		if p.X+1 >= MAP_SIZE {
+		if p.X+CLIENT_CELL_SIZE >= MAX_SPACE {
 			p.X = 0
 		} else {
-			p.X++
+			p.X += CLIENT_CELL_SIZE
 		}
 	default:
 		slog.Error("unknown direction detected")
@@ -43,7 +42,5 @@ func (p *Position) determinePosition(direction message.Operation_Direction) {
 }
 
 func (p *Position) IsHit(hitRange *message.Operation_HitRange) bool {
-	fmt.Println(p)
-	fmt.Println(hitRange)
-	return p.X >= hitRange.LeftBottom.X && p.X <= hitRange.RightTop.X && p.Y >= hitRange.LeftBottom.Y && p.Y <= hitRange.RightTop.Y
+	return p.X >= hitRange.LeftBottom.GetX() && p.X <= hitRange.RightTop.GetX() && p.Y >= hitRange.LeftBottom.GetY() && p.Y <= hitRange.RightTop.GetY()
 }
