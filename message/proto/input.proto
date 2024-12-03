@@ -24,9 +24,10 @@ message Operation {
   OperationType type = 1;
   Direction direction = 2;
   HitRange hit_range = 3;
-  GameState game_state = 4;
-  int64 context = 5;
-  int64 prev_context = 6;
+  string target_user_id = 4;
+  GameState game_state = 5;
+  int64 context = 6;
+  int64 prev_context = 7;
   
 
   enum Direction {

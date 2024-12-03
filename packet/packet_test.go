@@ -3,7 +3,6 @@ package packet_test
 import (
 	"animalized/message"
 	"animalized/packet"
-	"fmt"
 	"net"
 	"testing"
 
@@ -79,8 +78,6 @@ func TestInputParsing(t *testing.T) {
 
 		packetStore := packet.NewStore()
 		input, err := packetStore.ParseInput(server)
-
-		fmt.Println(input)
 
 		if err != nil {
 			t.Fatal(err)
