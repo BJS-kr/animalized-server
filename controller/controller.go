@@ -101,13 +101,14 @@ func (c *Controller) MakeQuitRoomInput(userId string, roomName string) *message.
 /**
  * CAUTION: Use as System Direct Input
  */
-func (c *Controller) MakeGameStartInput(userId string, roomName string) *message.Input {
+func (c *Controller) MakeGameStartInput(userId string, roomName string, userCharacterTypes rooms.UserCharacterTypes) *message.Input {
 	return &message.Input{
 		UserId: userId,
 		Kind: &message.Input_Room{
 			Room: &message.Room{
-				Type:     message.Room_START,
-				RoomName: roomName,
+				Type:               message.Room_START,
+				RoomName:           roomName,
+				UserCharacterTypes: userCharacterTypes,
 			},
 		},
 	}

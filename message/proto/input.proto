@@ -96,11 +96,19 @@ message Room {
   RoomType type = 1;
   string room_name = 2;
   RoomState room_state = 4;
+  map<string, CharacterType> user_character_types = 5;
 
   enum RoomType {
     ROOM_UNSPECIFIED = 0;
     QUIT = 1;
     START = 2;
     STATE = 3;
+  }
+
+  enum CharacterType {
+    CHARACTER_UNSPECIFIED = 0;
+    PINK = 1;
+    DUDE = 2;
+    OWL = 3;
   }
 }

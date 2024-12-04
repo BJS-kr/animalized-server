@@ -55,7 +55,7 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 
 		r.Game.StartStreaming(c.makeGameHandler(r))
 		r.SetStatus(message.RoomState_PLAYING)
-		r.Game.SystemDirectInput(c.MakeGameStartInput(input.UserId, roomInput.RoomName))
+		r.Game.SystemDirectInput(c.MakeGameStartInput(input.UserId, roomInput.RoomName, r.PickCharacterRandomTypes()))
 	case message.Room_QUIT:
 		u, err := c.Rooms.Quit(roomInput.RoomName, input.UserId)
 

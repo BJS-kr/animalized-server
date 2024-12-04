@@ -286,6 +286,58 @@ func (Room_RoomType) EnumDescriptor() ([]byte, []int) {
 	return file_message_proto_input_proto_rawDescGZIP(), []int{6, 0}
 }
 
+type Room_CharacterType int32
+
+const (
+	Room_CHARACTER_UNSPECIFIED Room_CharacterType = 0
+	Room_PINK                  Room_CharacterType = 1
+	Room_DUDE                  Room_CharacterType = 2
+	Room_OWL                   Room_CharacterType = 3
+)
+
+// Enum value maps for Room_CharacterType.
+var (
+	Room_CharacterType_name = map[int32]string{
+		0: "CHARACTER_UNSPECIFIED",
+		1: "PINK",
+		2: "DUDE",
+		3: "OWL",
+	}
+	Room_CharacterType_value = map[string]int32{
+		"CHARACTER_UNSPECIFIED": 0,
+		"PINK":                  1,
+		"DUDE":                  2,
+		"OWL":                   3,
+	}
+)
+
+func (x Room_CharacterType) Enum() *Room_CharacterType {
+	p := new(Room_CharacterType)
+	*p = x
+	return p
+}
+
+func (x Room_CharacterType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (Room_CharacterType) Descriptor() protoreflect.EnumDescriptor {
+	return file_message_proto_input_proto_enumTypes[5].Descriptor()
+}
+
+func (Room_CharacterType) Type() protoreflect.EnumType {
+	return &file_message_proto_input_proto_enumTypes[5]
+}
+
+func (x Room_CharacterType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use Room_CharacterType.Descriptor instead.
+func (Room_CharacterType) EnumDescriptor() ([]byte, []int) {
+	return file_message_proto_input_proto_rawDescGZIP(), []int{6, 1}
+}
+
 type Input struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -734,9 +786,10 @@ type Room struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type      Room_RoomType `protobuf:"varint,1,opt,name=type,proto3,enum=input.Room_RoomType" json:"type,omitempty"`
-	RoomName  string        `protobuf:"bytes,2,opt,name=room_name,json=roomName,proto3" json:"room_name,omitempty"`
-	RoomState *RoomState    `protobuf:"bytes,4,opt,name=room_state,json=roomState,proto3" json:"room_state,omitempty"`
+	Type               Room_RoomType                 `protobuf:"varint,1,opt,name=type,proto3,enum=input.Room_RoomType" json:"type,omitempty"`
+	RoomName           string                        `protobuf:"bytes,2,opt,name=room_name,json=roomName,proto3" json:"room_name,omitempty"`
+	RoomState          *RoomState                    `protobuf:"bytes,4,opt,name=room_state,json=roomState,proto3" json:"room_state,omitempty"`
+	UserCharacterTypes map[string]Room_CharacterType `protobuf:"bytes,5,rep,name=user_character_types,json=userCharacterTypes,proto3" json:"user_character_types,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"varint,2,opt,name=value,proto3,enum=input.Room_CharacterType"`
 }
 
 func (x *Room) Reset() {
@@ -786,6 +839,13 @@ func (x *Room) GetRoomName() string {
 func (x *Room) GetRoomState() *RoomState {
 	if x != nil {
 		return x.RoomState
+	}
+	return nil
+}
+
+func (x *Room) GetUserCharacterTypes() map[string]Room_CharacterType {
+	if x != nil {
+		return x.UserCharacterTypes
 	}
 	return nil
 }
@@ -1042,7 +1102,7 @@ var file_message_proto_input_proto_rawDesc = []byte{
 	0x52, 0x45, 0x41, 0x54, 0x45, 0x5f, 0x52, 0x4f, 0x4f, 0x4d, 0x10, 0x01, 0x12, 0x0d, 0x0a, 0x09,
 	0x4a, 0x4f, 0x49, 0x4e, 0x5f, 0x52, 0x4f, 0x4f, 0x4d, 0x10, 0x02, 0x12, 0x0d, 0x0a, 0x09, 0x51,
 	0x55, 0x49, 0x54, 0x5f, 0x52, 0x4f, 0x4f, 0x4d, 0x10, 0x03, 0x12, 0x09, 0x0a, 0x05, 0x53, 0x54,
-	0x41, 0x54, 0x45, 0x10, 0x04, 0x22, 0xc0, 0x01, 0x0a, 0x04, 0x52, 0x6f, 0x6f, 0x6d, 0x12, 0x28,
+	0x41, 0x54, 0x45, 0x10, 0x04, 0x22, 0xc2, 0x03, 0x0a, 0x04, 0x52, 0x6f, 0x6f, 0x6d, 0x12, 0x28,
 	0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x14, 0x2e, 0x69,
 	0x6e, 0x70, 0x75, 0x74, 0x2e, 0x52, 0x6f, 0x6f, 0x6d, 0x2e, 0x52, 0x6f, 0x6f, 0x6d, 0x54, 0x79,
 	0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x72, 0x6f, 0x6f, 0x6d,
@@ -1050,12 +1110,28 @@ var file_message_proto_input_proto_rawDesc = []byte{
 	0x6d, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x2f, 0x0a, 0x0a, 0x72, 0x6f, 0x6f, 0x6d, 0x5f, 0x73, 0x74,
 	0x61, 0x74, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x69, 0x6e, 0x70, 0x75,
 	0x74, 0x2e, 0x52, 0x6f, 0x6f, 0x6d, 0x53, 0x74, 0x61, 0x74, 0x65, 0x52, 0x09, 0x72, 0x6f, 0x6f,
-	0x6d, 0x53, 0x74, 0x61, 0x74, 0x65, 0x22, 0x40, 0x0a, 0x08, 0x52, 0x6f, 0x6f, 0x6d, 0x54, 0x79,
-	0x70, 0x65, 0x12, 0x14, 0x0a, 0x10, 0x52, 0x4f, 0x4f, 0x4d, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45,
-	0x43, 0x49, 0x46, 0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x08, 0x0a, 0x04, 0x51, 0x55, 0x49, 0x54,
-	0x10, 0x01, 0x12, 0x09, 0x0a, 0x05, 0x53, 0x54, 0x41, 0x52, 0x54, 0x10, 0x02, 0x12, 0x09, 0x0a,
-	0x05, 0x53, 0x54, 0x41, 0x54, 0x45, 0x10, 0x03, 0x42, 0x0b, 0x5a, 0x09, 0x2e, 0x2f, 0x6d, 0x65,
-	0x73, 0x73, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6d, 0x53, 0x74, 0x61, 0x74, 0x65, 0x12, 0x55, 0x0a, 0x14, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x63,
+	0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x73, 0x18, 0x05,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x23, 0x2e, 0x69, 0x6e, 0x70, 0x75, 0x74, 0x2e, 0x52, 0x6f, 0x6f,
+	0x6d, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x54,
+	0x79, 0x70, 0x65, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x12, 0x75, 0x73, 0x65, 0x72, 0x43,
+	0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x54, 0x79, 0x70, 0x65, 0x73, 0x1a, 0x60, 0x0a,
+	0x17, 0x55, 0x73, 0x65, 0x72, 0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x54, 0x79,
+	0x70, 0x65, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x2f, 0x0a, 0x05, 0x76, 0x61,
+	0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x19, 0x2e, 0x69, 0x6e, 0x70, 0x75,
+	0x74, 0x2e, 0x52, 0x6f, 0x6f, 0x6d, 0x2e, 0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72,
+	0x54, 0x79, 0x70, 0x65, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22,
+	0x40, 0x0a, 0x08, 0x52, 0x6f, 0x6f, 0x6d, 0x54, 0x79, 0x70, 0x65, 0x12, 0x14, 0x0a, 0x10, 0x52,
+	0x4f, 0x4f, 0x4d, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46, 0x49, 0x45, 0x44, 0x10,
+	0x00, 0x12, 0x08, 0x0a, 0x04, 0x51, 0x55, 0x49, 0x54, 0x10, 0x01, 0x12, 0x09, 0x0a, 0x05, 0x53,
+	0x54, 0x41, 0x52, 0x54, 0x10, 0x02, 0x12, 0x09, 0x0a, 0x05, 0x53, 0x54, 0x41, 0x54, 0x45, 0x10,
+	0x03, 0x22, 0x47, 0x0a, 0x0d, 0x43, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x54, 0x79,
+	0x70, 0x65, 0x12, 0x19, 0x0a, 0x15, 0x43, 0x48, 0x41, 0x52, 0x41, 0x43, 0x54, 0x45, 0x52, 0x5f,
+	0x55, 0x4e, 0x53, 0x50, 0x45, 0x43, 0x49, 0x46, 0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x08, 0x0a,
+	0x04, 0x50, 0x49, 0x4e, 0x4b, 0x10, 0x01, 0x12, 0x08, 0x0a, 0x04, 0x44, 0x55, 0x44, 0x45, 0x10,
+	0x02, 0x12, 0x07, 0x0a, 0x03, 0x4f, 0x57, 0x4c, 0x10, 0x03, 0x42, 0x0b, 0x5a, 0x09, 0x2e, 0x2f,
+	0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1070,48 +1146,52 @@ func file_message_proto_input_proto_rawDescGZIP() []byte {
 	return file_message_proto_input_proto_rawDescData
 }
 
-var file_message_proto_input_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_message_proto_input_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_message_proto_input_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
+var file_message_proto_input_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_message_proto_input_proto_goTypes = []any{
 	(Operation_Direction)(0),              // 0: input.Operation.Direction
 	(Operation_OperationType)(0),          // 1: input.Operation.OperationType
 	(RoomState_RoomStatusType)(0),         // 2: input.RoomState.RoomStatusType
 	(Lobby_LobbyType)(0),                  // 3: input.Lobby.LobbyType
 	(Room_RoomType)(0),                    // 4: input.Room.RoomType
-	(*Input)(nil),                         // 5: input.Input
-	(*Position)(nil),                      // 6: input.Position
-	(*Operation)(nil),                     // 7: input.Operation
-	(*Init)(nil),                          // 8: input.Init
-	(*RoomState)(nil),                     // 9: input.RoomState
-	(*Lobby)(nil),                         // 10: input.Lobby
-	(*Room)(nil),                          // 11: input.Room
-	(*Operation_HitRange)(nil),            // 12: input.Operation.HitRange
-	(*Operation_GameState)(nil),           // 13: input.Operation.GameState
-	(*Operation_GameState_UserState)(nil), // 14: input.Operation.GameState.UserState
+	(Room_CharacterType)(0),               // 5: input.Room.CharacterType
+	(*Input)(nil),                         // 6: input.Input
+	(*Position)(nil),                      // 7: input.Position
+	(*Operation)(nil),                     // 8: input.Operation
+	(*Init)(nil),                          // 9: input.Init
+	(*RoomState)(nil),                     // 10: input.RoomState
+	(*Lobby)(nil),                         // 11: input.Lobby
+	(*Room)(nil),                          // 12: input.Room
+	(*Operation_HitRange)(nil),            // 13: input.Operation.HitRange
+	(*Operation_GameState)(nil),           // 14: input.Operation.GameState
+	(*Operation_GameState_UserState)(nil), // 15: input.Operation.GameState.UserState
+	nil,                                   // 16: input.Room.UserCharacterTypesEntry
 }
 var file_message_proto_input_proto_depIdxs = []int32{
-	8,  // 0: input.Input.init:type_name -> input.Init
-	7,  // 1: input.Input.op:type_name -> input.Operation
-	10, // 2: input.Input.lobby:type_name -> input.Lobby
-	11, // 3: input.Input.room:type_name -> input.Room
+	9,  // 0: input.Input.init:type_name -> input.Init
+	8,  // 1: input.Input.op:type_name -> input.Operation
+	11, // 2: input.Input.lobby:type_name -> input.Lobby
+	12, // 3: input.Input.room:type_name -> input.Room
 	1,  // 4: input.Operation.type:type_name -> input.Operation.OperationType
 	0,  // 5: input.Operation.direction:type_name -> input.Operation.Direction
-	12, // 6: input.Operation.hit_range:type_name -> input.Operation.HitRange
-	13, // 7: input.Operation.game_state:type_name -> input.Operation.GameState
+	13, // 6: input.Operation.hit_range:type_name -> input.Operation.HitRange
+	14, // 7: input.Operation.game_state:type_name -> input.Operation.GameState
 	2,  // 8: input.RoomState.status:type_name -> input.RoomState.RoomStatusType
 	3,  // 9: input.Lobby.type:type_name -> input.Lobby.LobbyType
-	9,  // 10: input.Lobby.room_states:type_name -> input.RoomState
+	10, // 10: input.Lobby.room_states:type_name -> input.RoomState
 	4,  // 11: input.Room.type:type_name -> input.Room.RoomType
-	9,  // 12: input.Room.room_state:type_name -> input.RoomState
-	6,  // 13: input.Operation.HitRange.left_bottom:type_name -> input.Position
-	6,  // 14: input.Operation.HitRange.right_top:type_name -> input.Position
-	14, // 15: input.Operation.GameState.user_states:type_name -> input.Operation.GameState.UserState
-	6,  // 16: input.Operation.GameState.UserState.position:type_name -> input.Position
-	17, // [17:17] is the sub-list for method output_type
-	17, // [17:17] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	10, // 12: input.Room.room_state:type_name -> input.RoomState
+	16, // 13: input.Room.user_character_types:type_name -> input.Room.UserCharacterTypesEntry
+	7,  // 14: input.Operation.HitRange.left_bottom:type_name -> input.Position
+	7,  // 15: input.Operation.HitRange.right_top:type_name -> input.Position
+	15, // 16: input.Operation.GameState.user_states:type_name -> input.Operation.GameState.UserState
+	7,  // 17: input.Operation.GameState.UserState.position:type_name -> input.Position
+	5,  // 18: input.Room.UserCharacterTypesEntry.value:type_name -> input.Room.CharacterType
+	19, // [19:19] is the sub-list for method output_type
+	19, // [19:19] is the sub-list for method input_type
+	19, // [19:19] is the sub-list for extension type_name
+	19, // [19:19] is the sub-list for extension extendee
+	0,  // [0:19] is the sub-list for field type_name
 }
 
 func init() { file_message_proto_input_proto_init() }
@@ -1130,8 +1210,8 @@ func file_message_proto_input_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_message_proto_input_proto_rawDesc,
-			NumEnums:      5,
-			NumMessages:   10,
+			NumEnums:      6,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

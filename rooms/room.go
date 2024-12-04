@@ -5,6 +5,7 @@ import (
 	"animalized/message"
 	"animalized/users"
 	"errors"
+	"math/rand"
 )
 
 type Room struct {
@@ -12,6 +13,8 @@ type Room struct {
 	Status message.RoomState_RoomStatusType
 	Game   *game.Game
 }
+
+type UserCharacterTypes map[string]message.Room_CharacterType
 
 func (r *Room) Join(user *users.User) error {
 	if r.Status != message.RoomState_WAITING {
@@ -49,4 +52,52 @@ func (r *Room) MakeRoomState(roomName string) *message.RoomState {
 	rs.UserIds = r.Users.LockedIds()
 
 	return rs
+}
+
+func (r *Room) PickCharacterRandomTypes() UserCharacterTypes {
+	ids := r.Users.LockedIds()
+	count := len(ids)
+	remain := 0
+	typeMap := make(UserCharacterTypes)
+
+	if count%CHARACTER_TYPES_COUNT == 0 {
+		remain = count / CHARACTER_TYPES_COUNT
+	} else {
+		remain = count/CHARACTER_TYPES_COUNT + 1
+	}
+
+	characterRemains := [CHARACTER_TYPES_COUNT]int{remain, remain, remain}
+	picked := make([]message.Room_CharacterType, 0, count)
+
+	for {
+		pickedI := rand.Intn(CHARACTER_TYPES_COUNT)
+
+		biggestRemain := characterRemains[pickedI]
+
+		for _, remain := range characterRemains {
+			if remain > biggestRemain {
+				biggestRemain = remain
+			}
+		}
+
+		if characterRemains[pickedI] != biggestRemain {
+			continue
+		}
+
+		if characterRemains[pickedI] > 0 {
+			picked = append(picked, message.Room_CharacterType(pickedI+1))
+			characterRemains[pickedI]--
+			count--
+		}
+
+		if count == 0 {
+			break
+		}
+	}
+
+	for i, id := range ids {
+		typeMap[id] = picked[i]
+	}
+
+	return typeMap
 }
