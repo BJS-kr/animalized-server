@@ -59,10 +59,25 @@ io작업이기 떄문에 단순히 append와는 다르다.
 
 * 패킷을 하나씩밖에 못읽는 현상 발생. readInput와 cutChunk의 위치 변경
 
-* 처음 packet delimiter로 설정한 byte는 36인 $(dollar sign)이었다. 그러나 서버에서 특정 상황에서 패킷핸들이 안되는 상황 발생. 도저히 문제를 찾을 수 없어 byte slice를 하나 하나 대조해보았다. 그 결과, 파싱한 모양새가 클라이언트에서 보낸 것과 다르다는 것을 발견
+* 처음 packet delimiter로 설정한 byte는 36인 $(dollar sign)이었다. 대부분의 상황에서 정상동작해 의심하지 못하고 있었으나, 특정 상황(캐릭터가 왼쪽을 바라보고 공격을 하며, 타겟이 맵의 최서단에 위치할 때)에서 패킷핸들이 안되는 상황 발생. 도저히 문제를 찾을 수 없어 byte slice를 하나 하나 대조해보았다. 그 결과, 파싱한 모양새가 클라이언트에서 보낸 것과 다르다는 것을 발견
 구체적으로는 [10 5 116 101 115 116 50 26 16 8 3 26 12 10 4 8 0 16 0 18 4 8 36 16 0 36]를 보냈는데 $를 기준으로 파싱한 결과는 [10 5 116 101 115 116 50 26 16 8 3 26 12 10 4 8 0 16 0 18 4 8 36]. 즉 중간에 위치한 36까지 ReadBytes를 실행해버려  16 0 36이 Unmarshaling되지 못했음을 발견. 36이 쓰인다는 것을 알게 되었고 Control Unit 0x1F로 Delimiter변경. 이후 정상 동작 확인
 
+* excessive cpu consumption
+for select 구문을 사용한 결과 blocking operation이 없는 부분들의 공회전 때문에 cpu가 빠르게 소모되었다.
+for select case <- chan: ... case <-time.After(duration): ...을 쓰면 해결된다고 생각할 수 있지만
+내가 non-blocking queue를 사용한 이유는 channel의 잠재적 block 가능성을 없애고 싶었던 것이기 때문에(buffered channel의 경우에도 마찬가지) for select case <- chan으로 input을 받는 것 자체가 나의 목적에 맞지 않았다.
 
+그래서 내가 해결한 방법은 길이 1의 buffered channel이다. channel을 idle detector로 쓰는 것이다.
+queue로부터 메세지를 처리해야하는 worker들은 모두 idle detector channel의 지시로부터 작업을 시작한다.
+일단 작업에 진입하면, 자신이 담당하는 queue가 빌 때까지 작업을 실행한다.
 
-해야되는일:
-hit 패킷에 맞은 유저 아이디 보내야함. 그래야 서버에서 hit위치와 맞은 유저 대조가능
+작업을 지시하는 worker, 즉 queue에 작업을 넣는 worker들은 만약 channel이 비었다면(idle일 가능성. idle detected)이 있다면 enqueue직후에 idle detector를 통해 작업을 지시하고 channel의 길이가 1이라면(작업중이거나 작업을 할 예정)이라면
+작업 지시를 생략한다. 작업지시 자체를 넉넉한 용량의 buffered channel로 처리하면 되지 않냐고 의문을 제기할 수 있지만 상술 한 것 처럼 chan이 block을 유발할 수 있기 때문에 선택지에서 제외했다.
+
+* 그렇다면 channel을 쓴 부분은 무엇인가?
+내가 channel을 써도 된다고 판단한 기준은 다음과 같다.
+- close broadcast
+- channel block이 에러가 아닌 경우
+  - 이 경우는 구현 내에서 input channel에 해당하는데, input이 actor로 처리 되고 있을 뿐 더러(어차피 sequential), input이 처리가 된 이후 빠르게 전파되는 것이 중요하지 모두가 같은 속도로 전파받는다면 sync에 문제가 없기 때문이다.
+    - 근데 내 말대로라면 receive -> distribute는 channel로 해도 되는거아닌가? 어차피 sequential이니까. 아예 분리 될 필요가 없을지도? 분리되어야 한다면 이유가 뭘까?
+  
