@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	listener, err := net.Listen("tcp", "127.0.0.1:9988")
+	listener, err := net.Listen("tcp", "0.0.0.0:9988")
 
 	if err != nil {
 		panic(err)
