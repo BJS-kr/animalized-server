@@ -16,6 +16,8 @@ func main() {
 		panic(err)
 	}
 
+	println("Listening")
+
 	c := controller.New(100)
 
 	for {
