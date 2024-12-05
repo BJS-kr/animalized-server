@@ -20,23 +20,19 @@ func (d *Distributable) Make() {
 
 func (d *Distributable) Receive(handler Handler) {
 	for input := range d.InputChannel {
-		select {
-		case <-d.Stop:
-			return
-		default:
-			input, err := handler(input)
+		input, err := handler(input)
 
-			if err != nil {
-				slog.Error(err.Error())
-				continue
-			}
-
-			if input == nil {
-				continue
-			}
-
-			d.Inputs.Enqueue(input)
+		if err != nil {
+			slog.Error(err.Error())
+			continue
 		}
+
+		if input == nil {
+			continue
+		}
+
+		d.Inputs.Enqueue(input)
+
 	}
 }
 
