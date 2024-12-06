@@ -16,7 +16,7 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 
 	switch lobbyInput.Type {
 	case message.Lobby_CREATE_ROOM:
-		u, err := c.FindUserById(input.UserId)
+		u, err := c.Lobby.Session.FindUserById(input.UserId)
 
 		if err != nil {
 			return nil, err
@@ -49,7 +49,7 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 		r.SystemInput(c.MakeRoomStateInput(input.UserId, lobbyInput.RoomName))
 
 	case message.Lobby_JOIN_ROOM:
-		u, err := c.FindUserById(input.UserId)
+		u, err := c.Lobby.Session.FindUserById(input.UserId)
 
 		if err != nil {
 			return nil, err
@@ -73,7 +73,7 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 		r.SystemDirectInput(c.MakeJoinInput(input.UserId, lobbyInput.RoomName))
 		r.SystemInput(c.MakeRoomStateInput(input.UserId, lobbyInput.RoomName))
 	case message.Lobby_STATE:
-		lobbyInput.RoomStates = c.MakeRoomStates()
+		lobbyInput.RoomStates = c.Rooms.MakeRoomStates()
 	default:
 		return nil, errors.New("unknown lobby input type:" + lobbyInput.Type.String())
 	}

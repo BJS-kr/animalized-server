@@ -7,8 +7,8 @@ import (
 )
 
 type Controller struct {
-	*lobby.Lobby
-	*rooms.Rooms
+	Lobby *lobby.Lobby
+	Rooms *rooms.Rooms
 }
 
 func New(maxUsers int) *Controller {
@@ -31,7 +31,7 @@ func (c *Controller) MakeLobbyState(userId string) *message.Input {
 		Kind: &message.Input_Lobby{
 			Lobby: &message.Lobby{
 				Type:       message.Lobby_STATE,
-				RoomStates: c.MakeRoomStates(),
+				RoomStates: c.Rooms.MakeRoomStates(),
 			},
 		},
 	}

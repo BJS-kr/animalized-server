@@ -21,7 +21,7 @@ func TestProduce(t *testing.T) {
 	q := queue.New[*message.Input]()
 	user, _ := users.NewUser(server, "test", packet.NewStore())
 	user.SetProduceChannel(inputProduceChan)
-	user.StartPacketHandlers(users.NewUsers(1))
+	user.StartPacketHandlers(users.NewSession(1))
 
 	go func() {
 		input := &message.Input{

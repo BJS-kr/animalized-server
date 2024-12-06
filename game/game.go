@@ -6,7 +6,7 @@ import (
 )
 
 type Game struct {
-	users.DistributableUsers
+	users.DistributableSession
 	State *state.GameState
 }
 
@@ -14,7 +14,7 @@ func New(maxUsers int) *Game {
 	g := new(Game)
 
 	g.State = state.New()
-	g.MakeWithUsers(maxUsers)
+	g.MakeWithSession(maxUsers)
 
 	return g
 }

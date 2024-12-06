@@ -9,7 +9,7 @@ import (
 )
 
 type Room struct {
-	users.DistributableUsers
+	users.DistributableSession
 	Status message.RoomState_RoomStatusType
 	Game   *game.Game
 }
@@ -21,7 +21,7 @@ func (r *Room) Join(user *users.User) error {
 		return errors.New("room is not waiting")
 	}
 
-	if err := r.Users.Join(user, r.InputChannel); err != nil {
+	if err := r.Session.Join(user, r.InputChannel); err != nil {
 		return err
 	}
 
@@ -39,7 +39,7 @@ func (r *Room) SetStatus(targetStatus message.RoomState_RoomStatusType) error {
 }
 
 func (r *Room) Quit(user *users.User) (int, error) {
-	return r.Users.Quit(user)
+	return r.Session.Quit(user)
 }
 
 // Room struct 자체는 Name을 가지고 있지 않으므로 인자로 받는다.
@@ -47,15 +47,15 @@ func (r *Room) MakeRoomState(roomName string) *message.RoomState {
 	rs := new(message.RoomState)
 
 	rs.RoomName = roomName
-	rs.MaxUsers = int32(r.Users.Max)
+	rs.MaxUsers = int32(r.Session.Max)
 	rs.Status = r.Status
-	rs.UserIds = r.Users.LockedIds()
+	rs.UserIds = r.Session.LockedIds()
 
 	return rs
 }
 
 func (r *Room) PickCharacterRandomTypes() UserCharacterTypes {
-	ids := r.Users.LockedIds()
+	ids := r.Session.LockedIds()
 	count := len(ids)
 	remain := 0
 	typeMap := make(UserCharacterTypes)

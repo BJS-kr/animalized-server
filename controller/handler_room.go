@@ -33,9 +33,9 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 		r.StopStreaming()
 		characterTypes := r.PickCharacterRandomTypes()
 
-		for _, userId := range r.Users.LockedIds() {
+		for _, userId := range r.Session.LockedIds() {
 			r.Game.State.AddUserState(state.UserID(userId))
-			u, err := r.FindUserById(userId)
+			u, err := r.Session.FindUserById(userId)
 
 			if err != nil {
 				return nil, err

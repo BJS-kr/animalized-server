@@ -5,40 +5,40 @@ import (
 )
 
 type Lobby struct {
-	users.DistributableUsers
+	users.DistributableSession
 }
 
 func New(max int) *Lobby {
 	l := new(Lobby)
 
-	l.MakeWithUsers(max)
+	l.MakeWithSession(max)
 
 	return l
 }
 
 func (l *Lobby) InitialJoin(user *users.User) error {
-	err := l.Users.Join(user, l.InputChannel)
+	err := l.Session.Join(user, l.InputChannel)
 
 	if err != nil {
 		return err
 	}
 
-	user.StartPacketHandlers(l.Users)
+	user.StartPacketHandlers(l.Session)
 
 	return nil
 }
 
 func (l *Lobby) Join(user *users.User) error {
-	return l.Users.Join(user, l.InputChannel)
+	return l.Session.Join(user, l.InputChannel)
 }
 
 func (l *Lobby) Quit(userId string) (*users.User, error) {
-	u, err := l.Users.FindUserById(userId)
+	u, err := l.Session.FindUserById(userId)
 
 	if err != nil {
 		return nil, err
 	}
-	_, err = l.Users.Quit(u)
+	_, err = l.Session.Quit(u)
 
 	return u, err
 }

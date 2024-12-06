@@ -4,7 +4,6 @@ import (
 	"animalized/common"
 	"animalized/message"
 	"animalized/packet"
-	"animalized/queue"
 	"errors"
 	"log/slog"
 	"net"
@@ -14,7 +13,7 @@ import (
 )
 
 type User struct {
-	common.Distributable
+	common.Actor
 	Conn           net.Conn
 	Id             string
 	packetStore    *packet.PacketStore
@@ -27,9 +26,7 @@ func NewUser(conn net.Conn, id string, packetStore *packet.PacketStore) (*User, 
 		return nil, errors.New("empty or longer than 10 length id not allowed")
 	}
 	u := new(User)
-	u.Distributable = common.Distributable{
-		Inputs: queue.New[*message.Input](),
-	}
+	u.Make()
 	u.Id = id
 	u.Conn = conn
 	u.packetStore = packetStore
@@ -73,8 +70,8 @@ func (u *User) validateInput(input *message.Input) error {
 	return nil
 }
 
-func (u *User) StartPacketHandlers(users *Users) {
-	go u.handleIncoming(users)
+func (u *User) StartPacketHandlers(session *Session) {
+	go u.handleIncoming(session)
 	go u.handleOutgoing()
 }
 
@@ -82,7 +79,7 @@ func (u *User) StopPacketHandlers() {
 	close(u.Stop)
 }
 
-func (u *User) handleIncoming(users *Users) {
+func (u *User) handleIncoming(session *Session) {
 	for {
 		select {
 		case <-u.Stop:
@@ -96,7 +93,7 @@ func (u *User) handleIncoming(users *Users) {
 
 			if err != nil {
 				slog.Error(err.Error())
-				users.Quit(u)
+				session.Quit(u)
 				u.Conn.Close()
 				return
 			}

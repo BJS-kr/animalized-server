@@ -37,7 +37,7 @@ func (rs *Rooms) Create(roomName string, maxUsers int) (*Room, error) {
 		return r, errors.New("room users limit has exceeded")
 	}
 
-	r.MakeWithUsers(maxUsers)
+	r.MakeWithSession(maxUsers)
 	r.SetStatus(message.RoomState_WAITING)
 	r.Game = game.New(maxUsers)
 	rs.NameMap[RoomName(roomName)] = r
@@ -66,7 +66,7 @@ func (rs *Rooms) Quit(roomName string, userName string) (*users.User, error) {
 		return nil, errors.New("room does not exists")
 	}
 
-	user, err := r.Users.FindUserById(userName)
+	user, err := r.Session.FindUserById(userName)
 
 	if err != nil {
 		return nil, err
