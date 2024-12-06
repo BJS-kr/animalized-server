@@ -81,3 +81,10 @@ queue로부터 메세지를 처리해야하는 worker들은 모두 idle detector
   - 이 경우는 구현 내에서 input channel에 해당하는데, input이 actor로 처리 되고 있을 뿐 더러(어차피 sequential), input이 처리가 된 이후 빠르게 전파되는 것이 중요하지 모두가 같은 속도로 전파받는다면 sync에 문제가 없기 때문이다.
     - 근데 내 말대로라면 receive -> distribute는 channel로 해도 되는거아닌가? 어차피 sequential이니까. 아예 분리 될 필요가 없을지도? 분리되어야 한다면 이유가 뭘까?
   
+
+* packet delimiter
+packet delimiter로 31을 쓰고 있었는데, 패킷내용에 31이 포함되면 파싱이 안되는 문제 발생. 예를 들어 attack id가 31이면 거기까지 읽고 파싱을 시도하기 때문에 파싱 에러 발생. attack뿐 아니라 유저, 방번호 등 어떤 곳에서도 나타날 수 있는 에러이기 때문에 근본적인 해결이 필요함. 그냥 패킷길이를 먼저 보내야하나......
+
+* actor - idle detector는 actor.Receive => DistSession.Distribute 간에는 동작이 잘 된다. 그런데 handle outgoing에 붙이면 안된다... 이유가 대체 뭘까? 
+* queue빼자...그냥 buffered channel로 처리하자. channel에 삽입이 되는 것도 case조건을 충족시키므로 case chan<-data: case time.After() 패턴을 활용하면 buffer이상의 메세지가 쌓인 것을 파악하고 대응할 수 있다..
+  
