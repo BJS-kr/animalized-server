@@ -6,12 +6,12 @@ import (
 	"animalized/queue"
 )
 
-type DistributableSession struct {
+type DistSession struct {
 	common.Actor
 	*Session
 }
 
-func (ds *DistributableSession) Distribute() {
+func (ds *DistSession) Distribute() {
 	for {
 		select {
 		case <-ds.Stop:
@@ -30,17 +30,17 @@ func (ds *DistributableSession) Distribute() {
 	}
 }
 
-func (ds *DistributableSession) MakeWithSession(maxUsers int) {
+func (ds *DistSession) MakeWithSession(maxUsers int) {
 	ds.Make()
 	ds.Session = NewSession(maxUsers)
 }
 
-func (ds *DistributableSession) StartStreaming(handler common.Handler) {
+func (ds *DistSession) StartStreaming(handler common.Handler) {
 	go ds.Receive(handler)
 	go ds.Distribute()
 }
 
-func (ds *DistributableSession) StopStreaming() {
+func (ds *DistSession) StopStreaming() {
 	close(ds.Stop)
 	ds.Stop = make(chan common.Signal)
 	ds.Inputs = queue.New[*message.Input]()

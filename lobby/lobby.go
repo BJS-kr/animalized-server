@@ -5,7 +5,7 @@ import (
 )
 
 type Lobby struct {
-	users.DistributableSession
+	users.DistSession
 }
 
 func New(max int) *Lobby {

@@ -6,7 +6,7 @@ import (
 )
 
 type Game struct {
-	users.DistributableSession
+	users.DistSession
 	State *state.GameState
 }
 

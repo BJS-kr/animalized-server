@@ -9,7 +9,7 @@ import (
 )
 
 type Room struct {
-	users.DistributableSession
+	users.DistSession
 	Status message.RoomState_RoomStatusType
 	Game   *game.Game
 }
