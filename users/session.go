@@ -1,7 +1,6 @@
 package users
 
 import (
-	"animalized/common"
 	"animalized/message"
 	"errors"
 	"slices"
@@ -42,7 +41,7 @@ func (ss *Session) Join(u *User, inputProduceChannel chan<- *message.Input) erro
 		return errors.New("users max capacity reached")
 	}
 
-	u.Stop = make(chan common.Signal)
+	// u.Stop = make(chan common.Signal)
 	u.SetProduceChannel(inputProduceChannel)
 	ss.list = append(ss.list, u)
 

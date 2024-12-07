@@ -14,11 +14,11 @@ func New(maxUsers int) *Game {
 	g := new(Game)
 
 	g.State = state.New()
-	g.MakeWithSession(maxUsers)
+	g.Make(maxUsers)
 
 	return g
 }
 
 func (g *Game) JoinGame(u *users.User) error {
-	return g.Join(u, g.InputChannel)
+	return g.Join(u, g.Receiver)
 }

@@ -5,5 +5,4 @@ import (
 )
 
 type Handler func(*message.Input) (*message.Input, error)
-
 type Signal struct{}

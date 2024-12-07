@@ -21,7 +21,7 @@ func (r *Room) Join(user *users.User) error {
 		return errors.New("room is not waiting")
 	}
 
-	if err := r.Session.Join(user, r.InputChannel); err != nil {
+	if err := r.Session.Join(user, r.Receiver); err != nil {
 		return err
 	}
 

@@ -11,13 +11,13 @@ type Lobby struct {
 func New(max int) *Lobby {
 	l := new(Lobby)
 
-	l.MakeWithSession(max)
+	l.Make(max)
 
 	return l
 }
 
 func (l *Lobby) InitialJoin(user *users.User) error {
-	err := l.Session.Join(user, l.InputChannel)
+	err := l.Session.Join(user, l.Receiver)
 
 	if err != nil {
 		return err
@@ -29,7 +29,7 @@ func (l *Lobby) InitialJoin(user *users.User) error {
 }
 
 func (l *Lobby) Join(user *users.User) error {
-	return l.Session.Join(user, l.InputChannel)
+	return l.Session.Join(user, l.Receiver)
 }
 
 func (l *Lobby) Quit(userId string) (*users.User, error) {

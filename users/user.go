@@ -1,9 +1,9 @@
 package users
 
 import (
-	"animalized/common"
 	"animalized/message"
 	"animalized/packet"
+	"animalized/queue"
 	"errors"
 	"log/slog"
 	"net"
@@ -13,11 +13,11 @@ import (
 )
 
 type User struct {
-	common.Actor
 	Conn           net.Conn
 	Id             string
 	packetStore    *packet.PacketStore
 	produceChannel chan<- *message.Input
+	outgoingQueue  *queue.Queue[*message.Input]
 }
 
 func NewUser(conn net.Conn, id string, packetStore *packet.PacketStore) (*User, error) {
@@ -26,7 +26,7 @@ func NewUser(conn net.Conn, id string, packetStore *packet.PacketStore) (*User, 
 		return nil, errors.New("empty or longer than 10 length id not allowed")
 	}
 	u := new(User)
-	u.Make()
+	u.outgoingQueue = queue.New[*message.Input]()
 	u.Id = id
 	u.Conn = conn
 	u.packetStore = packetStore
@@ -75,63 +75,41 @@ func (u *User) StartPacketHandlers(session *Session) {
 	go u.handleOutgoing()
 }
 
-func (u *User) StopPacketHandlers() {
-	close(u.Stop)
-}
-
 func (u *User) handleIncoming(session *Session) {
 	for {
-		select {
-		case <-u.Stop:
+		input, err := u.ProduceInput()
+
+		if err != nil {
+			slog.Error(err.Error())
+			session.Quit(u)
+			u.Conn.Close()
 			return
-		default:
-			if u.Inputs.Len() != 0 {
-				continue
-			}
-
-			input, err := u.ProduceInput()
-
-			if err != nil {
-				slog.Error(err.Error())
-				session.Quit(u)
-				u.Conn.Close()
-				return
-			}
-
-			u.produceChannel <- input
 		}
+
+		u.produceChannel <- input
 	}
 }
 
 func (u *User) handleOutgoing() {
 	for {
-		select {
-		case <-u.Stop:
-			return
-		default:
-			if u.Inputs.Len() == 0 {
-				continue
-			}
+		n := u.outgoingQueue.Dequeue()
 
-			n := u.Inputs.Dequeue()
+		if n == nil || n.Value == nil {
+			continue
+		}
 
-			if n == nil || n.Value == nil {
-				continue
-			}
+		message, err := proto.Marshal(n.Value)
 
-			message, err := proto.Marshal(n.Value)
+		if err != nil {
+			slog.Error(err.Error())
+			continue
+		}
 
-			if err != nil {
-				slog.Error(err.Error())
-				continue
-			}
+		_, err = u.Conn.Write(append(message, packet.INPUT_PACKET_DELIMITER))
 
-			_, err = u.Conn.Write(append(message, packet.INPUT_PACKET_DELIMITER))
-
-			if err != nil {
-				slog.Error(err.Error())
-				continue
-			}
+		if err != nil {
+			slog.Error(err.Error())
+			continue
 		}
 	}
 }
