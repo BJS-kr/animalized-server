@@ -58,6 +58,10 @@ func (ps *PacketStore) makeChunk(conn net.Conn) ([]byte, error) {
 
 		size, err := ps.readInput(conn)
 
+		if size == 0 {
+			return chunk, errors.New("connection closed")
+		}
+
 		if err != nil {
 			return ps.incomingBuf, err
 		}
