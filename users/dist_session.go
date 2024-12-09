@@ -72,7 +72,6 @@ func (ds *DistSession) Tick(tickRate time.Duration) {
 				u.Tick <- signal
 			}
 		}
-
 	}
 }
 

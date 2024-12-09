@@ -47,10 +47,8 @@ func (q *Queue[T]) Enqueue(v T) {
 			// head가 비었으므로 비교 없이 강제로 store되어야 한다.
 			q.tail.Store(node)
 			break
-		}
-
-		// tail이 바뀌지 않았고 tailNode의 next가 nil인지(진짜 tail인지) 확인
-		if q.head.Load() != nil && tailNode == q.tail.Load() && tailNode != nil && tailNode.next.Load() == nil {
+			// tail이 바뀌지 않았고 tailNode의 next가 nil인지(진짜 tail인지) 확인
+		} else if tailNode == q.tail.Load() && tailNode != nil && tailNode.next.Load() == nil {
 			// Node가 한 개만 존재할 때 head와 tail이 같으므로 tailNode의 next에 삽입하는 것은 head의 next에 삽입하는 것과 같다.
 			tailNode.next.Store(node)
 			q.tail.Store(node)
