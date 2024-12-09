@@ -32,11 +32,11 @@ func (gs *GameState) UpdateUserPosition(userId UserID, direction message.Operati
 
 func (gs *GameState) SignalGameState(inputProduceChannel chan<- *message.Input) {
 	tick := time.Tick(SERVER_STATE_SIGNAL_INTERVAL)
-	tickMessage := &message.Input{
-		Kind: &message.Input_Op{
-			Op: &message.Operation{
-				Type: message.Operation_GAME_STATE,
-			},
+
+	tickMessage := new(message.Input)
+	tickMessage.Kind = &message.Input_Op{
+		Op: &message.Operation{
+			Type: message.Operation_GAME_STATE,
 		},
 	}
 

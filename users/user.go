@@ -1,13 +1,13 @@
 package users
 
 import (
+	"animalized/common"
 	"animalized/message"
 	"animalized/packet"
 	"animalized/queue"
 	"errors"
 	"log/slog"
 	"net"
-	"sync"
 	"time"
 
 	"google.golang.org/protobuf/proto"
@@ -19,7 +19,7 @@ type User struct {
 	packetStore    *packet.PacketStore
 	produceChannel chan<- *message.Input
 	outgoingQueue  *queue.Queue[*message.Input]
-	Idler          *sync.Cond
+	Tick           chan common.Signal
 }
 
 func NewUser(conn net.Conn, id string, packetStore *packet.PacketStore) (*User, error) {
@@ -32,7 +32,8 @@ func NewUser(conn net.Conn, id string, packetStore *packet.PacketStore) (*User, 
 	u.Id = id
 	u.Conn = conn
 	u.packetStore = packetStore
-	u.Idler = sync.NewCond(new(sync.Mutex))
+	u.Tick = make(chan common.Signal)
+
 	return u, nil
 }
 
@@ -93,9 +94,8 @@ func (u *User) handleIncoming(session *Session) {
 }
 
 func (u *User) handleOutgoing() {
-	for {
-		u.Idler.L.Lock()
-		u.Idler.Wait()
+	for range u.Tick {
+
 		for {
 			n := u.outgoingQueue.Dequeue()
 
@@ -103,20 +103,21 @@ func (u *User) handleOutgoing() {
 				break
 			}
 
-			message, err := proto.Marshal(n.Value)
+			msg, err := proto.Marshal(n.Value)
 
 			if err != nil {
 				slog.Error(err.Error())
 				continue
 			}
 
-			_, err = u.Conn.Write(append(message, packet.INPUT_PACKET_DELIMITER))
+			_, err = u.Conn.Write(append(msg, packet.INPUT_PACKET_DELIMITER))
 
 			if err != nil {
 				slog.Error(err.Error())
 				continue
 			}
+
 		}
-		u.Idler.L.Unlock()
+
 	}
 }

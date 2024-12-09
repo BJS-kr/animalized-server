@@ -46,6 +46,36 @@ func (ds *DistSession) Receive(handler common.Handler) {
 	}
 }
 
+func (ds *DistSession) Distribute() {
+	for {
+		select {
+		case <-ds.Stop:
+			return
+		case input := <-ds.Dispatcher:
+			for u := range ds.Session.LockedRange() {
+				u.outgoingQueue.Enqueue(input)
+			}
+		}
+	}
+}
+
+func (ds *DistSession) Tick(tickRate time.Duration) {
+	ticker := time.NewTicker(tickRate)
+	signal := common.Signal{}
+
+	for {
+		select {
+		case <-ds.Stop:
+			return
+		case <-ticker.C:
+			for u := range ds.Session.LockedRange() {
+				u.Tick <- signal
+			}
+		}
+
+	}
+}
+
 // 해당하는 컨텍스트의 핸들러를 거치지 않는 input
 func (ds *DistSession) SystemDirectInput(message *message.Input) {
 	ds.Dispatcher <- message
@@ -57,23 +87,10 @@ func (ds *DistSession) SystemInput(message *message.Input) {
 	ds.Receiver <- message
 }
 
-func (ds *DistSession) Distribute() {
-	for {
-		select {
-		case <-ds.Stop:
-			return
-		case input := <-ds.Dispatcher:
-			for u := range ds.Session.LockedRange() {
-				u.outgoingQueue.Enqueue(input)
-				u.Idler.Signal()
-			}
-		}
-	}
-}
-
-func (ds *DistSession) StartStreaming(handler common.Handler) {
+func (ds *DistSession) StartStreaming(handler common.Handler, tickRate time.Duration) {
 	go ds.Receive(handler)
 	go ds.Distribute()
+	go ds.Tick(tickRate)
 }
 
 func (ds *DistSession) StopStreaming() {

@@ -83,6 +83,117 @@ func TestDequeueBeforeEnqueue(t *testing.T) {
 	}
 }
 
+func TestIntegrity(t *testing.T) {
+	q := queue.New[int]()
+
+	if q.GetHead() != nil {
+		t.Fatal("head is not nil")
+	}
+
+	if q.GetTail() != nil {
+		t.Fatal("tail is not nil")
+	}
+
+	q.Enqueue(1)
+	n := q.Dequeue()
+
+	if n == nil {
+		t.Fatal("dequeue failed")
+	}
+
+	if n.Value != 1 {
+		t.Fatal("dequeue failed")
+	}
+
+	if q.GetHead() != nil {
+		t.Fatal("head is not nil")
+	}
+
+	if q.GetTail() != nil {
+		t.Fatal("tail is not nil")
+	}
+
+	q.Enqueue(1)
+	q.Enqueue(2)
+	q.Dequeue()
+
+	if q.GetHead().Value != 2 {
+		t.Fatal("head is not 2")
+	}
+
+	if q.GetTail().Value != 2 {
+		t.Fatal("tail is not 2")
+	}
+
+	second := q.Dequeue()
+
+	if second == nil {
+		t.Fatal("dequeue failed")
+	}
+
+	if second.Value != 2 {
+		t.Fatal("dequeue failed")
+	}
+
+	if q.GetHead() != nil {
+		t.Fatal("head is not nil")
+	}
+
+	if q.GetTail() != nil {
+		t.Fatal("tail is not nil")
+	}
+
+	q.Enqueue(1)
+	q.Enqueue(2)
+	q.Enqueue(3)
+
+	if q.GetHead().Value != 1 {
+		t.Fatal("head is not 1")
+	}
+
+	if q.GetTail().Value != 3 {
+		t.Fatal("tail is not 3")
+	}
+
+	q.Dequeue()
+
+	if q.GetHead().Value != 2 {
+		t.Fatal("head is not 2")
+	}
+
+	if q.GetTail().Value != 3 {
+		t.Fatal("tail is not 3")
+	}
+
+	q.Dequeue()
+
+	if q.GetHead().Value != 3 {
+		t.Fatal("head is not 3")
+	}
+
+	if q.GetTail().Value != 3 {
+		t.Fatal("tail is not 3")
+	}
+
+	third := q.Dequeue()
+
+	if third == nil {
+		t.Fatal("dequeue failed")
+	}
+
+	if third.Value != 3 {
+		t.Fatal("dequeue failed")
+	}
+
+	if q.GetHead() != nil {
+		t.Fatal("head is not nil")
+	}
+
+	if q.GetTail() != nil {
+		t.Fatal("tail is not nil")
+	}
+}
+
 /*
 !! WARNING !! 꼭 go test -race로 실행해주세요. 그냥 실행하면 의미가 없습니다.
 */
@@ -181,7 +292,7 @@ func BenchmarkNoContention(b *testing.B) {
 
 // 구현 사항에 맞춰서 테스트: 구현 사항이란 인풋 큐에 1 actor와 1 dispatcher가 접근하는 구조
 func BenchmarkContention(b *testing.B) {
-	q := queue.New[any]()
+	q := queue.New[int]()
 	cq := ComparisonQueue{}
 	n := rand.Int()
 

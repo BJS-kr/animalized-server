@@ -54,7 +54,7 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 			}
 		}
 
-		r.Game.StartStreaming(c.makeGameHandler(r))
+		r.Game.StartStreaming(c.makeGameHandler(r), GAME_TICK_RATE)
 		r.SetStatus(message.RoomState_PLAYING)
 		r.Game.SystemDirectInput(c.MakeGameStartInput(input.UserId, roomInput.RoomName, characterTypes))
 	case message.Room_QUIT:
@@ -70,7 +70,7 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 			return nil, err
 		}
 
-		c.Lobby.SystemDirectInput(c.MakeLobbyState(input.UserId))
+		c.Lobby.SystemInput(c.MakeLobbyState(input.UserId))
 
 		if c.Rooms.NameMap[rooms.RoomName(roomInput.RoomName)] != nil {
 			r.SystemDirectInput(c.MakeRoomStateDirectInput(input.UserId, roomInput.RoomName, r))

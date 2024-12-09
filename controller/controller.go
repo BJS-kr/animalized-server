@@ -17,7 +17,7 @@ func New(maxUsers int) *Controller {
 	c.Lobby = lobby.New(maxUsers)
 	c.Rooms = rooms.New()
 
-	c.Lobby.StartStreaming(c.lobbyHandler)
+	c.Lobby.StartStreaming(c.lobbyHandler, LOBBY_TICK_RATE)
 
 	return c
 }
@@ -26,89 +26,101 @@ func New(maxUsers int) *Controller {
  * CAUTION: Use as System Direct Input
  */
 func (c *Controller) MakeLobbyState(userId string) *message.Input {
-	return &message.Input{
-		UserId: userId,
-		Kind: &message.Input_Lobby{
-			Lobby: &message.Lobby{
-				Type: message.Lobby_STATE,
-			},
+	input := new(message.Input)
+
+	input.UserId = userId
+	input.Kind = &message.Input_Lobby{
+		Lobby: &message.Lobby{
+			Type: message.Lobby_STATE,
 		},
 	}
+
+	return input
 }
 
 /**
  * CAUTION: Use as System Direct Input
  */
 func (c *Controller) MakeJoinInput(userId string, roomName string) *message.Input {
-	return &message.Input{
-		UserId: userId,
-		Kind: &message.Input_Lobby{
-			Lobby: &message.Lobby{
-				Type:     message.Lobby_JOIN_ROOM,
-				RoomName: roomName,
-			},
+	input := new(message.Input)
+
+	input.UserId = userId
+	input.Kind = &message.Input_Lobby{
+		Lobby: &message.Lobby{
+			Type:     message.Lobby_JOIN_ROOM,
+			RoomName: roomName,
 		},
 	}
+
+	return input
 }
 
 /**
  * CAUTION: Use as System Input
  */
 func (c *Controller) MakeRoomStateInput(userId string, roomName string) *message.Input {
-	return &message.Input{
-		UserId: userId,
-		Kind: &message.Input_Room{
-			Room: &message.Room{
-				Type:     message.Room_STATE,
-				RoomName: roomName,
-			},
+	input := new(message.Input)
+
+	input.UserId = userId
+	input.Kind = &message.Input_Room{
+		Room: &message.Room{
+			Type:     message.Room_STATE,
+			RoomName: roomName,
 		},
 	}
+
+	return input
 }
 
 /**
  * CAUTION: Use as System Direct Input
  */
 func (c *Controller) MakeRoomStateDirectInput(userId string, roomName string, room *rooms.Room) *message.Input {
-	return &message.Input{
-		UserId: userId,
-		Kind: &message.Input_Room{
-			Room: &message.Room{
-				Type:      message.Room_STATE,
-				RoomName:  roomName,
-				RoomState: room.MakeRoomState(roomName),
-			},
+	input := new(message.Input)
+
+	input.UserId = userId
+	input.Kind = &message.Input_Room{
+		Room: &message.Room{
+			Type:      message.Room_STATE,
+			RoomName:  roomName,
+			RoomState: room.MakeRoomState(roomName),
 		},
 	}
+
+	return input
 }
 
 /**
  * CAUTION: Use as System Direct Input
  */
 func (c *Controller) MakeQuitRoomInput(userId string, roomName string) *message.Input {
-	return &message.Input{
-		UserId: userId,
-		Kind: &message.Input_Lobby{
-			Lobby: &message.Lobby{
-				Type:     message.Lobby_QUIT_ROOM,
-				RoomName: roomName,
-			},
+	input := new(message.Input)
+
+	input.UserId = userId
+	input.Kind = &message.Input_Lobby{
+		Lobby: &message.Lobby{
+			Type:     message.Lobby_QUIT_ROOM,
+			RoomName: roomName,
 		},
 	}
+
+	return input
 }
 
 /**
  * CAUTION: Use as System Direct Input
  */
 func (c *Controller) MakeGameStartInput(userId string, roomName string, userCharacterTypes rooms.UserCharacterTypes) *message.Input {
-	return &message.Input{
-		UserId: userId,
-		Kind: &message.Input_Room{
-			Room: &message.Room{
-				Type:               message.Room_START,
-				RoomName:           roomName,
-				UserCharacterTypes: userCharacterTypes,
-			},
+	input := new(message.Input)
+
+	input.UserId = userId
+	input.Kind = &message.Input_Room{
+		Room: &message.Room{
+			Type:               message.Room_START,
+			RoomName:           roomName,
+			UserCharacterTypes: userCharacterTypes,
 		},
 	}
+
+	return input
 }
