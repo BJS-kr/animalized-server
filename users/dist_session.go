@@ -65,6 +65,7 @@ func (ds *DistSession) Distribute() {
 		case input := <-ds.Dispatcher:
 			for u := range ds.Session.LockedRange() {
 				u.outgoingQueue.Enqueue(input)
+				u.Idler.Signal()
 			}
 		}
 	}

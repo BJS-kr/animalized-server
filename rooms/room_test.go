@@ -79,7 +79,6 @@ func TestPickCharacterRandomTypes(t *testing.T) {
 		r3types := r3.PickCharacterRandomTypes()
 
 		if !isEquallyDistributed(r1types) || !isEquallyDistributed(r2types) || !isEquallyDistributed(r3types) {
-			fmt.Println(r1types, r2types, r3types)
 			t.Fail()
 		}
 	}

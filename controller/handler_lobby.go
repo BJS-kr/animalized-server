@@ -43,8 +43,8 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 			return nil, err
 		}
 
-		c.Lobby.SystemDirectInput(c.MakeLobbyState(input.UserId))
 		r.StartStreaming(c.roomHandler)
+		c.Lobby.SystemInput(c.MakeLobbyState(input.UserId))
 		r.SystemDirectInput(c.MakeJoinInput(input.UserId, lobbyInput.RoomName))
 		r.SystemInput(c.MakeRoomStateInput(input.UserId, lobbyInput.RoomName))
 
@@ -69,7 +69,7 @@ func (c *Controller) lobbyHandler(input *message.Input) (*message.Input, error) 
 			return nil, err
 		}
 
-		c.Lobby.SystemDirectInput(c.MakeLobbyState(input.UserId))
+		c.Lobby.SystemInput(c.MakeLobbyState(input.UserId))
 		r.SystemDirectInput(c.MakeJoinInput(input.UserId, lobbyInput.RoomName))
 		r.SystemInput(c.MakeRoomStateInput(input.UserId, lobbyInput.RoomName))
 	case message.Lobby_STATE:

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"log/slog"
 	"net"
+	"sync"
 	"time"
 
 	"google.golang.org/protobuf/proto"
@@ -18,6 +19,7 @@ type User struct {
 	packetStore    *packet.PacketStore
 	produceChannel chan<- *message.Input
 	outgoingQueue  *queue.Queue[*message.Input]
+	Idler          *sync.Cond
 }
 
 func NewUser(conn net.Conn, id string, packetStore *packet.PacketStore) (*User, error) {
@@ -30,7 +32,7 @@ func NewUser(conn net.Conn, id string, packetStore *packet.PacketStore) (*User, 
 	u.Id = id
 	u.Conn = conn
 	u.packetStore = packetStore
-
+	u.Idler = sync.NewCond(new(sync.Mutex))
 	return u, nil
 }
 
@@ -92,24 +94,29 @@ func (u *User) handleIncoming(session *Session) {
 
 func (u *User) handleOutgoing() {
 	for {
-		n := u.outgoingQueue.Dequeue()
+		u.Idler.L.Lock()
+		u.Idler.Wait()
+		for {
+			n := u.outgoingQueue.Dequeue()
 
-		if n == nil || n.Value == nil {
-			continue
+			if n == nil || n.Value == nil {
+				break
+			}
+
+			message, err := proto.Marshal(n.Value)
+
+			if err != nil {
+				slog.Error(err.Error())
+				continue
+			}
+
+			_, err = u.Conn.Write(append(message, packet.INPUT_PACKET_DELIMITER))
+
+			if err != nil {
+				slog.Error(err.Error())
+				continue
+			}
 		}
-
-		message, err := proto.Marshal(n.Value)
-
-		if err != nil {
-			slog.Error(err.Error())
-			continue
-		}
-
-		_, err = u.Conn.Write(append(message, packet.INPUT_PACKET_DELIMITER))
-
-		if err != nil {
-			slog.Error(err.Error())
-			continue
-		}
+		u.Idler.L.Unlock()
 	}
 }

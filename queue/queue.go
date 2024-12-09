@@ -33,17 +33,24 @@ func (q *Queue[T]) Enqueue(v T) {
 	node := q.pool.Get().(*Node[T])
 	node.next.Store(nil)
 	node.Value = v
-	headNode, tailNode := q.head.Load(), q.tail.Load()
 
-	if tailNode != nil {
-		// for{CAS} 하지 않는 이유는 어차피 현재 구현이 actor model이라 enqueue는 동시성 이슈가 없기 때문
-		tailNode.next.Swap(node)
-		q.tail.Swap(node)
-	} else if headNode == nil {
-		q.head.Store(node)
-	} else {
-		q.head.Load().next.Store(node)
-		q.tail.Store(node)
+	for {
+		headNode := q.head.Load()
+		tailNode := q.tail.Load()
+
+		// 이 지점에서 Dequeue가 일어나 head가 바뀌었을 수 있음
+		if headNode == nil && q.head.Load() == nil && q.head.CompareAndSwap(headNode, node) {
+			// head가 비었으므로 비교 없이 강제로 store되어야 한다.
+			q.tail.Store(node)
+			break
+		}
+
+		if tailNode == q.tail.Load() && tailNode.next.Load() == nil {
+			// Node가 한 개만 존재할 때 head와 tail이 같으므로 tailNode의 next에 삽입하는 것은 head의 next에 삽입하는 것과 같다.
+			tailNode.next.Store(node)
+			q.tail.Store(node)
+			break
+		}
 	}
 
 	atomic.AddUint32(&q.len, 1)

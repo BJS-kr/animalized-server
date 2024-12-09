@@ -30,8 +30,7 @@ func (c *Controller) MakeLobbyState(userId string) *message.Input {
 		UserId: userId,
 		Kind: &message.Input_Lobby{
 			Lobby: &message.Lobby{
-				Type:       message.Lobby_STATE,
-				RoomStates: c.Rooms.MakeRoomStates(),
+				Type: message.Lobby_STATE,
 			},
 		},
 	}
