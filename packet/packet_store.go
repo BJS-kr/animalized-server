@@ -3,6 +3,7 @@ package packet
 import (
 	"animalized/message"
 	"bytes"
+	"encoding/binary"
 	"errors"
 	"io"
 	"net"
@@ -11,14 +12,18 @@ import (
 )
 
 type PacketStore struct {
-	incomingBuf []byte
-	inputBuf    *bytes.Buffer
+	incomingBuf   []byte
+	inputBuf      *bytes.Buffer
+	packetSizeBuf []byte
+	targetBuf     []byte
 }
 
 func NewStore() *PacketStore {
 	ps := new(PacketStore)
 	ps.incomingBuf = make([]byte, BUFFER_SIZE)
 	ps.inputBuf = bytes.NewBuffer(nil)
+	ps.packetSizeBuf = make([]byte, 2)
+	ps.targetBuf = make([]byte, BUFFER_SIZE)
 
 	return ps
 }
@@ -30,14 +35,8 @@ func (ps *PacketStore) ParseInput(conn net.Conn) (*message.Input, error) {
 		return nil, err
 	}
 
-	stripped, err := stripDelimiter(chunk)
-
-	if err != nil {
-		return nil, err
-	}
-
 	input := new(message.Input)
-	if err := proto.Unmarshal(stripped, input); err != nil {
+	if err := proto.Unmarshal(chunk, input); err != nil {
 		return nil, err
 	}
 
@@ -73,17 +72,34 @@ func (ps *PacketStore) makeChunk(conn net.Conn) ([]byte, error) {
 }
 
 func (ps *PacketStore) cutChunk() ([]byte, error) {
-	chunk, err := ps.inputBuf.ReadBytes(INPUT_PACKET_DELIMITER)
+	readSizeOfPacket, err := ps.inputBuf.Read(ps.packetSizeBuf)
 
 	if err != nil {
 		if errors.Is(err, io.EOF) {
-			ps.inputBuf.Write(chunk)
+			ps.inputBuf.Write(ps.packetSizeBuf[:readSizeOfPacket])
 		}
 
-		return chunk, err
+		return ps.packetSizeBuf, err
 	}
 
-	return chunk, nil
+	packetSize := binary.BigEndian.Uint16(ps.packetSizeBuf)
+
+	if packetSize > BUFFER_SIZE {
+		return ps.targetBuf, errors.New("received packet size is bigger than BUFFER_SIZE")
+	}
+
+	targetBuf := ps.targetBuf[:packetSize]
+	readPacketSize, err := ps.inputBuf.Read(targetBuf)
+
+	if err != nil {
+		if errors.Is(err, io.EOF) {
+			ps.inputBuf.Write(targetBuf[:readPacketSize])
+		}
+
+		return targetBuf, err
+	}
+
+	return targetBuf, nil
 }
 
 func (ps *PacketStore) readInput(conn net.Conn) (int, error) {

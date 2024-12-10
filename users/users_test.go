@@ -3,6 +3,8 @@ package users_test
 import (
 	"animalized/message"
 	"animalized/packet"
+	"bytes"
+	"encoding/binary"
 	"time"
 
 	"animalized/queue"
@@ -38,7 +40,9 @@ func TestProduce(t *testing.T) {
 		}
 
 		for i := 0; i < goal; i++ {
-			client.Write(append(message, packet.INPUT_PACKET_DELIMITER))
+			sizeBuf := make([]byte, 2)
+			binary.BigEndian.PutUint16(sizeBuf, uint16(len(message)))
+			client.Write(bytes.Join([][]byte{sizeBuf, message}, nil))
 		}
 
 		if err := client.Close(); err != nil {

@@ -5,6 +5,8 @@ import (
 	"animalized/message"
 	"animalized/packet"
 	"animalized/queue"
+	"bytes"
+	"encoding/binary"
 	"errors"
 	"log/slog"
 	"net"
@@ -19,6 +21,7 @@ type User struct {
 	packetStore    *packet.PacketStore
 	produceChannel chan<- *message.Input
 	outgoingQueue  *queue.Queue[*message.Input]
+	sizeBuf        []byte
 	Tick           chan common.Signal
 }
 
@@ -33,6 +36,7 @@ func NewUser(conn net.Conn, id string, packetStore *packet.PacketStore) (*User, 
 	u.Conn = conn
 	u.packetStore = packetStore
 	u.Tick = make(chan common.Signal)
+	u.sizeBuf = make([]byte, 2)
 
 	return u, nil
 }
@@ -109,15 +113,18 @@ func (u *User) handleOutgoing() {
 				slog.Error(err.Error())
 				continue
 			}
+			if len(msg) > packet.BUFFER_SIZE {
+				slog.Error("length of packet size must not exceed BUFFER_SIZE")
+			}
 
-			_, err = u.Conn.Write(append(msg, packet.INPUT_PACKET_DELIMITER))
+			binary.BigEndian.PutUint16(u.sizeBuf, uint16(len(msg)))
+
+			_, err = u.Conn.Write(bytes.Join([][]byte{u.sizeBuf, msg}, nil))
 
 			if err != nil {
 				slog.Error(err.Error())
 				continue
 			}
-
 		}
-
 	}
 }

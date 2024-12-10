@@ -3,6 +3,8 @@ package packet_test
 import (
 	"animalized/message"
 	"animalized/packet"
+	"bytes"
+	"encoding/binary"
 	"net"
 	"testing"
 
@@ -73,7 +75,10 @@ func TestInputParsing(t *testing.T) {
 	for _, tc := range tcs {
 		go func() {
 			message, _ := proto.Marshal(tc.input)
-			client.Write(append(message, packet.INPUT_PACKET_DELIMITER))
+			sizeBuf := make([]byte, 2)
+			binary.BigEndian.PutUint16(sizeBuf, uint16(len(message)))
+
+			client.Write(bytes.Join([][]byte{sizeBuf, message}, nil))
 		}()
 
 		packetStore := packet.NewStore()
