@@ -99,7 +99,6 @@ func (u *User) handleIncoming(session *Session) {
 
 func (u *User) handleOutgoing() {
 	for range u.Tick {
-
 		for {
 			n := u.outgoingQueue.Dequeue()
 
@@ -125,6 +124,8 @@ func (u *User) handleOutgoing() {
 				slog.Error(err.Error())
 				continue
 			}
+
+			message.Pool.Put(n.Value)
 		}
 	}
 }

@@ -35,8 +35,9 @@ func (ps *PacketStore) ParseInput(conn net.Conn) (*message.Input, error) {
 		return nil, err
 	}
 
-	input := new(message.Input)
+	input := message.Pool.Get()
 	if err := proto.Unmarshal(chunk, input); err != nil {
+		message.Pool.Put(input)
 		return nil, err
 	}
 
