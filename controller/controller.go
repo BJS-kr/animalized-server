@@ -124,3 +124,17 @@ func (c *Controller) MakeGameStartInput(userId string, roomName string, userChar
 
 	return input
 }
+
+func (c *Controller) MakeGameResultInput(userId string, roomName string) *message.Input {
+	input := new(message.Input)
+
+	input.UserId = userId
+	input.Kind = &message.Input_GameResult{
+		GameResult: &message.GameResult{
+			WinnerId: userId,
+			RoomName: roomName,
+		},
+	}
+
+	return input
+}

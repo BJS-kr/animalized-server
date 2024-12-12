@@ -8,3 +8,7 @@ type UserState struct {
 func (us *UserState) IncreaseUserScore(amount int32) {
 	us.score += amount
 }
+
+func (us *UserState) IsWinner() bool {
+	return us.score >= WIN_SCORE
+}

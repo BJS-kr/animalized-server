@@ -23,7 +23,7 @@ func (rs *Rooms) Create(roomName string, maxUsers int) (*Room, error) {
 		return nil, errors.New("room name not provided when creating room")
 	}
 
-	if maxUsers <= 0 || maxUsers > MAX_USERS_LIMIT {
+	if maxUsers <= 1 || maxUsers > MAX_USERS_LIMIT {
 		return nil, errors.New("max users not in valid range")
 	}
 

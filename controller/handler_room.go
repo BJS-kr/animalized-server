@@ -32,8 +32,13 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 	case message.Room_START:
 		r.StopStreaming()
 		characterTypes := r.PickCharacterRandomTypes()
+		userIds := r.Session.LockedIds()
 
-		for _, userId := range r.Session.LockedIds() {
+		if len(userIds) <= 1 {
+			return nil, errors.New("not enough users to start game")
+		}
+
+		for _, userId := range userIds {
 			r.Game.State.AddUserState(state.UserID(userId))
 			u, err := r.Session.FindUserById(userId)
 
@@ -54,8 +59,8 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 			}
 		}
 
-		r.Game.StartStreaming(c.makeGameHandler(r), GAME_TICK_RATE)
-		r.SetStatus(message.RoomState_PLAYING)
+		c.Rooms.Remove(roomInput.RoomName)
+		r.Game.StartStreaming(c.makeGameHandler(r, roomInput.RoomName), GAME_TICK_RATE)
 		r.Game.SystemDirectInput(c.MakeGameStartInput(input.UserId, roomInput.RoomName, characterTypes))
 	case message.Room_QUIT:
 		u, err := c.Rooms.Quit(roomInput.RoomName, input.UserId)

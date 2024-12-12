@@ -12,6 +12,7 @@ message Input {
     Operation op = 3;
     Lobby lobby = 4;
     Room room = 5;
+    GameResult game_result = 6;
   }
 }
 
@@ -111,4 +112,9 @@ message Room {
     DUDE = 2;
     OWL = 3;
   }
+}
+
+message GameResult {
+  string winner_id = 1;
+  string room_name = 2;
 }
