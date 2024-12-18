@@ -49,7 +49,7 @@ func (c *Controller) makeGameHandler(r *rooms.Room, roomName string) common.Hand
 					return nil, errors.New("target user state not found")
 				}
 
-				if !state.IsHit(targetUserState.Position.X, targetUserState.Position.Y, opInput.HitRange) {
+				if !state.IsHit(targetUserState.Position, opInput.HitRange) {
 					return nil, errors.New("target user is not in hit range")
 				}
 
@@ -84,7 +84,7 @@ func (c *Controller) makeGameHandler(r *rooms.Room, roomName string) common.Hand
 			if opInput.TargetTerrainId != 0 {
 				terrain := r.Game.State.Terrains[opInput.TargetTerrainId]
 
-				if !state.IsHit(terrain.Position.X, terrain.Position.Y, opInput.HitRange) {
+				if !state.IsHit(terrain.Position, opInput.HitRange) {
 					return nil, errors.New("target terrain is not in hit range")
 				}
 

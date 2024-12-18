@@ -36,6 +36,6 @@ func determinePosition(position *message.Position, direction message.Operation_D
 	}
 }
 
-func IsHit(x, y int32, hitRange *message.Operation_HitRange) bool {
-	return x >= hitRange.LeftBottom.GetX() && x <= hitRange.RightTop.GetX() && y >= hitRange.LeftBottom.GetY() && y <= hitRange.RightTop.GetY()
+func IsHit(pos *message.Position, hitRange *message.Operation_HitRange) bool {
+	return pos.X >= hitRange.LeftBottom.GetX() && pos.X <= hitRange.RightTop.GetX() && pos.Y >= hitRange.LeftBottom.GetY() && pos.Y <= hitRange.RightTop.GetY()
 }

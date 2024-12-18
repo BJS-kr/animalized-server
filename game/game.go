@@ -9,7 +9,7 @@ import (
 	"math/rand"
 )
 
-const TerrainsCount = 20
+const TERRAINS_COUNT = 40
 
 type Game struct {
 	users.DistSession
@@ -31,13 +31,13 @@ func (g *Game) JoinGame(u *users.User) error {
 
 func (g *Game) InitTerrains() {
 	// proto의 기본값을 제외하기 위해 0을 건너뛰기 위해 1 추가
-	terrains := make([]*message.Terrain, TerrainsCount+1)
+	terrains := make([]*message.Terrain, TERRAINS_COUNT+1)
 	reservedPositions := map[string]bool{
 		"00": true,
 	}
-	generatedPositions := make([]*message.Position, 0, TerrainsCount)
+	generatedPositions := make([]*message.Position, 0, TERRAINS_COUNT)
 
-	for len(generatedPositions) < TerrainsCount {
+	for len(generatedPositions) < TERRAINS_COUNT {
 		x := rand.Int31n(state.MAP_SIZE)
 		y := rand.Int31n(state.MAP_SIZE)
 		xStr := strconv.Itoa(int(x))
@@ -58,11 +58,15 @@ func (g *Game) InitTerrains() {
 		State: message.TerrainState_DESTROYED,
 	}
 
-	for i := 1; i <= TerrainsCount; i++ {
+	for i := 1; i <= TERRAINS_COUNT; i++ {
+		pos := generatedPositions[i-1]
+		pos.X = pos.X * state.CLIENT_CELL_SIZE
+		pos.Y = pos.Y * state.CLIENT_CELL_SIZE
+
 		terrains[i] = &message.Terrain{
 			Type:     message.TerrainType_ROCK,
 			State:    message.TerrainState_SOLID,
-			Position: generatedPositions[i-1],
+			Position: pos,
 		}
 	}
 
