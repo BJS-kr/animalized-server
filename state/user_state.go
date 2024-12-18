@@ -1,7 +1,9 @@
 package state
 
+import "animalized/message"
+
 type UserState struct {
-	Position *Position
+	Position *message.Position
 	score    int32
 }
 

@@ -60,8 +60,9 @@ func (c *Controller) roomHandler(input *message.Input) (*message.Input, error) {
 		}
 
 		c.Rooms.Remove(roomInput.RoomName)
+		r.Game.InitTerrains()
 		r.Game.StartStreaming(c.makeGameHandler(r, roomInput.RoomName), GAME_TICK_RATE)
-		r.Game.SystemDirectInput(c.MakeGameStartInput(input.UserId, roomInput.RoomName, characterTypes))
+		r.Game.SystemDirectInput(c.MakeGameStartInput(input.UserId, roomInput.RoomName, characterTypes, r.Game.State.Terrains))
 	case message.Room_QUIT:
 		u, err := c.Rooms.Quit(roomInput.RoomName, input.UserId)
 

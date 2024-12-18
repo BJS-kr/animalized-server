@@ -110,7 +110,7 @@ func (c *Controller) MakeQuitRoomInput(userId string, roomName string) *message.
 /**
  * CAUTION: Use as System Direct Input
  */
-func (c *Controller) MakeGameStartInput(userId string, roomName string, userCharacterTypes rooms.UserCharacterTypes) *message.Input {
+func (c *Controller) MakeGameStartInput(userId string, roomName string, userCharacterTypes rooms.UserCharacterTypes, terrains []*message.Terrain) *message.Input {
 	input := new(message.Input)
 
 	input.UserId = userId
@@ -119,6 +119,7 @@ func (c *Controller) MakeGameStartInput(userId string, roomName string, userChar
 			Type:               message.Room_START,
 			RoomName:           roomName,
 			UserCharacterTypes: userCharacterTypes,
+			Terrains:           terrains,
 		},
 	}
 

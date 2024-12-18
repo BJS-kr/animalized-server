@@ -7,8 +7,10 @@ import (
 )
 
 type UserID string
+
 type GameState struct {
 	UserStates map[UserID]*UserState
+	Terrains   []*message.Terrain
 }
 
 func New() *GameState {
@@ -25,7 +27,7 @@ func (gs *GameState) UpdateUserPosition(userId UserID, direction message.Operati
 		return errors.New("user state not found")
 	}
 
-	us.Position.determinePosition(direction)
+	determinePosition(us.Position, direction)
 
 	return nil
 }
@@ -69,12 +71,24 @@ func (gs *GameState) AddUserState(userId UserID) error {
 	}
 
 	us := UserState{}
-	us.Position = &Position{
+	us.Position = &message.Position{
 		X: 0,
 		Y: 0,
 	}
 
 	gs.UserStates[userId] = &us
+
+	return nil
+}
+
+func (gs *GameState) ChangeTerrainState(terrainId int32) error {
+	terrain := gs.Terrains[terrainId]
+
+	if terrain.State >= message.TerrainState_DESTROYED {
+		return errors.New("terrain is already destroyed")
+	}
+
+	terrain.State += 1
 
 	return nil
 }

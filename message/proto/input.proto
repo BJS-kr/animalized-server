@@ -26,10 +26,12 @@ message Operation {
   Direction direction = 2;
   HitRange hit_range = 3;
   GameState game_state = 4;
+  // target_user_id and target_terrain_id is mutually exclusive
   string target_user_id = 5;
-  int32 projectile_id = 6;
-  int64 context = 7;
-  int64 prev_context = 8;
+  int32 target_terrain_id = 6;
+  int32 projectile_id = 7;
+  int64 context = 8;
+  int64 prev_context = 9;
   
 
   enum Direction {
@@ -98,6 +100,7 @@ message Room {
   string room_name = 2;
   RoomState room_state = 4;
   map<string, CharacterType> user_character_types = 5;
+  repeated Terrain terrains = 6;
 
   enum RoomType {
     ROOM_UNSPECIFIED = 0;
@@ -117,4 +120,23 @@ message Room {
 message GameResult {
   string winner_id = 1;
   string room_name = 2;
+}
+
+message Terrain {
+  TerrainType type = 1;
+  TerrainState state = 2;
+  Position position = 3;
+}
+
+enum TerrainType {
+  TERRAIN_UNSPECIFIED = 0;
+  ROCK = 1;
+}
+
+enum TerrainState {
+  TERRAIN_STATE_UNSPECIFIED = 0;
+  SOLID = 1;
+  DAMAGED = 2;
+  VULNERABLE = 3;
+  DESTROYED = 4;
 }
