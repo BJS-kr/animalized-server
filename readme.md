@@ -4,17 +4,27 @@
 
 # Introduction
 
-This is open source realtime multiplayer game server project in Go, can play using [animalized-client](https://github.com/BJS-kr/animalized-client). Initial purpose of this project was make a template Go based game server. I couldn't find any descent, open sourced game server project implemented in Go. So, I made my own(maybe this project bit gone too far for a template).
+This is open source realtime multiplayer game server project in Go. You can play with [animalized-client](https://github.com/BJS-kr/animalized-client). Initial purpose of this project was make a Go game server template . I couldn't find any descent, open sourced game server project in Go. So, I made my own(maybe this project bit gone too far for a template).
 
-Unfortunately, I have no game server experience at production level. So if something looks unsuitable or if there any suggestions, please, let me know.
+Unfortunately, I have no game server experience at production level. So if something looks unsuitable, please, let me know.
 
-# Key Features
+# Key Aspects
+1. This is realtime simulation game
+2. Avoiding potential blocks by [lock-free queue](queue/queue.go)(Yes, it could be dangerous. I'll explain it in Details)
+3. TCP(only) server - This project uses [protobuf](https://protobuf.dev/)
+4. [Actor](https://en.wikipedia.org/wiki/Actor_model), [Fan-out](https://en.wikipedia.org/wiki/Fan-out_(software)) pattern used for simple processing
+5. Most of surface models based on internal models for reusability - e.g [DistSession](users/dist_session.go)
+6. [deterministic lockstep](https://www.linkedin.com/pulse/deterministic-lockstep-networking-demystified-zack-sinisi-jqrue) synchronization - for realtime battle simulation
 
-1. Avoiding potential blocks by [lock-free queue](queue/queue.go)(Yes, it could be dangerous. I'll explain it in Details)
-2. TCP(only) server - I used [protobuf](https://protobuf.dev/), but protocol or packet parsing rule can be differed. choice is all yours 
-3. [Actor](https://en.wikipedia.org/wiki/Actor_model), [Fan-out](https://en.wikipedia.org/wiki/Fan-out_(software)) pattern used for simple processing
-4. Most of surface models based on internal models for reusability - e.g [DistSession](users/dist_session.go)
-5. [deterministic lockstep](https://www.linkedin.com/pulse/deterministic-lockstep-networking-demystified-zack-sinisi-jqrue) synchronization - because this game is realtime battle simulation
+# Game Rules(if you play with  [animalized-client](https://github.com/BJS-kr/animalized-client))
+
+1. You can fire a fireball with key "a"
+2. You can move characters using arrow keys
+3. Fireball can hit a character or a wall
+4. Wall will be weakened as fireball hit the wall
+5. If wall state reached "vulnerable", fireball can destroy the wall
+6. If a user hit player with fireball 10 times, game will be end
+
 
 # Flow
 <p align="center">
@@ -22,7 +32,7 @@ Unfortunately, I have no game server experience at production level. So if somet
 </p>
 
 # Details
-### How packet parsed?
+### 1. How packet parsed?
 1. Receive byte length
 2. read amount of received byte length
 3. parse into message
@@ -30,7 +40,7 @@ Unfortunately, I have no game server experience at production level. So if somet
 
 You can see the code at [packet_store.go](packet/packet_store.go).
 
-### How messages propagated?
+### 2. How messages propagated?
 All users are placed in actors. actors may vary, like lobby, room, game.
 Actor receives all messages from owned users sequentially.
 When actor receives message, it process the message, and fan-out to users.
@@ -40,21 +50,21 @@ actor may add message content, create new message, or drop the user message that
 </p>
 
 
-### Why Dispatcher do not directly send message but insert into queue?
+### 3. Why Dispatcher do not directly send message but insert into queue?
 dispatcher must guarantee same distribution performance. if distribution & sending occurs in single flow, performance cannot be guaranteed because user connection unstable or slow, overall distribution performance would not consistent.
 so, distributor and sender should be separated and communicate via outgoing queue. This approach is based on common programming practice: separate pure functions and I/O operations. 
 
-### How user moved to another actor?
+### 4. How user moved to another actor?
 Users pass message to target channel. Message channel can be changed.
 If user moves to another actor(e.g lobby -> room), message channel also changes.
 
-### How tick used?
+### 5. How tick used?
 This project uses ticks not only for in-game, but for all situation.
 For example, lobby's tick rate is 200ms. Users in lobby receive queued messages every 200ms and consume.
 Game's tick rate is 2ms, obviously for fast sync.
 
-### Why Lock-free Queue? (WHY NOT CHANNEL OR MUTEX?)
-#### Lock-free DS are not always fast and have pitfalls
+### 6. Why Lock-free Queue? (WHY NOT CHANNEL OR MUTEX?)
+#### 6-a. Lock-free DS are not always fast and have pitfalls
 Let's talk about general problems.
 
 1. If spin lock used(I did), it can occur greater latency.
@@ -71,9 +81,9 @@ Answer to 3. Implementation and usage are monotonic in this project. ABA problem
 
 Not an answer for problems but another reason to use: It does not occur blocks. Let me explain it later(in "When it's better than channels").
 
-#### Why not sync.Map
+#### 6-b. Why not sync.Map
 It's simple. It does not guarantees order.
-#### When it's better than channels
+#### 6-c. When it's better than channels
 I prefer channels in most cases. Actually, I used channel a lot in this project. I have only one standard. If "block" makes sense, I can use a channel. 
 
 A situation that block makes sense is "expected" or "natural". For example, I used channel between Actor & Dispatcher. It makes sense because if  Actor processing itself is slow, Dispatcher receives message pace with actor. Users might have bad experience but it is a server problem that can be fixed, and it is totally fair because all users receives message at a same pace.
@@ -86,15 +96,14 @@ How much space would suitable for buffered channel, especially for fast stacking
 
 And some other might say channels can be length measured, and can prevent blocks. Here's the second problem. If you want to prevent block by measuring channel buffer length, you have to measure it every single iteration. Length of Go data structure can be cached ONLY if that ds used in local. If ds referred outside, length cannot be cached and Go actually counts it.
 
-#### When it's better than mutex + slice
+#### 6-d. When it's better than mutex + slice
 
-ADD: I implemented this architecture before move to lock-step. This project currently uses ticks. So maybe mutex and slice would have better performance and simplicity. Even so, I did not changed because it works fine now and still can win against non-tick based operations
+ADD: I implemented lock-free queue before move to lock-step. This project currently uses ticks. So maybe mutex and slice would have better performance and simplicity. Even so, I did not changed because it works fine now and still can win against non-tick based operations
 
 In my experience, using lock all around was a pure evil. I do not want to say it is a reason to prefer lock-free over mutex. It is just a SKILL ISSUE. but still, lock-free can free me from deadlock a bit.
 
 My main concern was performance. As mentioned above, data receiving process is not highly contented with many goroutines, but highly lock requested from two goroutines, dispatcher and sender. I benchmarked this case and in my machine(Ryzen 7700), lock-free queue outperforms mutex + slice.
 
-# Game Rules
 
 
 
