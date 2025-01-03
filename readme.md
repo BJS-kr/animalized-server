@@ -10,7 +10,7 @@ Unfortunately, I have no game server experience at production level. So if somet
 
 # Key Aspects
 1. This is realtime simulation game
-2. Avoiding potential blocks by [lock-free queue](queue/queue.go)(Yes, it could be dangerous. I'll explain it in Details)
+2. Avoiding potential blocks by [lock-free queue](queue/queue.go)(Yes, it could be dangerous. I'll explain it in [Details](#details))
 3. TCP(only) server - This project uses [protobuf](https://protobuf.dev/)
 4. [Actor](https://en.wikipedia.org/wiki/Actor_model), [Fan-out](https://en.wikipedia.org/wiki/Fan-out_(software)) pattern used for simple processing
 5. [deterministic lockstep](https://www.linkedin.com/pulse/deterministic-lockstep-networking-demystified-zack-sinisi-jqrue) synchronization
@@ -29,7 +29,7 @@ Unfortunately, I have no game server experience at production level. So if somet
   <img width=700 src="flow.jpg" />
 </p>
 
-# Details
+# <a name="details"></a> Details
 ### 1. How packet parsed?
 1. Receive byte length
 2. read amount of received byte length
@@ -62,12 +62,12 @@ For example, lobby's tick rate is 200ms. Users in lobby receive queued messages 
 Game's tick rate is 2ms, obviously for fast sync.
 
 ### 6. Why Lock-free Queue? (WHY NOT CHANNEL OR MUTEX?)
-#### 6-a. Lock-free DS are not always fast and have pitfalls
+#### <a name="6-a"></a> 6-a. Lock-free DS are not always fast and have pitfalls
 Let's talk about general problems.
 
 1. If spin lock used(I did), it can occur greater latency and excessive CPU consumption.
 2. Simple is the best. Fancy algorithm tends to buggier and hard to change.
-3. CAS implies ABA problem
+3. [CAS](https://en.wikipedia.org/wiki/Compare-and-swap) implies [ABA Problem](https://en.wikipedia.org/wiki/ABA_problem)
 
 I totally agree with those problems, but here's the reason.
 
@@ -98,7 +98,7 @@ ADD: I implemented lock-free queue before move to Lock-step. This project curren
 
 In my experience, using lock all around was a pure evil. I don't want to say it is a reason to prefer lock-free over mutex. It is just a SKILL ISSUE of mine. But still, lock-free can free me from deadlock hell a bit.
 
-My main concern was performance. See 6-a.
+My main concern was performance. See [6-a](#6-a-lock-free-ds-are-not-always-fast-and-have-pitfalls).
 
 
 
