@@ -123,20 +123,29 @@ message GameResult {
 }
 
 message Terrain {
+  enum TerrainType {
+    TERRAIN_UNSPECIFIED = 0;
+    ROCK = 1;
+  }
+
+  enum TerrainState {
+    TERRAIN_STATE_UNSPECIFIED = 0;
+    SOLID = 1;
+    DAMAGED = 2;
+    VULNERABLE = 3;
+    DESTROYED = 4;
+  }
+
   TerrainType type = 1;
   TerrainState state = 2;
   Position position = 3;
 }
 
-enum TerrainType {
-  TERRAIN_UNSPECIFIED = 0;
-  ROCK = 1;
+message Error {
+  string code = 1;
+  string message = 2;
+  string user_id = 3;
 }
 
-enum TerrainState {
-  TERRAIN_STATE_UNSPECIFIED = 0;
-  SOLID = 1;
-  DAMAGED = 2;
-  VULNERABLE = 3;
-  DESTROYED = 4;
-}
+
+

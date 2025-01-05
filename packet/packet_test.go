@@ -28,7 +28,6 @@ func TestInputParsing(t *testing.T) {
 		{
 			desc: "parse move packet",
 			input: &message.Input{
-
 				UserId: "test",
 				Kind: &message.Input_Op{
 					Op: &message.Operation{

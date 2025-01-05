@@ -28,6 +28,7 @@ func (ds *DistSession) Receive(handler common.Handler) {
 
 		if err != nil {
 			slog.Error(err.Error())
+
 			continue
 		}
 
