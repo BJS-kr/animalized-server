@@ -84,7 +84,7 @@ func (gs *GameState) AddUserState(userId UserID) error {
 func (gs *GameState) ChangeTerrainState(terrainId int32) error {
 	terrain := gs.Terrains[terrainId]
 
-	if terrain.State >= message.TerrainState_DESTROYED {
+	if terrain.State >= message.Terrain_DESTROYED {
 		return errors.New("terrain is already destroyed")
 	}
 

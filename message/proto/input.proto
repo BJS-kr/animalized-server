@@ -16,6 +16,8 @@ message Input {
   }
 }
 
+message Init {}
+
 message Position {
   int32 x = 1;
   int32 y = 2;
@@ -65,7 +67,6 @@ message Operation {
   }
 }
 
-message Init {}
 
 message RoomState {
   RoomStatusType status = 1;
@@ -123,20 +124,23 @@ message GameResult {
 }
 
 message Terrain {
+  enum TerrainType {
+    TERRAIN_UNSPECIFIED = 0;
+    ROCK = 1;
+  }
+
+  enum TerrainState {
+    TERRAIN_STATE_UNSPECIFIED = 0;
+    SOLID = 1;
+    DAMAGED = 2;
+    VULNERABLE = 3;
+    DESTROYED = 4;
+  }
+
   TerrainType type = 1;
   TerrainState state = 2;
   Position position = 3;
 }
 
-enum TerrainType {
-  TERRAIN_UNSPECIFIED = 0;
-  ROCK = 1;
-}
 
-enum TerrainState {
-  TERRAIN_STATE_UNSPECIFIED = 0;
-  SOLID = 1;
-  DAMAGED = 2;
-  VULNERABLE = 3;
-  DESTROYED = 4;
-}
+

@@ -54,8 +54,8 @@ func (g *Game) InitTerrains() {
 	}
 
 	terrains[0] = &message.Terrain{
-		Type:  message.TerrainType_ROCK,
-		State: message.TerrainState_DESTROYED,
+		Type:  message.Terrain_ROCK,
+		State: message.Terrain_DESTROYED,
 	}
 
 	for i := 1; i <= TERRAINS_COUNT; i++ {
@@ -64,8 +64,8 @@ func (g *Game) InitTerrains() {
 		pos.Y = pos.Y * state.CLIENT_CELL_SIZE
 
 		terrains[i] = &message.Terrain{
-			Type:     message.TerrainType_ROCK,
-			State:    message.TerrainState_SOLID,
+			Type:     message.Terrain_ROCK,
+			State:    message.Terrain_SOLID,
 			Position: pos,
 		}
 	}
