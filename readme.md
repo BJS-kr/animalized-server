@@ -1,5 +1,7 @@
 <p align="center">
   <img src="animalized.png" />
+  <br >
+  <img src="play.gif">
 </p>
 
 # Introduction
@@ -27,6 +29,11 @@ Unfortunately, I have no game server experience at production level. So if somet
 # Flow
 <p align="center">
   <img width=700 src="flow.jpg" />
+</p>
+
+# Sync preview
+<p align="center">
+  <img width=700 src="sync.gif" />
 </p>
 
 # <a name="details"></a> Details

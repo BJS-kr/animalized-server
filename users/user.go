@@ -25,6 +25,8 @@ type User struct {
 	Tick           chan common.Signal
 }
 
+var ErrsUserIdNotMatched = errors.New("user id not matched")
+
 func NewUser(conn net.Conn, id string, packetStore *packet.PacketStore) (*User, error) {
 	userIdLen := len(id)
 	if userIdLen == 0 || userIdLen > 10 {
@@ -71,7 +73,7 @@ func (u *User) ProduceInput() (*message.Input, error) {
 
 func (u *User) validateInput(input *message.Input) error {
 	if input.UserId != u.Id {
-		return errors.New("user id not matched")
+		return ErrsUserIdNotMatched
 	}
 
 	return nil
@@ -88,6 +90,10 @@ func (u *User) handleIncoming(session *Session) {
 
 		if err != nil {
 			slog.Error(err.Error())
+			if errors.Is(err, ErrsUserIdNotMatched) {
+				continue
+			}
+
 			session.Quit(u)
 			u.Conn.Close()
 			return
