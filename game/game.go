@@ -4,6 +4,7 @@ import (
 	"animalized/message"
 	"animalized/state"
 	"animalized/users"
+
 	"strconv"
 
 	"math/rand"
@@ -13,7 +14,8 @@ const TERRAINS_COUNT = 40
 
 type Game struct {
 	users.DistSession
-	State *state.GameState
+	AttackDedup map[int32]bool
+	State       *state.GameState
 }
 
 func New(maxUsers int) *Game {

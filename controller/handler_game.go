@@ -33,6 +33,10 @@ func (c *Controller) makeGameHandler(r *rooms.Room, roomName string) common.Hand
 			}
 		case message.Operation_ATTACK:
 		case message.Operation_HIT:
+			if _, exists := r.Game.AttackDedup[opInput.ProjectileId]; exists {
+				return nil, errors.New("projectile already handled")
+			}
+
 			if opInput.TargetUserId == "" && opInput.TargetTerrainId == 0 {
 				return nil, errors.New("target user id or terrain id not provided in hit operation. not fatal")
 			}
@@ -41,7 +45,7 @@ func (c *Controller) makeGameHandler(r *rooms.Room, roomName string) common.Hand
 				return nil, errors.New("target user id and terrain id cannot be provided at the same time in hit operation")
 			}
 
-			// target user id가 있는 경우
+			// case 1: if target was user
 			if opInput.TargetUserId != "" {
 				targetUserState, ok := r.Game.State.UserStates[state.UserID(opInput.TargetUserId)]
 
@@ -79,9 +83,9 @@ func (c *Controller) makeGameHandler(r *rooms.Room, roomName string) common.Hand
 
 					return nil, nil
 				}
-			}
 
-			if opInput.TargetTerrainId != 0 {
+				// case 2: if target was terrain
+			} else if opInput.TargetTerrainId != 0 {
 				terrain := r.Game.State.Terrains[opInput.TargetTerrainId]
 
 				if !state.IsHit(terrain.Position, opInput.HitRange) {
@@ -92,6 +96,8 @@ func (c *Controller) makeGameHandler(r *rooms.Room, roomName string) common.Hand
 					return nil, err
 				}
 			}
+
+			r.Game.AttackDedup[opInput.ProjectileId] = true
 		case message.Operation_GAME_STATE:
 			opInput.GameState = r.Game.State.GetGameState()
 		default:
