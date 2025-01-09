@@ -3,3 +3,4 @@ ssh.sh
 upload.sh
 *.pem
 *.pub
+troublelog.md
