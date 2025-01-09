@@ -1,9 +1,11 @@
 package game
 
 import (
+	"animalized/common"
 	"animalized/message"
 	"animalized/state"
 	"animalized/users"
+	"time"
 
 	"strconv"
 
@@ -31,7 +33,13 @@ func (g *Game) JoinGame(u *users.User) error {
 	return g.Join(u, g.Receiver)
 }
 
-func (g *Game) InitTerrains() {
+func (g *Game) Init(handler common.Handler, tickRate time.Duration) {
+	g.initTerrains()
+	g.AttackDedup = make(map[int32]bool)
+	g.StartStreaming(handler, tickRate)
+}
+
+func (g *Game) initTerrains() {
 	// proto의 기본값을 제외하기 위해 0을 건너뛰기 위해 1 추가
 	terrains := make([]*message.Terrain, TERRAINS_COUNT+1)
 	reservedPositions := map[string]bool{
