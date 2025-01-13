@@ -6,9 +6,7 @@
 
 # Introduction
 
-This is open source realtime multiplayer game server project in Go. You can play with [animalized-client](https://github.com/BJS-kr/animalized-client). Initial purpose of this project is make a Go game server template. I couldn't find any descent, open sourced game server project in Go. So, I made my own(maybe this project bit gone too far for a template).
-
-Unfortunately, I have no game server experience at production level. So if something looks unsuitable, please, let me know.
+This is open source realtime multiplayer game server project in Go. You can play with [animalized-client](https://github.com/BJS-kr/animalized-client). Purpose of this project is to make a Go game server template. I couldn't find any descent, open sourced game server project in Go. So, I made my own(maybe this project bit gone too far for a template).
 
 # Key Aspects
 1. This is realtime simulation game
