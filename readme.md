@@ -10,7 +10,7 @@ This is open source realtime multiplayer game server project in Go. You can play
 
 # Key Aspects
 1. This is realtime simulation game
-2. Avoiding potential blocks by [lock-free queue](queue/queue.go)(Yes, it could be dangerous. I'll explain it in [Details](#details))
+2. Avoiding potential blocks by [lock-free queue](queue/queue.go)(I'll explain it in [Details](#details))
 3. TCP(only) server - This project uses [protobuf](https://protobuf.dev/)
 4. [Actor](https://en.wikipedia.org/wiki/Actor_model), [Fan-out](https://en.wikipedia.org/wiki/Fan-out_(software)) pattern used for simple processing
 5. [deterministic lockstep](https://www.linkedin.com/pulse/deterministic-lockstep-networking-demystified-zack-sinisi-jqrue) synchronization
@@ -78,14 +78,14 @@ I totally agree with those problems, but here's the reason.
 
 **Answer to 1**. Lock-free is not suitable for high contention. It'll cause random latency and complex problems. In this project, lock-free queue is used for data receiving between dispatcher and sender only. It means there is no high contention but there are one queueing goroutine, and one dequeueing goroutine. Performance is quite expectable and beat up mutex case in performance always. You can check out the benchmark [here](queue/queue_test.go).
 
-**Answer to 2**. I agree with that. Sincerely.
+**Answer to 2**. I agree with that.
 
 **Answer to 3**. Implementation and usage are monotonic in this project. ABA problem does not occurs in monotonic operation.
 
 Not an answer for problems but another reason to use: It does not occur blocks. Let me explain it later(in "When it's better than channels").
 
 #### 6-b. Why not sync.Map
-It's simple. It does not guarantees order.
+It does not guarantees order.
 #### 6-c. When it's better than channels
 I prefer channels in most cases. I have only one standard. If "block" makes sense, I use channels. 
 
