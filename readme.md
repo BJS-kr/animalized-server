@@ -93,13 +93,13 @@ A situation block makes sense is "expected" or "natural". For example, I used ch
 
 On the contrary, Let's assume that some users have bad network condition. Message consume slowed down because writing to TCP connection is slowed down. Eventually, channel will be overflowed and block the whole operation. It is not "natural" because most of users were in good network condition.
 
-Some might say channel can be buffered. Let's talk about that case. How much space would suitable for buffered channel, especially for fast stacking messages? How much should I buffer? I want to avoid channel blocking absolutely.
+Some might suggest buffered channel, but especially for fast stacking messages, they also might also be full and block. I wanted absolution.
 
-Some other might say channels can be length measured, and can prevent blocks. Here's the second problem. If you want to prevent block by measuring channel buffer length, you have to measure it every single iteration. Length of Go data structure can be cached ONLY if that ds used in local. If data referred outside, length cannot be cached and Go actually counts it.
+Some other might suggest channels can be length measured, and can prevent blocks. but length of Go data structure can be cached ONLY if that ds used in local. If data referred outside, length cannot be cached and Go actually counts it.
 
 #### 6-d. When it's better than mutex + slice
 
-ADD: I implemented lock-free queue before move to Lock-step. This project currently uses ticks. So maybe mutex and slice would have better performance and simplicity. Even so, I did not changed because it works fine now and still can win against non-tick based operations
+ADD: I implemented lock-free queue before move to Lock-step. This project currently uses ticks. So maybe mutex and slice would have better performance and simplicity.
 
 In my experience, using lock all around was a pure evil. I don't want to say it is a reason to prefer lock-free over mutex. It is just a SKILL ISSUE of mine. But still, lock-free can free me from deadlock hell a bit.
 
